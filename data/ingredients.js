@@ -2,7 +2,7 @@
  * NutriBudget - Base de Données des Ingrédients Locaux & Saisonniers (Sénégal / Dakar)
  * Données nutritionnelles pour 100g de partie comestible.
  * Sources scientifiques de référence : Table de composition des aliments d'Afrique de l'Ouest (FAO/INFOODS) & Ciqual.
- * Prix indicatifs moyens observés sur les marchés de Dakar (Sandaga, Tilène, Castors) en Francs CFA (XOF).
+ * Prix indicatifs moyens observés sur les marchés de Dakar en Francs CFA (XOF).
  */
 
 const SEN_INGREDIENTS = [
