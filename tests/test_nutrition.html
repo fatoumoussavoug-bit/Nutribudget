@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriBudget - Tests Unitaires Moteur Nutritionnel (Étape 1)</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F8FAFC;
+            color: #334155;
+            padding: 30px 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+        }
+        h1 {
+            color: #1E293B;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge {
+            background: #E8F8F5;
+            color: #27AE60;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .summary-bar {
+            display: flex;
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px;
+            border-radius: 12px;
+            background: #F1F5F9;
+        }
+        .summary-item {
+            font-weight: 600;
+        }
+        .summary-item.passed { color: #16A34A; }
+        .summary-item.failed { color: #DC2626; }
+        .test-card {
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+        .test-card.passed {
+            border-left: 5px solid #16A34A;
+            background: #F0FDF4;
+        }
+        .test-card.failed {
+            border-left: 5px solid #DC2626;
+            background: #FEF2F2;
+        }
+        .test-title {
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-desc {
+            font-size: 0.88rem;
+            color: #64748B;
+            margin-top: 4px;
+        }
+        .test-details {
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 0.82rem;
+            background: #FFFFFF;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span>NutriBudget Test Suite</span>
+            <span class="badge">Étape 1 : Moteur Déterministe</span>
+        </h1>
+        <p style="color: #64748B; margin-top: 4px;">Validation automatique des données nutritionnelles locales et du calculateur déterministe en FCFA.</p>
+
+        <div id="summary-bar" class="summary-bar">
+            <div id="stat-total" class="summary-item">Total : 0</div>
+            <div id="stat-passed" class="summary-item passed">Réussis : 0</div>
+            <div id="stat-failed" class="summary-item failed">Échoués : 0</div>
+        </div>
+
+        <div id="test-results"></div>
+    </div>
+
+    <!-- Scripts sous test -->
+    <script src="../data/ingredients.js"></script>
+    <script src="../services/nutritionCalculator.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsContainer = document.getElementById('test-results');
+            const statTotal = document.getElementById('stat-total');
+            const statPassed = document.getElementById('stat-passed');
+            const statFailed = document.getElementById('stat-failed');
+
+            let total = 0;
+            let passed = 0;
+            let failed = 0;
+
+            function assert(title, description, condition, details = "") {
+                total++;
+                const isSuccess = Boolean(condition);
+                if (isSuccess) passed++; else failed++;
+
+                const card = document.createElement('div');
+                card.className = `test-card ${isSuccess ? 'passed' : 'failed'}`;
+                card.innerHTML = `
+                    <div class="test-title">
+                        <span>${isSuccess ? '✅' : '❌'} ${title}</span>
+                        <span style="font-size: 0.85rem; font-weight: 600; color: ${isSuccess ? '#16A34A' : '#DC2626'}">
+                            ${isSuccess ? 'SUCCÈS' : 'ÉCHEC'}
+                        </span>
+                    </div>
+                    <div class="test-desc">${description}</div>
+                    ${details ? `<div class="test-details">${details}</div>` : ''}
+                `;
+                resultsContainer.appendChild(card);
+
+                statTotal.textContent = `Total : ${total}`;
+                statPassed.textContent = `Réussis : ${passed}`;
+                statFailed.textContent = `Échoués : ${failed}`;
+            }
+
+            // TEST 1 : Vérifier la présence de la base de données
+            const ingredients = window.NutriData ? window.NutriData.SEN_INGREDIENTS : [];
+            assert(
+                "Présence de la table d'ingrédients locaux",
+                "Vérifie que la table d'ingrédients sénégalais contient plus de 20 ingrédients certifiés",
+                ingredients.length >= 25,
+                `Nombre d'ingrédients chargés : ${ingredients.length}`
+            );
+
+            // TEST 2 : Vérifier les aliments piliers sénégalais
+            const expectedIds = ["riz-brise-ordinaire", "mil-arraw", "niebe", "yaboye-sardinelle", "moringa-nebeday", "kinkeliba", "fleurs-bissap-rouge"];
+            const missing = expectedIds.filter(id => !ingredients.some(ing => ing.id === id));
+            assert(
+                "Présence des aliments phares du Sénégal",
+                "Contrôle que Riz ordinaire, Mil, Niébé, Yaboye, Moringa, Kinkeliba et Bissap sont bien répertoriés",
+                missing.length === 0,
+                missing.length === 0 ? "Tous les aliments piliers sont présents !" : `Manquants : ${missing.join(', ')}`
+            );
+
+            // TEST 3 : Calcul déterministe d'un plat local complet (Thiéboudienne / Déjeuner Yaboye & Niébé)
+            const recipeItems = [
+                { ingredientId: "yaboye-sardinelle", quantity: 150, unit: "g" },  // 150g yaboye
+                { ingredientId: "riz-brise-ordinaire", quantity: 80, unit: "g" }, // 80g riz
+                { ingredientId: "niebe", quantity: 50, unit: "g" },               // 50g niébé
+                { ingredientId: "huile-arachide", quantity: 10, unit: "g" },      // 10g huile
+                { ingredientId: "oignon-jaune", quantity: 50, unit: "g" },        // 50g oignon
+                { ingredientId: "moringa-nebeday", quantity: 30, unit: "g" }      // 30g moringa
+            ];
+
+            const analysis = window.NutriCalculator.calculateRecipeNutrition(recipeItems, 1);
+            
+            // Calculs manuels attendus :
+            // Calories :
+            // Yaboye (135 * 1.5) = 202.5
+            // Riz (360 * 0.8) = 288
+            // Niébé (343 * 0.5) = 171.5
+            // Huile (900 * 0.1) = 90
+            // Oignon (40 * 0.5) = 20
+            // Moringa (64 * 0.3) = 19.2
+            // Total cal ~ 791 kcal (arrondi)
+            // Protéines :
+            // Yaboye (19.5 * 1.5) = 29.25
+            // Riz (7.0 * 0.8) = 5.6
+            // Niébé (24.0 * 0.5) = 12.0
+            // Huile 0
+            // Oignon (1.1 * 0.5) = 0.55
+            // Moringa (9.4 * 0.3) = 2.82
+            // Total prot ~ 50.2 g
+            // Coût en FCFA attendu :
+            // Yaboye (150g @ 1000 FCFA/kg) = 150 FCFA
+            // Riz (80g @ 500 FCFA/kg) = 40 FCFA
+            // Niébé (50g @ 900 FCFA/kg) = 45 FCFA
+            // Huile (10g @ 1200 FCFA/kg) = 12 FCFA
+            // Oignon (50g @ 500 FCFA/kg) = 25 FCFA
+            // Moringa (30g @ 1500 FCFA/kg) = 45 FCFA
+            // Total coût = 317 FCFA
+
+            const calOk = Math.abs(analysis.total.calories - 791) <= 2;
+            const protOk = Math.abs(analysis.total.proteins - 50.2) <= 1;
+            const costOk = Math.abs(analysis.total.costFCFA - 317) <= 2;
+
+            assert(
+                "Calcul exact de calories et macronutriments",
+                "Vérifie que les macros calculées correspondent exactement aux tables de composition",
+                calOk && protOk,
+                `Calculé : ${analysis.total.calories} kcal, ${analysis.total.proteins}g protéines, ${analysis.total.carbs}g glucides, ${analysis.total.fats}g lipides`
+            );
+
+            assert(
+                "Calcul exact du coût en FCFA",
+                "Vérifie que le coût estimé pour le marché dakarois correspond au panier (317 FCFA)",
+                costOk,
+                `Coût calculé : ${analysis.total.costFCFA} FCFA pour 50g+ de protéines !`
+            );
+
+            // TEST 4 : Répartition énergétique (%)
+            const dist = analysis.macroDistribution;
+            const sumPercent = dist.proteinPercent + dist.carbPercent + dist.fatPercent;
+            assert(
+                "Répartition calorique des macros",
+                "Vérifie que le total des pourcentages caloriques est cohérent (~100%)",
+                sumPercent >= 98 && sumPercent <= 102,
+                `Protéines : ${dist.proteinPercent}%, Glucides : ${dist.carbPercent}%, Lipides : ${dist.fatPercent}% (Total : ${sumPercent}%)`
+            );
+
+            // TEST 5 : Division par portions
+            const multiServings = window.NutriCalculator.calculateRecipeNutrition(recipeItems, 4);
+            const perPortionCalOk = multiServings.perServing.calories === Math.round(multiServings.total.calories / 4);
+            const perPortionCostOk = multiServings.perServing.costFCFA === Math.round(multiServings.total.costFCFA / 4);
+            assert(
+                "Gestion du nombre de portions (servings)",
+                "Pour 4 personnes, le coût et les calories par portion sont exactement le quart du total",
+                perPortionCalOk && perPortionCostOk,
+                `Total 4 portions : ${multiServings.total.calories} kcal, ${multiServings.total.costFCFA} FCFA. Par portion : ${multiServings.perServing.calories} kcal, ${multiServings.perServing.costFCFA} FCFA`
+            );
+
+            // TEST 6 : Conversion d'unités spéciales (pièces, cuillères)
+            const eggItem = [{ ingredientId: "oeuf-poule", quantity: 2, unit: "piece" }];
+            const eggAnalysis = window.NutriCalculator.calculateRecipeNutrition(eggItem, 1);
+            // 2 oeufs = 2 * 125 = 250 FCFA, poids ~ 110g, prot ~ 13.9g
+            const eggOk = eggAnalysis.total.costFCFA === 250 && eggAnalysis.total.weightGrams === 110;
+            assert(
+                "Conversion d'unités spécifiques (Œufs en pièces)",
+                "2 œufs = 110g et 250 FCFA",
+                eggOk,
+                `Poids calculé : ${eggAnalysis.total.weightGrams}g, Coût : ${eggAnalysis.total.costFCFA} FCFA`
+            );
+
+            // TEST 7 : Personnalisation du prix au marché de quartier
+            window.NutriCalculator.setCustomPrice("riz-brise-ordinaire", 400); // 400 au lieu de 500 FCFA
+            const discountedAnalysis = window.NutriCalculator.calculateRecipeNutrition(recipeItems, 1);
+            // Le riz passe de 40 FCFA à 32 FCFA, donc coût total = 309 FCFA
+            const customPriceOk = discountedAnalysis.total.costFCFA === 309;
+            window.NutriCalculator.resetCustomPrices(); // Réinitialiser
+            assert(
+                "Personnalisation des prix locaux par l'utilisateur",
+                "Permet à l'utilisateur d'ajuster le prix du riz à 400 FCFA/kg et recalcule le budget instantanément",
+                customPriceOk,
+                `Coût recalculé avec prix personnalisé : ${discountedAnalysis.total.costFCFA} FCFA (au lieu de 317 FCFA)`
+            );
+
+            // TEST 8 : Tolérance aux ingrédients non répertoriés
+            const unknownItem = [{ ingredientId: "ingredient-inconnu-xyz", quantity: 100, unit: "g" }];
+            const unknownAnalysis = window.NutriCalculator.calculateRecipeNutrition(unknownItem, 1);
+            assert(
+                "Résilience aux ingrédients inconnus",
+                "Ne plante pas si un ingrédient n'est pas trouvé et renvoie 0 en indiquant isUnknown: true",
+                unknownAnalysis.items[0].isUnknown === true && unknownAnalysis.total.calories === 0,
+                `isUnknown: ${unknownAnalysis.items[0].isUnknown}, Calories: ${unknownAnalysis.total.calories}`
+            );
+        });
+    </script>
+</body>
+</html>
