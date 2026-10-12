@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriBudget - Tests Unitaires Profil & Sécurité (Étape 2)</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F8FAFC;
+            color: #334155;
+            padding: 30px 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+        }
+        h1 {
+            color: #1E293B;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge {
+            background: #E8F8F5;
+            color: #27AE60;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .summary-bar {
+            display: flex;
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px;
+            border-radius: 12px;
+            background: #F1F5F9;
+        }
+        .summary-item { font-weight: 600; }
+        .summary-item.passed { color: #16A34A; }
+        .summary-item.failed { color: #DC2626; }
+        .test-card {
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+        .test-card.passed {
+            border-left: 5px solid #16A34A;
+            background: #F0FDF4;
+        }
+        .test-card.failed {
+            border-left: 5px solid #DC2626;
+            background: #FEF2F2;
+        }
+        .test-title {
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-desc {
+            font-size: 0.88rem;
+            color: #64748B;
+            margin-top: 4px;
+        }
+        .test-details {
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 0.82rem;
+            background: #FFFFFF;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span>NutriBudget Test Suite</span>
+            <span class="badge">Étape 2 : Profil & Garde-fous</span>
+        </h1>
+        <p style="color: #64748B; margin-top: 4px;">Validation automatique des calculs métaboliques (Mifflin-St Jeor), budgets FCFA et seuils de sécurité de santé.</p>
+
+        <div id="summary-bar" class="summary-bar">
+            <div id="stat-total" class="summary-item">Total : 0</div>
+            <div id="stat-passed" class="summary-item passed">Réussis : 0</div>
+            <div id="stat-failed" class="summary-item failed">Échoués : 0</div>
+        </div>
+
+        <div id="test-results"></div>
+    </div>
+
+    <!-- Script du service sous test -->
+    <script src="../services/userProfileService.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsContainer = document.getElementById('test-results');
+            const statTotal = document.getElementById('stat-total');
+            const statPassed = document.getElementById('stat-passed');
+            const statFailed = document.getElementById('stat-failed');
+
+            let total = 0;
+            let passed = 0;
+            let failed = 0;
+
+            function assert(title, description, condition, details = "") {
+                total++;
+                const isSuccess = Boolean(condition);
+                if (isSuccess) passed++; else failed++;
+
+                const card = document.createElement('div');
+                card.className = `test-card ${isSuccess ? 'passed' : 'failed'}`;
+                card.innerHTML = `
+                    <div class="test-title">
+                        <span>${isSuccess ? '✅' : '❌'} ${title}</span>
+                        <span style="font-size: 0.85rem; font-weight: 600; color: ${isSuccess ? '#16A34A' : '#DC2626'}">
+                            ${isSuccess ? 'SUCCÈS' : 'ÉCHEC'}
+                        </span>
+                    </div>
+                    <div class="test-desc">${description}</div>
+                    ${details ? `<div class="test-details">${details}</div>` : ''}
+                `;
+                resultsContainer.appendChild(card);
+
+                statTotal.textContent = `Total : ${total}`;
+                statPassed.textContent = `Réussis : ${passed}`;
+                statFailed.textContent = `Échoués : ${failed}`;
+            }
+
+            const Service = window.NutriProfile;
+
+            // TEST 1 : BMR Homme (Mifflin-St Jeor)
+            // 70kg, 175cm, 25 ans, homme -> 10*70 + 6.25*175 - 5*25 + 5 = 1673.75 -> 1674 kcal
+            const bmrMan = Service.calculateBMR(70, 175, 25, "homme");
+            assert(
+                "Formule BMR Homme (Mifflin-St Jeor)",
+                "Vérifie le calcul métabolique de base exact pour un homme de 70kg, 175cm, 25 ans",
+                bmrMan === 1674,
+                `BMR attendu: 1674 kcal, Obtenu: ${bmrMan} kcal`
+            );
+
+            // TEST 2 : BMR Femme (Mifflin-St Jeor)
+            // 60kg, 165cm, 30 ans, femme -> 10*60 + 6.25*165 - 5*30 - 161 = 1320.25 -> 1320 kcal
+            const bmrWoman = Service.calculateBMR(60, 165, 30, "femme");
+            assert(
+                "Formule BMR Femme (Mifflin-St Jeor)",
+                "Vérifie le calcul métabolique de base exact pour une femme de 60kg, 165cm, 30 ans",
+                bmrWoman === 1320,
+                `BMR attendu: 1320 kcal, Obtenu: ${bmrWoman} kcal`
+            );
+
+            // TEST 3 : TDEE et Dépense d'activité (PAL)
+            // BMR 1674 * modere (1.55) = 2594.7 -> 2595 kcal
+            const tdee = Service.calculateTDEE(1674, "modere");
+            assert(
+                "Calcul de Dépense Totale (TDEE)",
+                "Vérifie la pondération par le niveau d'activité physique modéré (1.55)",
+                tdee === 2595,
+                `TDEE attendu: 2595 kcal, Obtenu: ${tdee} kcal`
+            );
+
+            // TEST 4 : Calcul de l'IMC (BMI) et classification OMS
+            const bmiRes = Service.calculateBMI(70, 175);
+            assert(
+                "Indice de Masse Corporelle (IMC)",
+                "Pour 70kg et 175cm, IMC = 22.9 et catégorie 'Corpulence normale'",
+                bmiRes.bmi === 22.9 && bmiRes.category === "Corpulence normale",
+                `IMC calculé: ${bmiRes.bmi}, Catégorie: ${bmiRes.category}`
+            );
+
+            // TEST 5 : Garde-fou - Plancher de sécurité métabolique vitale (1200 kcal femme)
+            // Femme sédentaire de petit gabarit (45kg, 150cm, 40 ans) demandant une perte de poids
+            // BMR = 450 + 937.5 - 200 - 161 = 1026.5 kcal. TDEE sédentaire (1.2) = 1232 kcal.
+            // Sans garde-fou, un déficit de -400 mènerait à 832 kcal (dangereux !).
+            const fragileProfile = {
+                age: 40,
+                weight: 45,
+                height: 150,
+                gender: "femme",
+                goal: "perte",
+                activityLevel: "sedentaire"
+            };
+            const fragileCalc = Service.calculateEnergyNeeds(fragileProfile);
+            const floorTriggeredOk = fragileCalc.targetCalories === 1200 &&
+                                    fragileCalc.isFloorTriggered === true &&
+                                    fragileCalc.warnings.some(w => w.code === "SAFETY_FLOOR_APPLIED");
+            assert(
+                "Garde-fou : Plancher de sécurité métabolique vitale",
+                "Empêche tout apport calorique inférieur à 1 200 kcal/j pour une femme et génère une alerte explicite",
+                floorTriggeredOk,
+                `Apport brut calculé : ${fragileCalc.rawTargetCalories} kcal -> Sécurisé à : ${fragileCalc.targetCalories} kcal (Alerte: ${fragileCalc.warnings[0].message})`
+            );
+
+            // TEST 6 : Garde-fou - Alerte de protection des mineurs (< 18 ans)
+            const teenProfile = {
+                age: 16,
+                weight: 58,
+                height: 170,
+                gender: "homme",
+                goal: "perte",
+                activityLevel: "modere"
+            };
+            const teenCalc = Service.calculateEnergyNeeds(teenProfile);
+            const teenAlertOk = teenCalc.warnings.some(w => w.code === "MINOR_USER");
+            assert(
+                "Garde-fou : Détection et protection des mineurs",
+                "Déclenche une alerte médicale stricte pour les utilisateurs de moins de 18 ans",
+                teenAlertOk,
+                `Alerte déclenchée: ${teenCalc.warnings.find(w => w.code === "MINOR_USER").message}`
+            );
+
+            // TEST 7 : Conditions particulières (Grossesse, Diabète, Hypertension)
+            const medicalProfile = {
+                age: 32,
+                weight: 68,
+                height: 168,
+                gender: "femme",
+                goal: "maintien",
+                activityLevel: "leger",
+                specialConditions: ["grossesse", "hypertension"]
+            };
+            const medCalc = Service.calculateEnergyNeeds(medicalProfile);
+            const hasPregnancy = medCalc.warnings.some(w => w.code === "PREGNANCY_LACTATION");
+            const hasHypertension = medCalc.warnings.some(w => w.code === "HYPERTENSION");
+            assert(
+                "Garde-fou : Détection des situations médicales spécifiques",
+                "Émet les avertissements adaptés pour la grossesse et l'hypertension",
+                hasPregnancy && hasHypertension,
+                `Nombre d'avertissements spécifiques émis: ${medCalc.warnings.length}`
+            );
+
+            // TEST 8 : Calcul du budget alimentaire au Sénégal (FCFA)
+            // 35 000 FCFA/semaine pour une famille de 4 personnes
+            const budgetProfile = {
+                age: 35,
+                weight: 75,
+                height: 178,
+                gender: "homme",
+                goal: "maintien",
+                activityLevel: "modere",
+                householdSize: 4,
+                budgetAmountFCFA: 35000,
+                budgetPeriod: "hebdomadaire"
+            };
+            const budgetCalc = Service.calculateEnergyNeeds(budgetProfile);
+            const bInfo = budgetCalc.budget;
+            // 35 000 / 7 = 5 000 FCFA/j foyer. 5000 / 4 = 1250 FCFA/j/personne. 1250 / 3 = 417 FCFA/repas
+            const budgetOk = bInfo.dailyTotalFCFA === 5000 &&
+                             bInfo.dailyPerPersonFCFA === 1250 &&
+                             bInfo.perMealPerPersonFCFA === 417;
+            assert(
+                "Décomposition budgétaire en FCFA pour le foyer",
+                "35 000 FCFA/semaine pour 4 personnes = 5000 FCFA/j foyer, 1250 FCFA/personne/j, 417 FCFA/repas",
+                budgetOk,
+                `Par jour foyer: ${bInfo.dailyTotalFCFA} FCFA, Par personne: ${bInfo.dailyPerPersonFCFA} FCFA, Par repas: ${bInfo.perMealPerPersonFCFA} FCFA`
+            );
+
+            // TEST 9 : Gestion de session utilisateur (Inscription, Sauvegarde profil, Connexion)
+            try {
+                // Inscription d'un utilisateur de test
+                const testEmail = "test_user_" + Date.now() + "@nutribudget.sn";
+                const user = Service.register(testEmail, "password123", "Moussa Diop");
+                const isLogged = Service.getCurrentUser() && Service.getCurrentUser().email === testEmail;
+
+                // Sauvegarde du profil
+                const savedProf = Service.saveProfile(budgetProfile);
+                const retrievedProf = Service.getProfile();
+
+                assert(
+                    "Gestion de compte et persistance du profil utilisateur",
+                    "Permet l'inscription, la connexion automatique et la persistance locale du profil",
+                    isLogged && retrievedProf && retrievedProf.age === 35,
+                    `Utilisateur connecté: ${user.name} (${user.email}), Profil sauvegardé avec succès`
+                );
+            } catch (err) {
+                assert("Gestion de compte et persistance du profil utilisateur", "Échec inattendu", false, err.message);
+            }
+
+            // TEST 10 : Validation stricte des données d'entrée
+            const invalidData = { age: 3, weight: -10, height: 400, gender: "inconnu" };
+            const valResult = Service.validateProfileData(invalidData);
+            assert(
+                "Validation stricte des saisies aberrantes",
+                "Rejette les âges, poids, tailles ou genres invalides avec des messages d'erreur clairs",
+                valResult.isValid === false && valResult.errors.length >= 3,
+                `Erreurs interceptées (${valResult.errors.length}) : ${valResult.errors.join(' | ')}`
+            );
+        });
+    </script>
+</body>
+</html>

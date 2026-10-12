@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NutriBudget - Votre espace personnel de nutrition et de budget alimentaire adapté aux produits locaux de Dakar.">
+    <meta name="robots" content="noindex">
+    <title>Mon Espace | NutriBudget</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="app.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="app-body">
+
+    <!-- ============================
+         BARRE DE NAVIGATION APP
+         ============================ -->
+    <nav class="navbar" id="app-navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Nutri<span>Budget</span></a>
+
+            <!-- État connecté -->
+            <div class="app-nav-right" id="nav-logged-in" style="display:none;">
+                <div class="user-pill" id="nav-user-pill">
+                    <div class="user-avatar" id="nav-avatar">?</div>
+                    <span id="nav-username">Utilisateur</span>
+                </div>
+                <button class="btn btn-outline" id="nav-logout-btn" style="padding:10px 20px; font-size:0.9rem;">
+                    Déconnexion
+                </button>
+            </div>
+
+            <!-- État déconnecté -->
+            <div class="app-nav-right" id="nav-logged-out">
+                <a href="index.html" class="btn btn-outline" style="padding:10px 20px; font-size:0.9rem;">← Accueil</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================================================
+         ÉCRAN D'AUTHENTIFICATION (Connexion / Inscription)
+         ================================================== -->
+    <div class="auth-screen" id="auth-screen">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <a href="index.html" class="logo">Nutri<span>Budget</span></a>
+            </div>
+            <p style="text-align:center; color:var(--text-light); margin-bottom:0; font-size:0.95rem;">
+                Votre compagnon nutrition &amp; budget local 🥗
+            </p>
+
+            <!-- Onglets Connexion / Inscription -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-login" onclick="App.switchAuthTab('login')">Se connecter</button>
+                <button class="auth-tab" id="tab-register" onclick="App.switchAuthTab('register')">S'inscrire</button>
+            </div>
+
+            <!-- Formulaire Connexion -->
+            <form class="auth-form active" id="form-login" onsubmit="App.handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Adresse email</label>
+                    <input type="email" id="login-email" placeholder="votre@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" placeholder="Votre mot de passe" required autocomplete="current-password">
+                </div>
+                <div id="login-error" style="color:#E74C3C; font-size:0.85rem; margin-bottom:12px; display:none;"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;" id="login-submit-btn">
+                    Se connecter
+                </button>
+                <p class="auth-footer-text">
+                    Pas encore de compte ?
+                    <a onclick="App.switchAuthTab('register')">Créer un compte</a>
+                </p>
+            </form>
+
+            <!-- Formulaire Inscription -->
+            <form class="auth-form" id="form-register" onsubmit="App.handleRegister(event)">
+                <div class="form-group">
+                    <label for="register-name">Prénom ou pseudonyme</label>
+                    <input type="text" id="register-name" placeholder="Ex : Aminata, Moussa…" autocomplete="given-name">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Adresse email</label>
+                    <input type="email" id="register-email" placeholder="votre@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Mot de passe</label>
+                    <input type="password" id="register-password" placeholder="Min. 6 caractères" required autocomplete="new-password">
+                    <p class="form-hint">Au moins 6 caractères.</p>
+                </div>
+                <div id="register-error" style="color:#E74C3C; font-size:0.85rem; margin-bottom:12px; display:none;"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;" id="register-submit-btn">
+                    Créer mon compte
+                </button>
+                <p class="auth-footer-text">
+                    Déjà un compte ?
+                    <a onclick="App.switchAuthTab('login')">Se connecter</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================================================
+         ESPACE APPLICATION (Dashboard)
+         ================================================== -->
+    <div class="app-screen" id="app-screen">
+        <div class="app-layout">
+
+            <!-- SIDEBAR -->
+            <aside class="app-sidebar">
+                <p class="sidebar-section-label">Navigation</p>
+                <nav class="sidebar-nav">
+                    <button class="sidebar-item active" id="sidebar-dashboard" onclick="App.showTab('dashboard')">
+                        <span class="sidebar-icon">📊</span> Tableau de bord
+                    </button>
+                    <button class="sidebar-item" id="sidebar-profile" onclick="App.showTab('profile')">
+                        <span class="sidebar-icon">👤</span> Mon Profil
+                    </button>
+                    <button class="sidebar-item sidebar-item--disabled" id="sidebar-recipes" onclick="App.showComingSoon('Générateur de recettes')">
+                        <span class="sidebar-icon">🍽️</span> Recettes IA
+                        <span style="font-size:0.65rem; margin-left:auto; background:var(--primary-light); color:var(--primary-dark); padding:2px 6px; border-radius:8px; font-weight:700;">Étape 4</span>
+                    </button>
+                    <button class="sidebar-item sidebar-item--disabled" id="sidebar-menu" onclick="App.showComingSoon('Planificateur de menus')">
+                        <span class="sidebar-icon">📅</span> Planificateur
+                        <span style="font-size:0.65rem; margin-left:auto; background:var(--primary-light); color:var(--primary-dark); padding:2px 6px; border-radius:8px; font-weight:700;">Étape 6</span>
+                    </button>
+                </nav>
+
+                <div class="sidebar-logout">
+                    <button class="sidebar-item" onclick="App.logout()" style="color:var(--text-light);">
+                        <span class="sidebar-icon">🚪</span> Déconnexion
+                    </button>
+                    <a href="index.html" class="sidebar-item" style="color:var(--text-light);">
+                        <span class="sidebar-icon">🏠</span> Retour à l'accueil
+                    </a>
+                </div>
+            </aside>
+
+            <!-- CONTENU PRINCIPAL -->
+            <main class="app-main">
+
+                <!-- ===============================
+                     VUE : TABLEAU DE BORD
+                     =============================== -->
+                <div class="app-tab-view active" id="tab-view-dashboard">
+
+                    <!-- État vide (pas encore de profil) -->
+                    <div class="empty-state" id="dashboard-empty">
+                        <div class="empty-icon">🌱</div>
+                        <h3>Bienvenue sur NutriBudget !</h3>
+                        <p>Commencez par renseigner votre profil pour obtenir votre bilan nutritionnel personnalisé et votre budget alimentaire en FCFA.</p>
+                        <button class="btn btn-primary" onclick="App.showTab('profile')">
+                            Créer mon profil →
+                        </button>
+                    </div>
+
+                    <!-- Résultats (affiché quand profil existant) -->
+                    <div id="dashboard-results" style="display:none;">
+                        <div class="dashboard-header">
+                            <h2 id="dashboard-greeting">Bonjour !</h2>
+                            <p id="dashboard-subtext">Voici votre bilan nutritionnel personnalisé.</p>
+                        </div>
+
+                        <!-- Avertissements de santé -->
+                        <div class="warnings-container" id="warnings-container"></div>
+
+                        <!-- Disclaimer médical -->
+                        <div class="health-disclaimer" id="medical-disclaimer">
+                            ⚕️ <strong>Note importante :</strong> NutriBudget est un outil d'accompagnement nutritionnel et budgétaire. Ces estimations ne constituent pas une prescription médicale ni un diagnostic diététique. En cas de pathologie, consultez un médecin ou un nutritionniste qualifié.
+                        </div>
+
+                        <!-- Statistiques clés -->
+                        <div class="stats-grid">
+                            <div class="stat-card primary">
+                                <div class="stat-icon">🔥</div>
+                                <div class="stat-value" id="stat-calories">—</div>
+                                <div class="stat-unit">kcal/jour</div>
+                                <div class="stat-label">Cible calorique</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⚙️</div>
+                                <div class="stat-value" id="stat-bmr">—</div>
+                                <div class="stat-unit">kcal/jour</div>
+                                <div class="stat-label">Métabolisme de base (BMR)</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⚡</div>
+                                <div class="stat-value" id="stat-tdee">—</div>
+                                <div class="stat-unit">kcal/jour</div>
+                                <div class="stat-label">Dépense totale (TDEE)</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⚖️</div>
+                                <div class="stat-value" id="stat-bmi">—</div>
+                                <div class="stat-unit">IMC</div>
+                                <div class="stat-label" id="stat-bmi-cat">—</div>
+                            </div>
+                        </div>
+
+                        <!-- Répartition des macronutriments -->
+                        <div class="macros-card">
+                            <h3>🥩 Répartition des macronutriments cibles</h3>
+                            <div class="macro-bars">
+                                <div class="macro-bar-item">
+                                    <div class="macro-bar-header">
+                                        <span class="macro-bar-name">Protéines</span>
+                                        <span class="macro-bar-values" id="macro-proteins-val">—</span>
+                                    </div>
+                                    <div class="macro-bar-track">
+                                        <div class="macro-bar-fill proteins" id="macro-proteins-bar" style="width:0%"></div>
+                                    </div>
+                                </div>
+                                <div class="macro-bar-item">
+                                    <div class="macro-bar-header">
+                                        <span class="macro-bar-name">Glucides</span>
+                                        <span class="macro-bar-values" id="macro-carbs-val">—</span>
+                                    </div>
+                                    <div class="macro-bar-track">
+                                        <div class="macro-bar-fill carbs" id="macro-carbs-bar" style="width:0%"></div>
+                                    </div>
+                                </div>
+                                <div class="macro-bar-item">
+                                    <div class="macro-bar-header">
+                                        <span class="macro-bar-name">Lipides</span>
+                                        <span class="macro-bar-values" id="macro-fats-val">—</span>
+                                    </div>
+                                    <div class="macro-bar-track">
+                                        <div class="macro-bar-fill fats" id="macro-fats-bar" style="width:0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- IMC visuel -->
+                        <div class="bmi-card">
+                            <h3>📏 Indice de Masse Corporelle (IMC)</h3>
+                            <div class="bmi-display">
+                                <div class="bmi-number" id="bmi-number" style="color:var(--primary);">—</div>
+                                <div class="bmi-info">
+                                    <div class="bmi-category" id="bmi-category">—</div>
+                                    <div class="bmi-desc">Référentiel OMS. Valeur indicative.</div>
+                                </div>
+                            </div>
+                            <div class="bmi-scale">
+                                <div class="bmi-scale-marker" id="bmi-marker" style="left:0%"></div>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-light); margin-top:6px;">
+                                <span>Insuf. pond. (&lt;18.5)</span>
+                                <span>Normal (18.5–24.9)</span>
+                                <span>Surpoids (25–29.9)</span>
+                                <span>Obésité (≥30)</span>
+                            </div>
+                        </div>
+
+                        <!-- Budget alimentaire -->
+                        <div class="budget-card" id="budget-card" style="display:none;">
+                            <h3>💰 Budget alimentaire estimé (FCFA)</h3>
+                            <div class="budget-grid">
+                                <div class="budget-item">
+                                    <div class="budget-amount" id="budget-daily-total">—</div>
+                                    <div class="budget-label">FCFA par jour (foyer)</div>
+                                </div>
+                                <div class="budget-item">
+                                    <div class="budget-amount" id="budget-daily-person">—</div>
+                                    <div class="budget-label">FCFA par jour / personne</div>
+                                </div>
+                                <div class="budget-item">
+                                    <div class="budget-amount" id="budget-per-meal">—</div>
+                                    <div class="budget-label">FCFA par repas / personne</div>
+                                </div>
+                            </div>
+                            <p class="budget-disclaimer">
+                                💡 Les prix sont des estimations basées sur les marchés de Dakar (Sandaga, Tilène). Ils varient selon la saison et le quartier. Vous pouvez les ajuster dans votre profil.
+                            </p>
+                        </div>
+
+                        <div style="text-align:center; margin-top:32px;">
+                            <button class="btn btn-outline" onclick="App.showTab('profile')">
+                                ✏️ Modifier mon profil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===============================
+                     VUE : FORMULAIRE PROFIL
+                     =============================== -->
+                <div class="app-tab-view" id="tab-view-profile">
+                    <div class="profile-header">
+                        <h2>👤 Mon Profil</h2>
+                        <p>Renseignez vos informations pour obtenir un plan nutritionnel et budgétaire personnalisé.</p>
+                    </div>
+
+                    <form id="profile-form" onsubmit="App.handleSaveProfile(event)">
+
+                        <!-- SECTION 1 : Données corporelles -->
+                        <div class="profile-form-card">
+                            <div class="form-section-title">
+                                📋 Données corporelles
+                            </div>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="prof-age">Âge (ans)</label>
+                                    <input type="number" id="prof-age" placeholder="Ex : 28" min="10" max="110" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prof-weight">Poids (kg)</label>
+                                    <input type="number" id="prof-weight" placeholder="Ex : 65" min="30" max="250" step="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prof-height">Taille (cm)</label>
+                                    <input type="number" id="prof-height" placeholder="Ex : 168" min="100" max="230" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-gender">Genre</label>
+                                <select id="prof-gender" required>
+                                    <option value="">Sélectionner…</option>
+                                    <option value="femme">Femme</option>
+                                    <option value="homme">Homme</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 2 : Objectif -->
+                        <div class="profile-form-card">
+                            <div class="form-section-title">🎯 Objectif nutritionnel</div>
+                            <div class="goal-options">
+                                <div class="goal-option">
+                                    <input type="radio" name="prof-goal" id="goal-perte" value="perte">
+                                    <label for="goal-perte">
+                                        <span class="goal-icon">📉</span>
+                                        <span class="goal-label">Perdre du poids</span>
+                                        <span class="goal-desc">Déficit calorique modéré et durable</span>
+                                    </label>
+                                </div>
+                                <div class="goal-option">
+                                    <input type="radio" name="prof-goal" id="goal-maintien" value="maintien" checked>
+                                    <label for="goal-maintien">
+                                        <span class="goal-icon">⚖️</span>
+                                        <span class="goal-label">Maintenir</span>
+                                        <span class="goal-desc">Rester stable et en bonne santé</span>
+                                    </label>
+                                </div>
+                                <div class="goal-option">
+                                    <input type="radio" name="prof-goal" id="goal-prise" value="prise">
+                                    <label for="goal-prise">
+                                        <span class="goal-icon">📈</span>
+                                        <span class="goal-label">Prendre du poids</span>
+                                        <span class="goal-desc">Surplus calorique sain, gain musculaire</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 3 : Activité physique -->
+                        <div class="profile-form-card">
+                            <div class="form-section-title">🏃 Niveau d'activité physique</div>
+                            <div class="form-group">
+                                <label for="prof-activity">Votre niveau d'activité</label>
+                                <select id="prof-activity" required>
+                                    <option value="">Sélectionner…</option>
+                                    <option value="sedentaire">Sédentaire — peu ou pas de sport, travail de bureau</option>
+                                    <option value="leger">Légèrement actif — marche, sport 1–3 j/semaine</option>
+                                    <option value="modere">Modérément actif — sport 3–5 j/semaine, travail actif</option>
+                                    <option value="intense">Très actif — sport intensif 6–7 j/semaine, travail physique</option>
+                                    <option value="tres_intense">Extrêmement actif — athlète, travaux lourds quotidiens</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 4 : Budget et foyer -->
+                        <div class="profile-form-card">
+                            <div class="form-section-title">💰 Budget alimentaire et foyer</div>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="prof-budget-amount">Budget alimentaire (FCFA)</label>
+                                    <input type="number" id="prof-budget-amount" placeholder="Ex : 35000" min="0" step="500">
+                                    <p class="form-hint">Laissez vide si vous ne souhaitez pas de suivi budgétaire.</p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prof-budget-period">Période du budget</label>
+                                    <select id="prof-budget-period">
+                                        <option value="hebdomadaire">Par semaine (7 jours)</option>
+                                        <option value="journalier">Par jour</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prof-household">Nombre de personnes à nourrir</label>
+                                <input type="number" id="prof-household" placeholder="Ex : 4" min="1" max="20" value="1">
+                                <p class="form-hint">Inclut tous les membres du foyer qui partagent les repas.</p>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 5 : Conditions médicales -->
+                        <div class="profile-form-card">
+                            <div class="form-section-title">⚕️ Conditions particulières (optionnel)</div>
+                            <div class="form-group">
+                                <p style="font-size:0.88rem; color:var(--text-light); margin-bottom:16px;">
+                                    Ces informations permettent d'adapter les recommandations et d'émettre les avertissements de santé appropriés.
+                                </p>
+                                <div class="checkbox-grid">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="conditions" value="grossesse"> 🤰 Grossesse
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="conditions" value="allaitement"> 🤱 Allaitement
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="conditions" value="diabete"> 🩸 Diabète
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="conditions" value="hypertension"> 💓 Hypertension
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="conditions" value="insuffisance_renale"> 🫘 Insuff. rénale
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 6 : Préférences alimentaires -->
+                        <div class="profile-form-card">
+                            <div class="form-section-title">🥗 Préférences &amp; exclusions alimentaires</div>
+                            <p style="font-size:0.88rem; color:var(--text-light); margin-bottom:16px;">
+                                Les ingrédients sélectionnés seront exclus des recettes et menus proposés.
+                            </p>
+                            <div class="checkbox-grid">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="exclusions" value="porc"> 🐷 Porc
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="exclusions" value="boeuf"> 🐄 Bœuf
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="exclusions" value="poulet"> 🐔 Poulet / Volaille
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="exclusions" value="poisson"> 🐟 Poisson / Fruits de mer
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="exclusions" value="lait"> 🥛 Lait &amp; Produits laitiers
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="exclusions" value="oeufs"> 🥚 Œufs
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="exclusions" value="arachides"> 🥜 Arachides
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="exclusions" value="gluten"> 🌾 Gluten
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ERREURS de validation -->
+                        <div id="profile-form-errors" style="display:none; padding:14px 18px; background:#FEE2E2; border:1px solid #FCA5A5; border-radius:var(--radius-sm); margin-bottom:20px; font-size:0.88rem; color:#991B1B;"></div>
+
+                        <!-- BOUTON Enregistrer -->
+                        <div style="text-align:right;">
+                            <button type="submit" class="btn btn-primary" id="profile-save-btn" style="padding:14px 40px; font-size:1rem;">
+                                💾 Enregistrer mon profil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- TOAST Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="data/ingredients.js"></script>
+    <script src="services/nutritionCalculator.js"></script>
+    <script src="services/userProfileService.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
