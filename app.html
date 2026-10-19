@@ -120,9 +120,9 @@
                     <button class="sidebar-item" id="sidebar-profile" onclick="App.showTab('profile')">
                         <span class="sidebar-icon">👤</span> Mon Profil
                     </button>
-                    <button class="sidebar-item sidebar-item--disabled" id="sidebar-recipes" onclick="App.showComingSoon('Générateur de recettes')">
-                        <span class="sidebar-icon">🍽️</span> Recettes IA
-                        <span style="font-size:0.65rem; margin-left:auto; background:var(--primary-light); color:var(--primary-dark); padding:2px 6px; border-radius:8px; font-weight:700;">Étape 4</span>
+                    <button class="sidebar-item" id="sidebar-recipes" onclick="App.showTab('recipes')">
+                        <span class="sidebar-icon">🍽️</span> Recettes Terroir & IA
+                        <span style="font-size:0.65rem; margin-left:auto; background:var(--primary); color:white; padding:2px 7px; border-radius:10px; font-weight:700;">Nouveau</span>
                     </button>
                     <button class="sidebar-item sidebar-item--disabled" id="sidebar-menu" onclick="App.showComingSoon('Planificateur de menus')">
                         <span class="sidebar-icon">📅</span> Planificateur
@@ -470,7 +470,337 @@
                     </form>
                 </div>
 
+                <!-- ===============================
+                     VUE : RECETTES & GÉNÉRATEUR IA (Étape 4)
+                     =============================== -->
+                <div class="app-tab-view" id="tab-view-recipes">
+                    
+                    <!-- En-tête -->
+                    <div class="recipe-view-header">
+                        <h2>🍽️ Recettes du Terroir & Générateur IA</h2>
+                        <p>Sélectionnez les ingrédients disponibles dans votre cuisine ou sur votre étal de quartier. Notre moteur identifie les meilleures recettes locales et calcule exactement vos macros et votre budget en FCFA.</p>
+                    </div>
+
+                    <!-- BLOC 1 : SÉLECTEUR D'INGRÉDIENTS (PLACARD & MARCHÉ) -->
+                    <div class="pantry-card">
+                        <div class="pantry-card-title">
+                            <span>🧺 Mes Ingrédients Disponibles (Placard & Marché)</span>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="btn btn-outline" onclick="App.clearPantrySelection()" style="padding:6px 14px; font-size:0.8rem; border-radius:20px;">
+                                    Vider la sélection
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="App.selectAllPantry()" style="padding:6px 14px; font-size:0.8rem; border-radius:20px;">
+                                    Tout sélectionner
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Panier Presets express en 1 clic -->
+                        <div class="presets-section">
+                            <span class="presets-label">⚡ Paniers express :</span>
+                            <button type="button" class="preset-chip-btn" onclick="App.applyPantryPreset('ceeb')">
+                                🐟 Ceeb Express
+                            </button>
+                            <button type="button" class="preset-chip-btn" onclick="App.applyPantryPreset('yassa')">
+                                🍗 Yassa Terroir
+                            </button>
+                            <button type="button" class="preset-chip-btn" onclick="App.applyPantryPreset('proteines_eco')">
+                                💪 Protéines Éco (Niébé/Œufs)
+                            </button>
+                            <button type="button" class="preset-chip-btn" onclick="App.applyPantryPreset('petit_dej')">
+                                ☀️ Petit-déjeuner Mil & Kossam
+                            </button>
+                            <button type="button" class="preset-chip-btn" onclick="App.applyPantryPreset('vitalite_detox')">
+                                🌿 Détox Kinkeliba & Bouye
+                            </button>
+                        </div>
+
+                        <!-- Champ de recherche instantané -->
+                        <div class="ingredient-search-wrapper">
+                            <span class="ingredient-search-icon">🔍</span>
+                            <input type="text" id="recipe-ingredient-search" class="ingredient-search-input" placeholder="Rechercher un ingrédient local (ex : yaboye, mil, niébé, kinkeliba, gombo...)" oninput="App.handleIngredientSearch(this.value)">
+                        </div>
+
+                        <!-- Filtres par catégorie -->
+                        <div class="categories-filter-bar" id="recipe-categories-filter">
+                            <!-- Généré dynamiquement par App.renderCategoryPills() -->
+                        </div>
+
+                        <!-- Grille de sélection des ingrédients -->
+                        <div class="ingredients-selector-grid" id="recipe-ingredients-grid">
+                            <!-- Cartes d'ingrédients générées par App.renderIngredientCards() -->
+                        </div>
+
+                        <!-- Barre récapitulative du placard -->
+                        <div class="pantry-actions-bar">
+                            <div class="selected-counter-badge" id="pantry-counter-badge">
+                                <span>0</span> ingrédient(s) sélectionné(s) au placard
+                            </div>
+                            <div style="font-size:0.82rem; color:var(--text-light);">
+                                💡 Astuce : Plus vous cochez d'ingrédients, plus vous valorisez votre stock sans dépenses superflues.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BLOC 2 : CONTRÔLES & PARAMÈTRES DU GÉNÉRATEUR -->
+                    <div class="generator-controls-bar">
+                        <div class="controls-group">
+                            <div>
+                                <span class="controls-label" style="display:block; margin-bottom:4px;">Type de repas</span>
+                                <select id="filter-meal-type" class="controls-select" onchange="App.filterRecipes()">
+                                    <option value="all">Tous les repas</option>
+                                    <option value="dejeuner">Déjeuner</option>
+                                    <option value="diner">Dîner</option>
+                                    <option value="petit_dejeuner">Petit-déjeuner</option>
+                                    <option value="collation">Collation & Dessert</option>
+                                    <option value="boisson">Thé, Boisson & Infusion</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <span class="controls-label" style="display:block; margin-bottom:4px;">Portions (convives)</span>
+                                <div class="servings-selector">
+                                    <button type="button" class="servings-btn" id="serv-btn-1" onclick="App.setRecipeServings(1)">1 pers</button>
+                                    <button type="button" class="servings-btn active" id="serv-btn-2" onclick="App.setRecipeServings(2)">2 pers</button>
+                                    <button type="button" class="servings-btn" id="serv-btn-4" onclick="App.setRecipeServings(4)">4 pers</button>
+                                    <button type="button" class="servings-btn" id="serv-btn-6" onclick="App.setRecipeServings(6)">6 pers</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="controls-label" style="display:block; margin-bottom:4px;">Budget max total</span>
+                                <select id="filter-max-budget" class="controls-select" onchange="App.filterRecipes()">
+                                    <option value="">Tous les budgets</option>
+                                    <option value="500">Moins de 500 FCFA</option>
+                                    <option value="1000">Moins de 1 000 FCFA</option>
+                                    <option value="2000">Moins de 2 000 FCFA</option>
+                                    <option value="3500">Moins de 3 500 FCFA</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Boutons de génération -->
+                        <div class="generator-action-buttons">
+                            <button type="button" class="btn btn-primary" onclick="App.filterRecipes()" style="padding:10px 20px; font-size:0.9rem;">
+                                🔍 Trouver les recettes adaptées
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="App.generateCreativeRecipeModal()" style="padding:10px 18px; font-size:0.9rem;">
+                                ✨ Créer un plat sur-mesure
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="App.openAIPromptModal()" style="padding:10px 16px; font-size:0.9rem;" title="Voir le contrat de prompt pour LLMs externes">
+                                🤖 Prompt IA
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BLOC 3 : RÉSULTATS & FICHES RECETTES DÉTAILLÉES -->
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <h3 style="font-size:1.15rem; color:var(--secondary); font-weight:700;" id="recipes-results-count">
+                                🍲 Recettes suggérées (10)
+                            </h3>
+                            <div style="font-size:0.85rem; color:var(--text-light);" id="recipes-results-helper">
+                                Triées par taux de correspondance avec votre placard
+                            </div>
+                        </div>
+
+                        <!-- Grille des cartes recettes -->
+                        <div class="recipes-grid" id="recipes-results-container">
+                            <!-- Rendu dynamique par App.renderRecipeCards() -->
+                        </div>
+                    </div>
+
+                </div>
+
             </main>
+        </div>
+    </div>
+
+    <!-- MODALE : DÉTAIL COMPLET DE LA RECETTE -->
+    <div class="recipe-modal-backdrop" id="recipe-detail-modal" onclick="App.closeRecipeModal(event)">
+        <div class="recipe-modal-dialog" onclick="event.stopPropagation()">
+            <div class="recipe-modal-header">
+                <div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--primary-dark); text-transform:uppercase; margin-bottom:4px;" id="modal-recipe-category">
+                        Déjeuner · Sénégal
+                    </div>
+                    <div class="recipe-modal-title" id="modal-recipe-title">
+                        🍲 Titre de la recette
+                    </div>
+                </div>
+                <button type="button" class="recipe-modal-close" onclick="App.closeRecipeModal()">&times;</button>
+            </div>
+
+            <div class="recipe-modal-body">
+                <!-- Badges rapides & ajustement convives -->
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+                    <div style="display:flex; gap:12px; font-size:0.85rem; color:var(--text-light);" id="modal-recipe-meta">
+                        <span>⏱️ 45 min</span>
+                        <span>📊 Difficulté : Facile</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:0.85rem; font-weight:600; color:var(--secondary);">Convives :</span>
+                        <div class="servings-selector">
+                            <button type="button" class="servings-btn" id="modal-serv-1" onclick="App.changeModalServings(1)">1</button>
+                            <button type="button" class="servings-btn" id="modal-serv-2" onclick="App.changeModalServings(2)">2</button>
+                            <button type="button" class="servings-btn" id="modal-serv-4" onclick="App.changeModalServings(4)">4</button>
+                            <button type="button" class="servings-btn" id="modal-serv-6" onclick="App.changeModalServings(6)">6</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jauges nutritionnelles calculées par NutriCalculator -->
+                <div style="margin-bottom:8px; font-weight:700; font-size:0.95rem; color:var(--secondary); display:flex; justify-content:space-between;">
+                    <span>🔬 Profil Nutritionnel Exact (NutriCalculator)</span>
+                    <span style="font-size:0.8rem; color:var(--primary-dark); font-weight:600;" id="modal-nutrition-subtext">Par portion</span>
+                </div>
+                <div class="modal-nutrition-grid">
+                    <div class="modal-macro-box">
+                        <div class="modal-macro-val" id="modal-macro-kcal">0</div>
+                        <div class="modal-macro-lbl">Calories (kcal)</div>
+                    </div>
+                    <div class="modal-macro-box" style="border-bottom:3px solid #2ECC71;">
+                        <div class="modal-macro-val" id="modal-macro-prot" style="color:#27AE60;">0g</div>
+                        <div class="modal-macro-lbl">Protéines</div>
+                    </div>
+                    <div class="modal-macro-box" style="border-bottom:3px solid #3B82F6;">
+                        <div class="modal-macro-val" id="modal-macro-carbs" style="color:#2563EB;">0g</div>
+                        <div class="modal-macro-lbl">Glucides</div>
+                    </div>
+                    <div class="modal-macro-box" style="border-bottom:3px solid #F59E0B;">
+                        <div class="modal-macro-val" id="modal-macro-fats" style="color:#D97706;">0g</div>
+                        <div class="modal-macro-lbl">Lipides</div>
+                    </div>
+                </div>
+
+                <!-- Budget & Impact Placard -->
+                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:var(--radius-sm); padding:16px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <div>
+                        <div style="font-size:0.8rem; color:#166534; font-weight:600;">COÛT ESTIMÉ DU PLAT (MARCHÉS DE DAKAR)</div>
+                        <div style="font-size:1.4rem; font-weight:800; color:#15803D;" id="modal-cost-total">0 FCFA</div>
+                        <div style="font-size:0.85rem; color:#166534;" id="modal-cost-per-serving">Soit 0 FCFA / personne</div>
+                    </div>
+                    <div style="text-align:right;" id="modal-pantry-savings-box">
+                        <div style="font-size:0.8rem; color:#64748B;">Déjà au placard : <strong id="modal-pantry-saved" style="color:#15803D;">0 FCFA</strong></div>
+                        <div style="font-size:0.85rem; color:#991B1B; font-weight:700;">Reste à acheter : <span id="modal-pantry-to-buy">0 FCFA</span></div>
+                    </div>
+                </div>
+
+                <!-- Astuce du Chef Sénégalais -->
+                <div class="chef-tip-alert" id="modal-chef-tip-container">
+                    <span style="font-size:1.4rem;">💡</span>
+                    <div>
+                        <strong style="display:block; margin-bottom:2px; font-weight:700;">Astuce du Chef NutriBudget :</strong>
+                        <span id="modal-chef-tip-text">...</span>
+                    </div>
+                </div>
+
+                <!-- Ingrédients avec statut Placard / À acheter -->
+                <h4 style="font-size:1rem; font-weight:700; color:var(--secondary); margin-bottom:12px;">
+                    🛒 Liste des Ingrédients & Coûts Détaillés
+                </h4>
+                <div style="overflow-x:auto; margin-bottom:24px;">
+                    <table class="modal-ingredients-table">
+                        <thead>
+                            <tr>
+                                <th>Statut</th>
+                                <th>Ingrédient</th>
+                                <th>Quantité</th>
+                                <th>Coût indicatif</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-ingredients-tbody">
+                            <!-- Lignes générées dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Étapes de préparation -->
+                <h4 style="font-size:1rem; font-weight:700; color:var(--secondary); margin-bottom:14px;">
+                    👨‍🍳 Étapes de Préparation
+                </h4>
+                <ol class="modal-steps-list" id="modal-steps-container">
+                    <!-- Li générés dynamiquement -->
+                </ol>
+
+                <!-- Actions de bas de modale -->
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding-top:16px; border-top:1px solid var(--border);">
+                    <button type="button" class="btn btn-outline" id="modal-fav-toggle-btn" onclick="App.toggleCurrentRecipeFavorite()" style="display:inline-flex; align-items:center; gap:8px;">
+                        <span>⭐</span> Ajouter aux favoris
+                    </button>
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" class="btn btn-outline" onclick="window.print()">
+                            🖨️ Imprimer la fiche
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="App.closeRecipeModal()">
+                            Fermer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE : PROMPT IA & SÉPARATION STRICTE -->
+    <div class="recipe-modal-backdrop" id="ai-prompt-modal" onclick="App.closeAIPromptModal(event)">
+        <div class="recipe-modal-dialog" onclick="event.stopPropagation()">
+            <div class="recipe-modal-header">
+                <div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--primary-dark); text-transform:uppercase; margin-bottom:4px;">
+                        Architecture & Contrat IA
+                    </div>
+                    <div class="recipe-modal-title">
+                        🤖 Prompt IA avec Séparation Stricte
+                    </div>
+                </div>
+                <button type="button" class="recipe-modal-close" onclick="App.closeAIPromptModal()">&times;</button>
+            </div>
+
+            <div class="recipe-modal-body">
+                <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:var(--radius-sm); padding:16px; margin-bottom:20px; font-size:0.9rem; color:#1E40AF;">
+                    <strong>🛡️ Principe d'Or NutriBudget :</strong> L'intelligence artificielle (Claude, GPT, Gemini) est utilisée uniquement pour sa créativité culinaire et ses conseils de chef. Elle a <strong>interdiction stricte de calculer les calories, les macros ou les prix</strong>. Tous les chiffres sont calculés mathématiquement par notre moteur <code>NutriCalculator</code> à partir des tables FAO.
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <strong style="font-size:0.88rem; color:var(--secondary);">Template de Prompt Système (à copier) :</strong>
+                        <button type="button" class="btn btn-outline" onclick="App.copyPromptText('ai-prompt-system')" style="padding:4px 10px; font-size:0.75rem;">
+                            Copier
+                        </button>
+                    </div>
+                    <textarea id="ai-prompt-system" readonly style="width:100%; height:130px; font-family:monospace; font-size:0.78rem; padding:10px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-alt);"></textarea>
+                </div>
+
+                <div style="margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <strong style="font-size:0.88rem; color:var(--secondary);">Template de Prompt Utilisateur généré :</strong>
+                        <button type="button" class="btn btn-outline" onclick="App.copyPromptText('ai-prompt-user')" style="padding:4px 10px; font-size:0.75rem;">
+                            Copier
+                        </button>
+                    </div>
+                    <textarea id="ai-prompt-user" readonly style="width:100%; height:110px; font-family:monospace; font-size:0.78rem; padding:10px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-alt);"></textarea>
+                </div>
+
+                <!-- Testeur de réponse IA en direct -->
+                <div style="border-top:1px solid var(--border); padding-top:20px;">
+                    <h4 style="font-size:0.95rem; font-weight:700; color:var(--secondary); margin-bottom:8px;">
+                        🧪 Tester une réponse JSON d'IA en direct
+                    </h4>
+                    <p style="font-size:0.83rem; color:var(--text-light); margin-bottom:10px;">
+                        Collez la réponse JSON retournée par votre LLM pour voir <code>NutriCalculator</code> calculer instantanément ses macros et son coût réel :
+                    </p>
+                    <textarea id="ai-json-input" placeholder='Collez ici le JSON : { "title": "...", "ingredients": [...] }' style="width:100%; height:100px; font-family:monospace; font-size:0.8rem; padding:10px; border:1.5px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px;"></textarea>
+                    
+                    <div style="display:flex; justify-content:flex-end; gap:10px;">
+                        <button type="button" class="btn btn-secondary" onclick="App.loadMockAIResponse()">
+                            Charger un exemple
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="App.testAIReponse()">
+                            🚀 Valider & Calculer Déterministe
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -481,6 +811,7 @@
     <script src="data/ingredients.js"></script>
     <script src="services/nutritionCalculator.js"></script>
     <script src="services/userProfileService.js"></script>
+    <script src="services/recipeService.js"></script>
     <script src="app.js"></script>
 </body>
 

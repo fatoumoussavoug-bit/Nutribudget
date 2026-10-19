@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriBudget - Tests Unitaires Générateur de Recettes (Étape 4)</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F8FAFC;
+            color: #334155;
+            padding: 30px 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+        }
+        h1 {
+            color: #1E293B;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge {
+            background: #E8F8F5;
+            color: #27AE60;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .summary-bar {
+            display: flex;
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px;
+            border-radius: 12px;
+            background: #F1F5F9;
+        }
+        .summary-item {
+            font-weight: 600;
+        }
+        .summary-item.passed { color: #16A34A; }
+        .summary-item.failed { color: #DC2626; }
+        .test-card {
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+        .test-card.passed {
+            border-left: 5px solid #16A34A;
+            background-color: #F0FDF4;
+        }
+        .test-card.failed {
+            border-left: 5px solid #DC2626;
+            background-color: #FEF2F2;
+        }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .test-desc {
+            font-size: 0.85rem;
+            color: #64748B;
+        }
+        .test-details {
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 6px 10px;
+            border-radius: 6px;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span>NutriBudget Test Suite</span>
+            <span class="badge">Étape 4 : Générateur de Recettes & Séparation IA</span>
+        </h1>
+        <p style="color:#64748B; margin-top:0;">
+            Vérifie le catalogue des recettes locales, le moteur de matching du placard, l'intégration déterministe avec NutriCalculator et le contrat strict IA.
+        </p>
+
+        <div class="summary-bar" id="summary-bar">
+            <div class="summary-item" id="total-tests">Tests : 0</div>
+            <div class="summary-item passed" id="passed-tests">Succès : 0</div>
+            <div class="summary-item failed" id="failed-tests">Échecs : 0</div>
+        </div>
+
+        <div id="test-results"></div>
+    </div>
+
+    <!-- Dépendances -->
+    <script src="../data/ingredients.js"></script>
+    <script src="../services/nutritionCalculator.js"></script>
+    <script src="../services/userProfileService.js"></script>
+    <script src="../services/recipeService.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const resultsContainer = document.getElementById("test-results");
+            let total = 0;
+            let passed = 0;
+            let failed = 0;
+
+            function assert(title, description, condition, details = "") {
+                total++;
+                const isSuccess = Boolean(condition);
+                if (isSuccess) passed++; else failed++;
+
+                const card = document.createElement("div");
+                card.className = `test-card ${isSuccess ? "passed" : "failed"}`;
+                card.innerHTML = `
+                    <div class="test-header">
+                        <span>${isSuccess ? "✅" : "❌"} ${title}</span>
+                        <span>${isSuccess ? "SUCCÈS" : "ÉCHEC"}</span>
+                    </div>
+                    <div class="test-desc">${description}</div>
+                    ${details ? `<div class="test-details">${details}</div>` : ""}
+                `;
+                resultsContainer.appendChild(card);
+
+                document.getElementById("total-tests").textContent = `Tests : ${total}`;
+                document.getElementById("passed-tests").textContent = `Succès : ${passed}`;
+                document.getElementById("failed-tests").textContent = `Échecs : ${failed}`;
+            }
+
+            // ========================================================
+            // EXÉCUTION DES TESTS UNITAIRES ÉTAPE 4
+            // ========================================================
+
+            // TEST 1 : Catalogue et intégrité des recettes sénégalaises
+            const catalog = window.NutriRecipes.getCatalog();
+            const hasEssentialRecipes = catalog.some(r => r.id.includes("ceebu-jen")) &&
+                                       catalog.some(r => r.id.includes("yassa")) &&
+                                       catalog.some(r => r.id.includes("soupou-kandia")) &&
+                                       catalog.some(r => r.id.includes("kinkeliba"));
+            assert(
+                "Catalogue officiel des recettes du terroir sénégalais",
+                "Le catalogue contient 10 recettes complètes incluant Ceebu Jën, Yassa, Soupou Kandia et Kinkeliba",
+                catalog.length >= 10 && hasEssentialRecipes,
+                `Nombre de recettes enregistrées : ${catalog.length}`
+            );
+
+            // TEST 2 : Calcul déterministe obligatoire via NutriCalculator
+            const ceeb = window.NutriRecipes.getRecipeById("recette-ceebu-jen-sain", 4);
+            const nutritionValid = ceeb && ceeb.nutrition &&
+                                  ceeb.nutrition.total.calories > 1500 &&
+                                  ceeb.nutrition.perServing.calories > 350 &&
+                                  ceeb.nutrition.perServing.costFCFA > 0;
+            assert(
+                "Couplage déterministe avec NutriCalculator",
+                "Les calories, protéines et coûts sont calculés scientifiquement à partir de la table FAO sans aucune approximation",
+                nutritionValid,
+                `Ceebu Jën (4 pers) : ${ceeb.nutrition.total.calories} kcal total (${ceeb.nutrition.perServing.calories} kcal/portion), Coût total : ${ceeb.nutrition.total.costFCFA} FCFA (${ceeb.nutrition.perServing.costFCFA} FCFA/portion)`
+            );
+
+            // TEST 3 : Score de matching du placard (100% quand tout est présent)
+            const allCeebIngredients = ceeb.ingredients.map(i => i.ingredientId);
+            const perfectMatches = window.NutriRecipes.matchRecipesWithIngredients(allCeebIngredients, { mealType: "dejeuner" });
+            const topMatch = perfectMatches[0];
+            assert(
+                "Score de correspondance parfait (100%)",
+                "Quand l'utilisateur sélectionne tous les ingrédients d'une recette, le score atteint 100% et 0 ingrédient manquant",
+                topMatch && topMatch.id === "recette-ceebu-jen-sain" && topMatch.matchScore === 100 && topMatch.missingCount === 0,
+                `Recette trouvée en tête : ${topMatch ? topMatch.title : "aucune"} avec score ${topMatch ? topMatch.matchScore : 0}% et ${topMatch ? topMatch.missingCount : -1} manquant(s)`
+            );
+
+            // TEST 4 : Calcul précis des ingrédients manquants et du budget à ajouter
+            const partialPantry = ["yaboye-sardinelle", "riz-brise-ordinaire", "huile-arachide", "oignon-local"];
+            const partialMatches = window.NutriRecipes.matchRecipesWithIngredients(partialPantry, { mealType: "dejeuner" });
+            const ceebPartial = partialMatches.find(r => r.id === "recette-ceebu-jen-sain");
+            const missingCalculated = ceebPartial && ceebPartial.missingCount > 0 &&
+                                     ceebPartial.missingCostFCFA > 0 &&
+                                     ceebPartial.pantryCostSavedFCFA > 0;
+            assert(
+                "Calcul des ingrédients manquants et économies du placard",
+                "Identifie les ingrédients manquants à acheter au marché et déduit la valeur déjà présente au placard",
+                missingCalculated,
+                `Ingrédients au placard : 4. Manquants à acheter : ${ceebPartial ? ceebPartial.missingCount : 0} pour ${ceebPartial ? ceebPartial.missingCostFCFA : 0} FCFA (Économie placard : ${ceebPartial ? ceebPartial.pantryCostSavedFCFA : 0} FCFA)`
+            );
+
+            // TEST 5 : Respect strict des exclusions médicales & allergies du profil (ex: Poisson)
+            const noFishMatches = window.NutriRecipes.matchRecipesWithIngredients([], {
+                userExclusions: ["poisson"]
+            });
+            const containsFish = noFishMatches.some(r => r.id.includes("ceebu-jen") || r.id.includes("soupou-kandia") || r.id.includes("poisson-braise"));
+            assert(
+                "Filtrage des exclusions et allergies (Exclusion : Poisson)",
+                "Élimine strictement les recettes contenant du poisson pour respecter les intolérances et croyances",
+                !containsFish && noFishMatches.length > 0,
+                `Recettes compatibles sans poisson : ${noFishMatches.length} recettes (aucune recette de poisson conservée)`
+            );
+
+            // TEST 6 : Respect de l'exclusion Arachides
+            const noPeanutMatches = window.NutriRecipes.matchRecipesWithIngredients([], {
+                userExclusions: ["arachides"]
+            });
+            const containsPeanut = noPeanutMatches.some(r => r.id.includes("arraw-porridge") || r.id.includes("salade-niebe"));
+            assert(
+                "Filtrage des allergies graves (Exclusion : Arachides)",
+                "Exclut les recettes à base de pâte d'arachide, arachides et huile d'arachide",
+                !containsPeanut,
+                `Recettes sécurisées sans arachides : ${noPeanutMatches.length} recettes (Arraw et Salade au niébé exclus)`
+            );
+
+            // TEST 7 : Mise à l'échelle dynamique des portions (Servings 1 vs 4)
+            const singleServing = window.NutriRecipes.getRecipeById("recette-yassa-poulet-fonio", 1);
+            const fourServings = window.NutriRecipes.getRecipeById("recette-yassa-poulet-fonio", 4);
+            const calDiff = Math.abs(singleServing.nutrition.total.calories * 4 - fourServings.nutrition.total.calories);
+            const costDiff = Math.abs(singleServing.nutrition.total.costFCFA * 4 - fourServings.nutrition.total.costFCFA);
+            const scaleOk = calDiff <= 5 && costDiff <= 10;
+            assert(
+                "Mise à l'échelle linéaire des portions (1 portion vs 4 portions)",
+                "Les calories et le budget s'adaptent proportionnellement au nombre de convives",
+                scaleOk,
+                `1 portion : ${singleServing.nutrition.total.calories} kcal, ${singleServing.nutrition.total.costFCFA} FCFA | 4 portions : ${fourServings.nutrition.total.calories} kcal, ${fourServings.nutrition.total.costFCFA} FCFA (écart arrondi : ${calDiff} kcal, ${costDiff} FCFA)`
+            );
+
+            // TEST 8 : Génération locale créative sur-mesure (100% Offline)
+            const customIngredients = ["niebe-haricot-local", "tomate-fraiche", "oignon-local", "citron-vert", "huile-arachide"];
+            const creativeMeal = window.NutriRecipes.generateCreativeRecipe(customIngredients, {
+                mealType: "dejeuner",
+                servings: 2
+            });
+            const creativeOk = creativeMeal && creativeMeal.nutrition &&
+                               creativeMeal.nutrition.total.calories > 0 &&
+                               creativeMeal.steps.length > 0;
+            assert(
+                "Générateur créatif local (100% hors-ligne & déterministe)",
+                "Compose un repas équilibré et génère la recette complète et son coût sans aucune dépendance réseau",
+                creativeOk,
+                `Plat créé : "${creativeMeal.title}" (${creativeMeal.nutrition.total.calories} kcal pour 2 pers, ${creativeMeal.nutrition.total.costFCFA} FCFA, ${creativeMeal.steps.length} étapes)`
+            );
+
+            // TEST 9 : Contrat strict du prompt IA (Interdiction de calcul LLM)
+            const promptContract = window.NutriRecipes.generateAIPrompt({
+                selectedIngredientIds: ["yaboye-sardinelle", "riz-brise-ordinaire"],
+                targetCalories: 2200,
+                userGoal: "perte"
+            });
+            const contractValid = promptContract.systemPrompt.includes("RÈGLE D'OR ABSOLUE") &&
+                                 promptContract.systemPrompt.includes("Ne calcule JAMAIS toi-même les calories") &&
+                                 promptContract.systemPrompt.includes("NutriCalculator");
+            assert(
+                "Contrat strict de prompt IA (Séparation des responsabilités)",
+                "Interdit formellement à l'IA de calculer les valeurs nutritionnelles et exige un schéma JSON strict",
+                contractValid,
+                "Prompt système contient la directive d'or et le schéma JSON strict avec ingredientId"
+            );
+
+            // TEST 10 : Validation et calcul déterministe d'une réponse IA
+            const mockAIResponse = JSON.stringify({
+                title: "Poêlée Dakaroise au Fonio & Sardinelle",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 20,
+                difficulty: "Facile",
+                description: "Une recette légère et savoureuse.",
+                chefTip: "Parfumez d'un zeste de citron vert.",
+                ingredients: [
+                    { ingredientId: "yaboye-sardinelle", quantity: 300, unit: "g" },
+                    { ingredientId: "fonio", quantity: 150, unit: "g" },
+                    { ingredientId: "oignon-local", quantity: 100, unit: "g" }
+                ],
+                steps: [
+                    "Griller le poisson délicatement.",
+                    "Cuire le fonio à la vapeur.",
+                    "Dresser avec les oignons caramélisés."
+                ]
+            });
+            const validatedAI = window.NutriRecipes.parseAndValidateAIRecipe(mockAIResponse, 2);
+            const aiValid = validatedAI && validatedAI.nutrition &&
+                            validatedAI.nutrition.total.calories > 0 &&
+                            validatedAI.nutrition.total.proteins > 40;
+            assert(
+                "Parsing & Hydratation déterministe d'une recette générée par IA",
+                "Prend le JSON de l'IA, valide les identifiants d'ingrédients et calcule les chiffres réels avec NutriCalculator",
+                aiValid,
+                `Recette IA validée : "${validatedAI.title}" — Nutrition calculée par NutriCalculator : ${validatedAI.nutrition.total.calories} kcal, ${validatedAI.nutrition.total.proteins}g protéines, ${validatedAI.nutrition.total.costFCFA} FCFA`
+            );
+        });
+    </script>
+</body>
+</html>

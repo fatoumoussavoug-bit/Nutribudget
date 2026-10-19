@@ -141,6 +141,7 @@ const App = (function () {
         // Charger les données de la vue
         if (tabName === "dashboard") loadDashboard();
         if (tabName === "profile") loadProfileForm();
+        if (tabName === "recipes") loadRecipesTab();
     }
 
     function showComingSoon(featureName) {
@@ -328,6 +329,548 @@ const App = (function () {
     }
 
     // ============================================================
+    // RECETTES & GÉNÉRATEUR IA (Étape 4)
+    // ============================================================
+    let selectedPantryIngredients = new Set(["yaboye-sardinelle", "riz-brise-ordinaire", "oignon-jaune", "huile-arachide"]);
+    let activeRecipeCategory = "all";
+    let ingredientSearchQuery = "";
+    let activeServings = 2;
+    let currentModalRecipe = null;
+    let cachedFilteredRecipes = [];
+
+    function loadRecipesTab() {
+        // Initialiser les portions selon le profil si disponible
+        const profile = NutriProfile.getProfile();
+        if (profile && profile.householdSize) {
+            setRecipeServings(profile.householdSize, false);
+        }
+
+        renderCategoryPills();
+        renderIngredientCards();
+        updatePantryCounter();
+        filterRecipes();
+    }
+
+    function renderCategoryPills() {
+        const container = document.getElementById("recipe-categories-filter");
+        if (!container || !window.NutriData) return;
+
+        const categories = window.NutriData.INGREDIENT_CATEGORIES || [];
+        container.innerHTML = categories.map(cat => `
+            <button type="button" class="category-chip ${cat.id === activeRecipeCategory ? "active" : ""}" onclick="App.setRecipeCategory('${cat.id}')">
+                ${cat.label}
+            </button>
+        `).join("");
+    }
+
+    function setRecipeCategory(catId) {
+        activeRecipeCategory = catId;
+        renderCategoryPills();
+        renderIngredientCards();
+    }
+
+    function handleIngredientSearch(query) {
+        ingredientSearchQuery = (query || "").trim().toLowerCase();
+        renderIngredientCards();
+    }
+
+    function renderIngredientCards() {
+        const grid = document.getElementById("recipe-ingredients-grid");
+        if (!grid || !window.NutriData) return;
+
+        let list = window.NutriData.SEN_INGREDIENTS || [];
+
+        // Filtre catégorie
+        if (activeRecipeCategory !== "all") {
+            list = list.filter(ing => ing.category === activeRecipeCategory);
+        }
+
+        // Filtre recherche textuelle
+        if (ingredientSearchQuery) {
+            list = list.filter(ing =>
+                ing.name.toLowerCase().includes(ingredientSearchQuery) ||
+                (ing.description && ing.description.toLowerCase().includes(ingredientSearchQuery)) ||
+                (ing.tags && ing.tags.some(t => t.toLowerCase().includes(ingredientSearchQuery)))
+            );
+        }
+
+        if (list.length === 0) {
+            grid.innerHTML = `
+                <div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--text-light); font-size:0.9rem;">
+                    Aucun ingrédient ne correspond à votre recherche.
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = list.map(ing => {
+            const isSelected = selectedPantryIngredients.has(ing.id);
+            const priceLabel = ing.priceUnit === "piece" 
+                ? (ing.pricePerPiece || 100) + " FCFA / pièce"
+                : ing.defaultPricePerKg + " FCFA / kg";
+
+            return `
+                <div class="ingredient-card-item ${isSelected ? "selected" : ""}" onclick="App.togglePantryIngredient('${ing.id}')">
+                    <div class="ing-card-top">
+                        <span style="font-size:1.2rem;">${getCategoryEmoji(ing.category)}</span>
+                        <div class="ing-check-icon">✓</div>
+                    </div>
+                    <div class="ing-card-name">${escapeHtml(ing.name)}</div>
+                    <div class="ing-card-meta">
+                        <span>${escapeHtml(ing.categoryLabel || "")}</span>
+                        <span style="font-weight:700; color:var(--primary-dark);">${priceLabel}</span>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function getCategoryEmoji(cat) {
+        const map = {
+            cereales_feculents: "🌾",
+            legumineuses: "🥜",
+            poissons_viandes_oeufs: "🐟",
+            legumes: "🥬",
+            fruits: "🥭",
+            boissons_infusions: "🫖",
+            huiles_condiments: "🌿",
+            produits_laitiers: "🥛"
+        };
+        return map[cat] || "🌱";
+    }
+
+    function togglePantryIngredient(ingId) {
+        if (selectedPantryIngredients.has(ingId)) {
+            selectedPantryIngredients.delete(ingId);
+        } else {
+            selectedPantryIngredients.add(ingId);
+        }
+        renderIngredientCards();
+        updatePantryCounter();
+        filterRecipes();
+    }
+
+    function clearPantrySelection() {
+        selectedPantryIngredients.clear();
+        renderIngredientCards();
+        updatePantryCounter();
+        filterRecipes();
+        showToast("Placard vidé.", "info");
+    }
+
+    function selectAllPantry() {
+        if (!window.NutriData) return;
+        (window.NutriData.SEN_INGREDIENTS || []).forEach(i => selectedPantryIngredients.add(i.id));
+        renderIngredientCards();
+        updatePantryCounter();
+        filterRecipes();
+        showToast("Tous les ingrédients locaux ont été sélectionnés !", "success");
+    }
+
+    function applyPantryPreset(presetKey) {
+        if (!window.NutriRecipes) return;
+        const presets = window.NutriRecipes.getPresets();
+        const p = presets[presetKey];
+        if (p && Array.isArray(p.ingredients)) {
+            selectedPantryIngredients = new Set(p.ingredients);
+            renderIngredientCards();
+            updatePantryCounter();
+            filterRecipes();
+            showToast(`${p.icon} Panier "${p.label}" appliqué !`, "success");
+        }
+    }
+
+    function updatePantryCounter() {
+        const badge = document.getElementById("pantry-counter-badge");
+        if (badge) {
+            badge.innerHTML = `<span>${selectedPantryIngredients.size}</span> ingrédient(s) sélectionné(s) au placard`;
+        }
+    }
+
+    function setRecipeServings(servings, triggerFilter = true) {
+        activeServings = Number(servings) || 2;
+        [1, 2, 4, 6].forEach(s => {
+            const btn = document.getElementById("serv-btn-" + s);
+            if (btn) btn.classList.toggle("active", s === activeServings);
+        });
+        if (triggerFilter) {
+            filterRecipes();
+        }
+    }
+
+    function filterRecipes() {
+        if (!window.NutriRecipes) return;
+
+        const mealType = document.getElementById("filter-meal-type") ? document.getElementById("filter-meal-type").value : "all";
+        const maxBudget = document.getElementById("filter-max-budget") ? document.getElementById("filter-max-budget").value : "";
+
+        // Récupérer les exclusions du profil utilisateur connecté
+        const profile = NutriProfile.getProfile();
+        const exclusions = (profile && Array.isArray(profile.exclusions)) ? profile.exclusions : [];
+
+        const pantryArray = Array.from(selectedPantryIngredients);
+
+        cachedFilteredRecipes = window.NutriRecipes.matchRecipesWithIngredients(pantryArray, {
+            mealType,
+            maxBudget: maxBudget ? Number(maxBudget) : null,
+            servings: activeServings,
+            userExclusions: exclusions
+        });
+
+        renderRecipeCards(cachedFilteredRecipes);
+    }
+
+    function renderRecipeCards(recipes) {
+        const container = document.getElementById("recipes-results-container");
+        const countHeader = document.getElementById("recipes-results-count");
+        if (!container) return;
+
+        if (countHeader) {
+            countHeader.textContent = `🍲 Recettes adaptées (${recipes.length})`;
+        }
+
+        if (recipes.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column:1/-1; text-align:center; padding:48px 24px; background:var(--white); border-radius:var(--radius-md); border:1px dashed var(--border);">
+                    <div style="font-size:2.4rem; margin-bottom:12px;">🥗</div>
+                    <h4 style="font-size:1.1rem; color:var(--secondary); margin-bottom:6px;">Aucune recette ne correspond à ces critères</h4>
+                    <p style="font-size:0.88rem; color:var(--text-light); max-width:460px; margin:0 auto 16px;">
+                        Essayez d'élargir le type de repas ou de sélectionner davantage d'ingrédients au placard.
+                    </p>
+                    <button type="button" class="btn btn-secondary" onclick="App.generateCreativeRecipeModal()">
+                        ✨ Créer un plat sur-mesure avec mon placard
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = recipes.map(recipe => {
+            const nut = recipe.nutrition || { total: {}, perServing: {}, macroDistribution: {} };
+            const isFav = recipe.isFavorite || NutriRecipes.isFavorite(recipe.id);
+
+            // Badge de correspondance
+            let matchBadgeHtml = "";
+            if (recipe.matchScore === 100) {
+                matchBadgeHtml = `<span class="recipe-match-pill match-100">✨ 100% au placard</span>`;
+            } else if (recipe.matchScore >= 60) {
+                matchBadgeHtml = `<span class="recipe-match-pill match-high">🛒 ${recipe.matchScore}% dispo (manque ${recipe.missingCount})</span>`;
+            } else if (recipe.matchScore > 0) {
+                matchBadgeHtml = `<span class="recipe-match-pill match-med">🧺 ${recipe.matchScore}% au placard</span>`;
+            } else {
+                matchBadgeHtml = `<span class="recipe-match-pill" style="background:#F1F5F9; color:#64748B;">À acheter au marché</span>`;
+            }
+
+            const mealLabels = {
+                dejeuner: "Déjeuner",
+                diner: "Dîner",
+                petit_dejeuner: "Petit-déjeuner",
+                collation: "Collation / Dessert",
+                boisson: "Thé / Boisson"
+            };
+
+            return `
+                <div class="recipe-card">
+                    <div class="recipe-card-header">
+                        <div class="recipe-badge-row">
+                            ${matchBadgeHtml}
+                            <button type="button" class="recipe-fav-btn" onclick="App.toggleCardFavorite('${recipe.id}', event)" title="Ajouter aux favoris">
+                                ${isFav ? "⭐" : "☆"}
+                            </button>
+                        </div>
+                        <div class="recipe-title">
+                            <span>${recipe.imageEmoji || "🍲"}</span>
+                            <span>${escapeHtml(recipe.title)}</span>
+                        </div>
+                        <div class="recipe-meta-sub">
+                            <span>${mealLabels[recipe.mealType] || "Repas"}</span>
+                            <span>⏱️ ${recipe.prepTimeMinutes + recipe.cookingTimeMinutes} min</span>
+                            <span>👥 ${recipe.activeServings} pers</span>
+                        </div>
+                    </div>
+
+                    <div class="recipe-card-body">
+                        <p class="recipe-desc-text">${escapeHtml(recipe.description || "")}</p>
+
+                        <!-- Stats calculées par NutriCalculator -->
+                        <div class="recipe-card-stats">
+                            <div class="recipe-stat-cell">
+                                <div class="recipe-stat-val">${nut.perServing?.calories || 0}</div>
+                                <div class="recipe-stat-lbl">kcal / pers</div>
+                            </div>
+                            <div class="recipe-stat-cell">
+                                <div class="recipe-stat-val" style="color:#27AE60;">${nut.perServing?.proteins || 0}g</div>
+                                <div class="recipe-stat-lbl">Protéines</div>
+                            </div>
+                            <div class="recipe-stat-cell">
+                                <div class="recipe-stat-val" style="color:#2563EB;">${nut.perServing?.carbs || 0}g</div>
+                                <div class="recipe-stat-lbl">Glucides</div>
+                            </div>
+                        </div>
+
+                        <!-- État placard -->
+                        <div class="pantry-status-info">
+                            ${recipe.missingCount > 0 
+                                ? `<span style="color:#991B1B; font-weight:600;">+ ${recipe.missingCostFCFA} FCFA à acheter (${recipe.missingCount} ingrédient(s))</span>` 
+                                : `<span style="color:#15803D; font-weight:700;">✅ Tous les ingrédients sont déjà prêts chez vous !</span>`}
+                        </div>
+                    </div>
+
+                    <div class="recipe-card-footer">
+                        <div>
+                            <div class="recipe-cost-label">Coût estimé (total)</div>
+                            <div class="recipe-cost-amount">${(nut.total?.costFCFA || 0).toLocaleString("fr-FR")} FCFA</div>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="App.openRecipeModal('${recipe.id}')" style="padding:8px 16px; font-size:0.85rem;">
+                            Voir la recette →
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function toggleCardFavorite(recipeId, event) {
+        if (event) event.stopPropagation();
+        if (!window.NutriRecipes) return;
+        const isNowFav = window.NutriRecipes.toggleFavorite(recipeId);
+        filterRecipes();
+        showToast(isNowFav ? "Recette ajoutée à vos favoris ! ⭐" : "Recette retirée des favoris.", "info");
+    }
+
+    function openRecipeModal(recipeId) {
+        if (!window.NutriRecipes) return;
+        currentModalRecipe = window.NutriRecipes.getRecipeById(recipeId, activeServings);
+        if (!currentModalRecipe) {
+            // Chercher dans les recettes créatives en cache
+            currentModalRecipe = cachedFilteredRecipes.find(r => r.id === recipeId);
+        }
+        if (!currentModalRecipe) return;
+
+        renderRecipeModalContent(currentModalRecipe);
+        const modal = document.getElementById("recipe-detail-modal");
+        if (modal) modal.classList.add("show");
+    }
+
+    function closeRecipeModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        const modal = document.getElementById("recipe-detail-modal");
+        if (modal) modal.classList.remove("show");
+    }
+
+    function changeModalServings(newServings) {
+        if (!currentModalRecipe || !window.NutriRecipes) return;
+        currentModalRecipe = window.NutriRecipes.enrichRecipeWithNutrition(currentModalRecipe, newServings);
+        renderRecipeModalContent(currentModalRecipe);
+    }
+
+    function renderRecipeModalContent(recipe) {
+        const nut = recipe.nutrition || { total: {}, perServing: {}, macroDistribution: {}, items: [] };
+
+        document.getElementById("modal-recipe-title").innerHTML = `<span>${recipe.imageEmoji || "🍲"}</span> ${escapeHtml(recipe.title)}`;
+        document.getElementById("modal-recipe-category").textContent = `${recipe.mealType.toUpperCase()} · ${recipe.difficulty || "Facile"} · MARCHÉS DU SÉNÉGAL`;
+        document.getElementById("modal-recipe-meta").innerHTML = `
+            <span>⏱️ Préparation : ${recipe.prepTimeMinutes} min</span>
+            <span>🔥 Cuisson : ${recipe.cookingTimeMinutes} min</span>
+        `;
+
+        // Boutons convives dans la modale
+        [1, 2, 4, 6].forEach(s => {
+            const btn = document.getElementById("modal-serv-" + s);
+            if (btn) btn.classList.toggle("active", s === recipe.activeServings);
+        });
+
+        // Macros
+        document.getElementById("modal-macro-kcal").textContent = (nut.perServing?.calories || 0).toLocaleString("fr-FR");
+        document.getElementById("modal-macro-prot").textContent = (nut.perServing?.proteins || 0) + "g";
+        document.getElementById("modal-macro-carbs").textContent = (nut.perServing?.carbs || 0) + "g";
+        document.getElementById("modal-macro-fats").textContent = (nut.perServing?.fats || 0) + "g";
+
+        // Budget
+        document.getElementById("modal-cost-total").textContent = (nut.total?.costFCFA || 0).toLocaleString("fr-FR") + " FCFA";
+        document.getElementById("modal-cost-per-serving").textContent = `Soit ${(nut.perServing?.costFCFA || 0).toLocaleString("fr-FR")} FCFA / portion (${recipe.activeServings} convive(s))`;
+
+        // Économies du placard
+        let pantryCost = 0;
+        let toBuyCost = 0;
+        nut.items.forEach(it => {
+            if (selectedPantryIngredients.has(it.ingredientId)) {
+                pantryCost += it.costFCFA;
+            } else {
+                toBuyCost += it.costFCFA;
+            }
+        });
+        document.getElementById("modal-pantry-saved").textContent = pantryCost.toLocaleString("fr-FR") + " FCFA";
+        document.getElementById("modal-pantry-to-buy").textContent = toBuyCost.toLocaleString("fr-FR") + " FCFA";
+
+        // Astuce du chef
+        document.getElementById("modal-chef-tip-text").textContent = recipe.chefTip || "Utilisez des produits frais du marché de Dakar pour des vitamines préservées !";
+
+        // Table des ingrédients
+        const tbody = document.getElementById("modal-ingredients-tbody");
+        if (tbody) {
+            tbody.innerHTML = nut.items.map(it => {
+                const inPantry = selectedPantryIngredients.has(it.ingredientId);
+                return `
+                    <tr>
+                        <td>
+                            ${inPantry 
+                                ? `<span style="background:#DCFCE7; color:#15803D; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:12px;">Au placard</span>` 
+                                : `<span style="background:#FEE2E2; color:#991B1B; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:12px;">À acheter</span>`}
+                        </td>
+                        <td><strong>${escapeHtml(it.name)}</strong></td>
+                        <td>${it.quantity} ${it.unit} (${it.weightGrams}g)</td>
+                        <td><strong style="color:var(--primary-dark);">${it.costFCFA} FCFA</strong></td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        // Étapes numérotées
+        const stepsContainer = document.getElementById("modal-steps-container");
+        if (stepsContainer && Array.isArray(recipe.steps)) {
+            stepsContainer.innerHTML = recipe.steps.map(step => `
+                <li class="modal-step-item">${escapeHtml(step)}</li>
+            `).join("");
+        }
+
+        // Bouton favori modale
+        const favBtn = document.getElementById("modal-fav-toggle-btn");
+        if (favBtn && window.NutriRecipes) {
+            const isFav = window.NutriRecipes.isFavorite(recipe.id);
+            favBtn.innerHTML = isFav ? "<span>⭐</span> Retirer des favoris" : "<span>☆</span> Ajouter aux favoris";
+        }
+    }
+
+    function toggleCurrentRecipeFavorite() {
+        if (!currentModalRecipe || !window.NutriRecipes) return;
+        const isNowFav = window.NutriRecipes.toggleFavorite(currentModalRecipe.id);
+        renderRecipeModalContent(currentModalRecipe);
+        filterRecipes();
+        showToast(isNowFav ? "Ajouté aux favoris ! ⭐" : "Retiré des favoris.", "info");
+    }
+
+    function generateCreativeRecipeModal() {
+        if (!window.NutriRecipes) return;
+        const pantryArray = Array.from(selectedPantryIngredients);
+        if (pantryArray.length === 0) {
+            showToast("Veuillez sélectionner au moins un ingrédient au placard !", "error");
+            return;
+        }
+
+        try {
+            const mealType = document.getElementById("filter-meal-type") ? document.getElementById("filter-meal-type").value : "dejeuner";
+            const creative = window.NutriRecipes.generateCreativeRecipe(pantryArray, {
+                mealType: mealType === "all" ? "dejeuner" : mealType,
+                servings: activeServings
+            });
+            cachedFilteredRecipes.unshift(creative);
+            renderRecipeCards(cachedFilteredRecipes);
+            openRecipeModal(creative.id);
+            showToast("✨ Recette sur-mesure créée à partir de votre placard !", "success");
+        } catch (err) {
+            showToast(err.message, "error");
+        }
+    }
+
+    function openAIPromptModal() {
+        if (!window.NutriRecipes) return;
+        const pantryArray = Array.from(selectedPantryIngredients);
+        const profile = NutriProfile.getProfile();
+
+        const prompts = window.NutriRecipes.generateAIPrompt({
+            selectedIngredientIds: pantryArray,
+            userGoal: profile ? profile.goal : "maintien",
+            targetCalories: profile && profile.calculated ? profile.calculated.targetCalories : 2000,
+            servings: activeServings,
+            mealType: document.getElementById("filter-meal-type") ? document.getElementById("filter-meal-type").value : "dejeuner"
+        });
+
+        document.getElementById("ai-prompt-system").value = prompts.systemPrompt;
+        document.getElementById("ai-prompt-user").value = prompts.userPrompt;
+
+        const modal = document.getElementById("ai-prompt-modal");
+        if (modal) modal.classList.add("show");
+    }
+
+    function closeAIPromptModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        const modal = document.getElementById("ai-prompt-modal");
+        if (modal) modal.classList.remove("show");
+    }
+
+    function copyPromptText(elementId) {
+        const textarea = document.getElementById(elementId);
+        if (!textarea) return;
+        textarea.select();
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            showToast("Prompt copié dans le presse-papier ! 📋", "success");
+        }).catch(() => {
+            document.execCommand("copy");
+            showToast("Prompt copié ! 📋", "success");
+        });
+    }
+
+    function loadMockAIResponse() {
+        const mock = {
+            title: "Mijoté Léger de Poulet aux Légumes des Niayes & Fonio",
+            mealType: "dejeuner",
+            prepTimeMinutes: 20,
+            cookingTimeMinutes: 25,
+            difficulty: "Facile",
+            imageEmoji: "🍲",
+            description: "Une recette d'inspiration dakaroise associant le poulet fermier et le fonio complet.",
+            chefTip: "Parfumez la sauce avec du nététou concassé pour une note umami sans excès de sodium.",
+            tags: ["senegalais", "sans-gluten", "ia-generee"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 500, unit: "g" },
+                { ingredientId: "fonio", quantity: 240, unit: "g" },
+                { ingredientId: "carotte", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 200, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 25, unit: "ml" },
+                { ingredientId: "soumbala-netetou", quantity: 15, unit: "g" }
+            ],
+            steps: [
+                "Découper et faire dorer le poulet fermier avec les oignons émincés.",
+                "Ajouter les carottes en rondelles, le nététou et un verre d'eau. Laisser mijoter 20 minutes.",
+                "Cuire le fonio à la vapeur ou 5 minutes à l'eau bouillante.",
+                "Dresser le ragoût surmontant le lit de fonio et déguster bien chaud."
+            ]
+        };
+        document.getElementById("ai-json-input").value = JSON.stringify(mock, null, 2);
+    }
+
+    function testAIReponse() {
+        if (!window.NutriRecipes) return;
+        const text = document.getElementById("ai-json-input").value.trim();
+        if (!text) {
+            showToast("Veuillez coller un JSON de recette d'abord !", "error");
+            return;
+        }
+
+        try {
+            const recipe = window.NutriRecipes.parseAndValidateAIRecipe(text, activeServings);
+            closeAIPromptModal();
+            cachedFilteredRecipes.unshift(recipe);
+            renderRecipeCards(cachedFilteredRecipes);
+            openRecipeModal(recipe.id);
+            showToast("Recette IA validée et calculée avec succès par NutriCalculator ! 🎉", "success");
+        } catch (err) {
+            showToast(err.message, "error");
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // ============================================================
     // UTILITAIRES
     // ============================================================
     function setValue(id, value) {
@@ -339,6 +882,7 @@ const App = (function () {
 
     function showToast(message, type = "success") {
         const container = document.getElementById("toast-container");
+        if (!container) return;
         const toast = document.createElement("div");
         const icons = { success: "✅", error: "❌", info: "ℹ️" };
         toast.className = "toast " + type;
@@ -365,6 +909,27 @@ const App = (function () {
         showTab,
         showComingSoon,
         handleSaveProfile,
-        showToast
+        showToast,
+        // Méthodes Étape 4 (Recettes & Placard)
+        setRecipeCategory,
+        handleIngredientSearch,
+        togglePantryIngredient,
+        clearPantrySelection,
+        selectAllPantry,
+        applyPantryPreset,
+        setRecipeServings,
+        filterRecipes,
+        toggleCardFavorite,
+        openRecipeModal,
+        closeRecipeModal,
+        changeModalServings,
+        toggleCurrentRecipeFavorite,
+        generateCreativeRecipeModal,
+        openAIPromptModal,
+        closeAIPromptModal,
+        copyPromptText,
+        loadMockAIResponse,
+        testAIReponse
     };
 })();
+
