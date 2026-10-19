@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriBudget - Tests Unitaires Adaptation Dynamique des Recettes (Étape 5)</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F8FAFC;
+            color: #334155;
+            padding: 30px 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+        }
+        h1 {
+            color: #1E293B;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge {
+            background: #E8F8F5;
+            color: #27AE60;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .summary-bar {
+            display: flex;
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px;
+            border-radius: 12px;
+            background: #F1F5F9;
+        }
+        .summary-item {
+            font-weight: 600;
+        }
+        .summary-item.passed { color: #16A34A; }
+        .summary-item.failed { color: #DC2626; }
+        .test-card {
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+        .test-card.passed {
+            border-left: 5px solid #16A34A;
+            background-color: #F0FDF4;
+        }
+        .test-card.failed {
+            border-left: 5px solid #DC2626;
+            background-color: #FEF2F2;
+        }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .test-desc {
+            font-size: 0.85rem;
+            color: #64748B;
+        }
+        .test-details {
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 6px 10px;
+            border-radius: 6px;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span>NutriBudget Test Suite</span>
+            <span class="badge">Étape 5 : Adaptation Dynamique des Recettes</span>
+        </h1>
+        <p style="color:#64748B; margin-top:0;">
+            Vérifie les modificateurs intelligents 1-clic (+ Protéines, - Cher, Alléger graisses), les substitutions d'ingrédients et le différentiel comparatif Avant/Après.
+        </p>
+
+        <div class="summary-bar" id="summary-bar">
+            <div class="summary-item" id="total-tests">Tests : 0</div>
+            <div class="summary-item passed" id="passed-tests">Succès : 0</div>
+            <div class="summary-item failed" id="failed-tests">Échecs : 0</div>
+        </div>
+
+        <div id="test-results"></div>
+    </div>
+
+    <!-- Dépendances -->
+    <script src="../data/ingredients.js"></script>
+    <script src="../services/nutritionCalculator.js"></script>
+    <script src="../services/userProfileService.js"></script>
+    <script src="../services/recipeService.js"></script>
+    <script src="../services/recipeAdaptationService.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const resultsContainer = document.getElementById("test-results");
+            let total = 0;
+            let passed = 0;
+            let failed = 0;
+
+            function assert(title, description, condition, details = "") {
+                total++;
+                const isSuccess = Boolean(condition);
+                if (isSuccess) passed++; else failed++;
+
+                const card = document.createElement("div");
+                card.className = `test-card ${isSuccess ? "passed" : "failed"}`;
+                card.innerHTML = `
+                    <div class="test-header">
+                        <span>${isSuccess ? "✅" : "❌"} ${title}</span>
+                        <span>${isSuccess ? "SUCCÈS" : "ÉCHEC"}</span>
+                    </div>
+                    <div class="test-desc">${description}</div>
+                    ${details ? `<div class="test-details">${details}</div>` : ""}
+                `;
+                resultsContainer.appendChild(card);
+
+                document.getElementById("total-tests").textContent = `Tests : ${total}`;
+                document.getElementById("passed-tests").textContent = `Succès : ${passed}`;
+                document.getElementById("failed-tests").textContent = `Échecs : ${failed}`;
+            }
+
+            // ========================================================
+            // EXÉCUTION DES TESTS UNITAIRES ÉTAPE 5
+            // ========================================================
+
+            const ceeb = window.NutriRecipes.getRecipeById("recette-ceebu-jen-sain", 4);
+            const yassa = window.NutriRecipes.getRecipeById("recette-yassa-poulet-fonio", 4);
+
+            // TEST 1 : Adaptation "+ Protéines"
+            const ceebPro = window.NutriAdaptation.adaptMoreProteins(ceeb, 4);
+            const proIncrease = ceebPro.nutrition.total.proteins > ceeb.nutrition.total.proteins;
+            const proRatio = ceebPro.nutrition.total.proteins / ceeb.nutrition.total.proteins;
+            assert(
+                "Modificateur 1-clic : Plus de Protéines (+ Protéines)",
+                "Augmente la teneur en protéines de plus de 20% en renforçant la source protéique",
+                proIncrease && proRatio >= 1.20,
+                `Protéines initiales : ${ceeb.nutrition.total.proteins}g -> Version boostée : ${ceebPro.nutrition.total.proteins}g (+${Math.round((proRatio - 1) * 100)}%)`
+            );
+
+            // TEST 2 : Adaptation "Plus économique / Moins cher"
+            const yassaEco = window.NutriAdaptation.adaptLowerCost(yassa, 4);
+            const costSavings = yassaEco.nutrition.total.costFCFA < yassa.nutrition.total.costFCFA;
+            const diffFCFA = yassa.nutrition.total.costFCFA - yassaEco.nutrition.total.costFCFA;
+            assert(
+                "Modificateur 1-clic : Plus Économique / Moins Cher",
+                "Diminue le budget global en FCFA tout en maintenant une structure de repas équilibrée",
+                costSavings && diffFCFA > 0,
+                `Coût initial : ${yassa.nutrition.total.costFCFA} FCFA -> Version éco : ${yassaEco.nutrition.total.costFCFA} FCFA (Économie : -${diffFCFA} FCFA)`
+            );
+
+            // TEST 3 : Adaptation "Alléger en graisses / Lipides maîtrisés"
+            const ceebLight = window.NutriAdaptation.adaptHealthyLight(ceeb, 4);
+            const fatReduction = ceebLight.nutrition.total.fats < ceeb.nutrition.total.fats;
+            const calReduction = ceebLight.nutrition.total.calories < ceeb.nutrition.total.calories;
+            assert(
+                "Modificateur 1-clic : Alléger en Graisses (Lipides Maîtrisés)",
+                "Réduit les lipides d'huile et fait chuter les calories superflues sans dénaturer le goût",
+                fatReduction && calReduction,
+                `Lipides initiaux : ${ceeb.nutrition.total.fats}g (${ceeb.nutrition.total.calories} kcal) -> Allégé : ${ceebLight.nutrition.total.fats}g (${ceebLight.nutrition.total.calories} kcal)`
+            );
+
+            // TEST 4 : Calibration calorique exacte sur un objectif cible (ex: 550 kcal / portion)
+            const targetKcalPerServing = 550;
+            const ceebScaled = window.NutriAdaptation.scaleToTargetCalories(ceeb, targetKcalPerServing, 4);
+            const scaledKcal = ceebScaled.nutrition.perServing.calories;
+            const diffKcal = Math.abs(scaledKcal - targetKcalPerServing);
+            assert(
+                "Calibration dynamique sur les calories cibles du profil",
+                "Met à l'échelle les portions pour correspondre à la cible calorique souhaitée (~550 kcal)",
+                diffKcal <= 40,
+                `Cible : ${targetKcalPerServing} kcal -> Obtenu : ${scaledKcal} kcal / portion (écart : ${diffKcal} kcal)`
+            );
+
+            // TEST 5 : Substitution d'ingrédient Céréale (Riz -> Fonio)
+            const ceebFonio = window.NutriAdaptation.substituteIngredient(ceeb, "riz-brise-ordinaire", "fonio", 4);
+            const hasFonio = ceebFonio.ingredients.some(i => i.ingredientId === "fonio");
+            const hasOldRiz = ceebFonio.ingredients.some(i => i.ingredientId === "riz-brise-ordinaire");
+            assert(
+                "Substitution d'ingrédient locale (Riz brisé -> Fonio)",
+                "Remplace le riz brisé par du fonio et recalcule les valeurs exactes",
+                hasFonio && !hasOldRiz && ceebFonio.nutrition.total.calories > 0,
+                `Nouvel ingrédient : Fonio présent (${ceebFonio.nutrition.total.calories} kcal, ${ceebFonio.nutrition.total.costFCFA} FCFA)`
+            );
+
+            // TEST 6 : Substitution Protéine animale -> Légumineuse végétale (Poulet -> Niébé)
+            const yassaNiebe = window.NutriAdaptation.substituteIngredient(yassa, "poulet-fermier", "niebe", 4);
+            const hasNiebe = yassaNiebe.ingredients.some(i => i.ingredientId === "niebe");
+            const isVegetarian = !yassaNiebe.ingredients.some(i => i.ingredientId === "poulet-fermier");
+            assert(
+                "Substitution Protéine (Poulet fermier -> Haricots Niébé)",
+                "Transforme le plat en option 100% végétale économique tout en conservant un apport protéique élevé",
+                hasNiebe && isVegetarian && yassaNiebe.nutrition.total.proteins > 30,
+                `Protéines végétales obtenues : ${yassaNiebe.nutrition.total.proteins}g, Nouveau coût : ${yassaNiebe.nutrition.total.costFCFA} FCFA`
+            );
+
+            // TEST 7 : Dictionnaire de suggestions de substitution
+            const rizSubs = window.NutriAdaptation.getAvailableSubstitutions("riz-brise-ordinaire");
+            const pouletSubs = window.NutriAdaptation.getAvailableSubstitutions("poulet-fermier");
+            assert(
+                "Catalogue des suggestions de substitutions locales",
+                "Fournit des propositions pertinentes avec justifications pour chaque ingrédient",
+                rizSubs.length >= 2 && pouletSubs.length >= 2,
+                `Substituts trouvés pour Riz : ${rizSubs.map(s => s.name.split('(')[0].trim()).join(', ')} | Pour Poulet : ${pouletSubs.map(s => s.name.split('(')[0].trim()).join(', ')}`
+            );
+
+            // TEST 8 : Comparateur Avant / Après (Diff nutritionnel & budgétaire)
+            const comparison = window.NutriAdaptation.compareRecipes(ceeb, ceebLight);
+            const diffCalValid = comparison && comparison.deltas.calories < 0;
+            const diffCostValid = comparison && typeof comparison.deltas.costFCFA === "number";
+            assert(
+                "Moteur comparatif Avant / Après (Deltas précis)",
+                "Calcule avec précision les écarts caloriques, protéiques et budgétaires entre la recette originale et adaptée",
+                diffCalValid && diffCostValid,
+                `Delta Calories : ${comparison.deltas.calories} kcal/portion, Delta Protéines : ${comparison.deltas.proteins}g, Delta Coût : ${comparison.deltas.costFCFA} FCFA`
+            );
+
+            // TEST 9 : Calcul déterministe obligatoire via NutriCalculator
+            const testItem = ceebPro.scaledIngredients;
+            const manualCalc = window.NutriCalculator.calculateRecipeNutrition(testItem, 4);
+            const mathCoherence = manualCalc.total.calories === ceebPro.nutrition.total.calories &&
+                                  manualCalc.total.costFCFA === ceebPro.nutrition.total.costFCFA;
+            assert(
+                "Règle d'or de calcul déterministe via NutriCalculator",
+                "Les valeurs de la recette adaptée proviennent strictement des calculs déterministes de NutriCalculator",
+                mathCoherence,
+                `Calories NutriCalculator : ${manualCalc.total.calories} kcal === Recette adaptée : ${ceebPro.nutrition.total.calories} kcal`
+            );
+
+            // TEST 10 : Résilience et conservation de la recette d'origine
+            const ceebOriginalUnchanged = ceeb.ingredients.some(i => i.ingredientId === "riz-brise-ordinaire");
+            assert(
+                "Immuabilité de la recette source",
+                "Les adaptations ne modifient pas l'objet de recette d'origine en mémoire",
+                ceebOriginalUnchanged,
+                "La recette source conserve son riz brisé et ses proportions d'origine."
+            );
+        });
+    </script>
+</body>
+</html>

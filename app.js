@@ -336,6 +336,9 @@ const App = (function () {
     let ingredientSearchQuery = "";
     let activeServings = 2;
     let currentModalRecipe = null;
+    let originalModalRecipe = null;
+    let activeAdaptationType = null;
+    let activeSubstitutionTarget = null;
     let cachedFilteredRecipes = [];
 
     function loadRecipesTab() {
@@ -647,6 +650,11 @@ const App = (function () {
         }
         if (!currentModalRecipe) return;
 
+        // Conserver une copie originale immuable pour le comparateur Avant / Après
+        originalModalRecipe = JSON.parse(JSON.stringify(currentModalRecipe));
+        activeAdaptationType = null;
+        activeSubstitutionTarget = null;
+
         renderRecipeModalContent(currentModalRecipe);
         const modal = document.getElementById("recipe-detail-modal");
         if (modal) modal.classList.add("show");
@@ -656,12 +664,96 @@ const App = (function () {
         if (event && event.target !== event.currentTarget) return;
         const modal = document.getElementById("recipe-detail-modal");
         if (modal) modal.classList.remove("show");
+        activeSubstitutionTarget = null;
     }
 
     function changeModalServings(newServings) {
         if (!currentModalRecipe || !window.NutriRecipes) return;
+        if (originalModalRecipe) {
+            originalModalRecipe = window.NutriRecipes.enrichRecipeWithNutrition(originalModalRecipe, newServings);
+        }
         currentModalRecipe = window.NutriRecipes.enrichRecipeWithNutrition(currentModalRecipe, newServings);
         renderRecipeModalContent(currentModalRecipe);
+    }
+
+    // ============================================================
+    // GESTIONNAIRES D'ADAPTATION DYNAMIQUE (Étape 5)
+    // ============================================================
+    function applyRecipeAdaptation(type) {
+        if (!currentModalRecipe || !window.NutriAdaptation) return;
+
+        // Base de calcul : toujours à partir de la recette d'origine pour éviter les dérives
+        const base = originalModalRecipe || currentModalRecipe;
+        const servings = currentModalRecipe.activeServings || 2;
+
+        try {
+            let adapted = null;
+            if (type === "plus_proteines") {
+                adapted = window.NutriAdaptation.adaptMoreProteins(base, servings);
+                showToast("💪 Version enrichie en protéines appliquée !", "success");
+            } else if (type === "moins_cher") {
+                adapted = window.NutriAdaptation.adaptLowerCost(base, servings);
+                showToast("💰 Version économique anti-inflation appliquée !", "success");
+            } else if (type === "legere_lipides") {
+                adapted = window.NutriAdaptation.adaptHealthyLight(base, servings);
+                showToast("🌿 Version allégée en huile appliquée !", "success");
+            } else if (type === "cible_calorique") {
+                const profile = NutriProfile.getProfile();
+                let targetKcal = 600;
+                if (profile && profile.calculated && profile.calculated.targetCalories) {
+                    // Estimation portion selon repas : ~35% du total quotidien pour déjeuner/dîner
+                    const factor = base.mealType === "petit_dejeuner" ? 0.25 : base.mealType === "collation" ? 0.15 : 0.35;
+                    targetKcal = Math.round(profile.calculated.targetCalories * factor);
+                }
+                adapted = window.NutriAdaptation.scaleToTargetCalories(base, targetKcal, servings);
+                showToast(`🎯 Portions calibrées sur votre cible (${targetKcal} kcal/repas) !`, "success");
+            }
+
+            if (adapted) {
+                activeAdaptationType = type;
+                currentModalRecipe = adapted;
+                renderRecipeModalContent(currentModalRecipe);
+            }
+        } catch (err) {
+            showToast("Erreur lors de l'adaptation : " + err.message, "error");
+        }
+    }
+
+    function resetRecipeAdaptation() {
+        if (!originalModalRecipe) return;
+        currentModalRecipe = JSON.parse(JSON.stringify(originalModalRecipe));
+        activeAdaptationType = null;
+        activeSubstitutionTarget = null;
+        renderRecipeModalContent(currentModalRecipe);
+        showToast("↩️ Recette restaurée à sa version d'origine.", "info");
+    }
+
+    function toggleIngredientSubstitution(ingredientId) {
+        if (activeSubstitutionTarget === ingredientId) {
+            activeSubstitutionTarget = null;
+        } else {
+            activeSubstitutionTarget = ingredientId;
+        }
+        renderRecipeModalContent(currentModalRecipe);
+    }
+
+    function applyIngredientSubstitution(targetId, replacementId) {
+        if (!currentModalRecipe || !window.NutriAdaptation) return;
+        try {
+            const adapted = window.NutriAdaptation.substituteIngredient(
+                currentModalRecipe,
+                targetId,
+                replacementId,
+                currentModalRecipe.activeServings
+            );
+            currentModalRecipe = adapted;
+            activeAdaptationType = "substitution";
+            activeSubstitutionTarget = null;
+            renderRecipeModalContent(currentModalRecipe);
+            showToast(`🔄 Ingrédient substitué avec succès !`, "success");
+        } catch (err) {
+            showToast("Impossible de substituer : " + err.message, "error");
+        }
     }
 
     function renderRecipeModalContent(recipe) {
@@ -679,6 +771,59 @@ const App = (function () {
             const btn = document.getElementById("modal-serv-" + s);
             if (btn) btn.classList.toggle("active", s === recipe.activeServings);
         });
+
+        // ==========================================
+        // GESTION DE LA BARRE D'ADAPTATION & DU DIFF
+        // ==========================================
+        const badgeEl = document.getElementById("modal-adaptation-badge");
+        const resetBtn = document.getElementById("adapt-btn-reset");
+        const diffCard = document.getElementById("recipe-diff-card");
+
+        // Boutons actifs
+        ["pro", "eco", "light", "target"].forEach(key => {
+            const btnMap = { pro: "plus_proteines", eco: "moins_cher", light: "legere_lipides", target: "cible_calorique" };
+            const b = document.getElementById("adapt-btn-" + key);
+            if (b) b.classList.toggle("active", activeAdaptationType === btnMap[key]);
+        });
+
+        if (activeAdaptationType && originalModalRecipe && window.NutriAdaptation) {
+            if (badgeEl) {
+                badgeEl.style.display = "inline-block";
+                badgeEl.textContent = recipe.adaptationLabel || "Personnalisée";
+            }
+            if (resetBtn) resetBtn.style.display = "inline-flex";
+
+            // Calcul du comparatif Avant / Après
+            const diff = window.NutriAdaptation.compareRecipes(originalModalRecipe, recipe);
+            if (diff && diffCard) {
+                diffCard.style.display = "block";
+
+                // Calories
+                document.getElementById("diff-val-calories").textContent = `${diff.original.calories} → ${diff.adapted.calories} kcal`;
+                const calDeltaEl = document.getElementById("diff-delta-calories");
+                const calDelta = diff.deltas.calories;
+                calDeltaEl.textContent = (calDelta > 0 ? "+" : "") + calDelta + " kcal";
+                calDeltaEl.className = "diff-stat-delta " + (calDelta < 0 ? "delta-good" : "delta-neutral");
+
+                // Protéines
+                document.getElementById("diff-val-proteins").textContent = `${diff.original.proteins}g → ${diff.adapted.proteins}g`;
+                const proDeltaEl = document.getElementById("diff-delta-proteins");
+                const proDelta = diff.deltas.proteins;
+                proDeltaEl.textContent = (proDelta > 0 ? "+" : "") + proDelta + "g";
+                proDeltaEl.className = "diff-stat-delta " + (proDelta > 0 ? "delta-good" : "delta-neutral");
+
+                // Coût
+                document.getElementById("diff-val-cost").textContent = `${diff.original.costFCFA.toLocaleString("fr-FR")} → ${diff.adapted.costFCFA.toLocaleString("fr-FR")} FCFA`;
+                const costDeltaEl = document.getElementById("diff-delta-cost");
+                const costDelta = diff.deltas.costFCFA;
+                costDeltaEl.textContent = (costDelta > 0 ? "+" : "") + costDelta.toLocaleString("fr-FR") + " FCFA";
+                costDeltaEl.className = "diff-stat-delta " + (costDelta < 0 ? "delta-good" : (costDelta === 0 ? "delta-neutral" : "delta-alert"));
+            }
+        } else {
+            if (badgeEl) badgeEl.style.display = "none";
+            if (resetBtn) resetBtn.style.display = "none";
+            if (diffCard) diffCard.style.display = "none";
+        }
 
         // Macros
         document.getElementById("modal-macro-kcal").textContent = (nut.perServing?.calories || 0).toLocaleString("fr-FR");
@@ -706,11 +851,42 @@ const App = (function () {
         // Astuce du chef
         document.getElementById("modal-chef-tip-text").textContent = recipe.chefTip || "Utilisez des produits frais du marché de Dakar pour des vitamines préservées !";
 
-        // Table des ingrédients
+        // Table des ingrédients avec bouton de substitution 🔄
         const tbody = document.getElementById("modal-ingredients-tbody");
         if (tbody) {
             tbody.innerHTML = nut.items.map(it => {
                 const inPantry = selectedPantryIngredients.has(it.ingredientId);
+                const hasSubs = window.NutriAdaptation && window.NutriAdaptation.getAvailableSubstitutions(it.ingredientId).length > 0;
+                const isSubOpen = activeSubstitutionTarget === it.ingredientId;
+
+                let subsBoxHtml = "";
+                if (isSubOpen && window.NutriAdaptation) {
+                    const subs = window.NutriAdaptation.getAvailableSubstitutions(it.ingredientId);
+                    subsBoxHtml = `
+                        <tr>
+                            <td colspan="5" style="padding:0; border:none;">
+                                <div class="substitute-options-box">
+                                    <div style="font-weight:700; color:var(--secondary); margin-bottom:8px;">
+                                        🔄 Remplacer "${escapeHtml(it.name.split("(")[0].trim())}" par une alternative locale :
+                                    </div>
+                                    ${subs.map(s => `
+                                        <div class="substitute-option-item" onclick="App.applyIngredientSubstitution('${it.ingredientId}', '${s.id}')">
+                                            <div>
+                                                <strong>${escapeHtml(s.name.split("(")[0].trim())}</strong>
+                                                <span style="font-size:0.75rem; color:var(--text-light); margin-left:6px;">(${s.priceUnitLabel})</span>
+                                                <div style="font-size:0.78rem; color:#0369A1; margin-top:2px;">💡 ${escapeHtml(s.reason)}</div>
+                                            </div>
+                                            <button type="button" class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;">
+                                                Choisir →
+                                            </button>
+                                        </div>
+                                    `).join("")}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
+
                 return `
                     <tr>
                         <td>
@@ -721,7 +897,15 @@ const App = (function () {
                         <td><strong>${escapeHtml(it.name)}</strong></td>
                         <td>${it.quantity} ${it.unit} (${it.weightGrams}g)</td>
                         <td><strong style="color:var(--primary-dark);">${it.costFCFA} FCFA</strong></td>
+                        <td>
+                            ${hasSubs 
+                                ? `<button type="button" class="substitute-btn" onclick="App.toggleIngredientSubstitution('${it.ingredientId}')" title="Voir les alternatives locales">
+                                    ${isSubOpen ? "✕ Fermer" : "🔄 Remplacer"}
+                                   </button>` 
+                                : `<span style="font-size:0.75rem; color:var(--text-light);">Standard</span>`}
+                        </td>
                     </tr>
+                    ${subsBoxHtml}
                 `;
             }).join("");
         }
@@ -929,7 +1113,12 @@ const App = (function () {
         closeAIPromptModal,
         copyPromptText,
         loadMockAIResponse,
-        testAIReponse
+        testAIReponse,
+        // Méthodes Étape 5 (Adaptation & Substitutions)
+        applyRecipeAdaptation,
+        resetRecipeAdaptation,
+        toggleIngredientSubstitution,
+        applyIngredientSubstitution
     };
 })();
 

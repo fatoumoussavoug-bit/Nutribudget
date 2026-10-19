@@ -649,6 +649,53 @@
                     </div>
                 </div>
 
+                <!-- BARRE D'ADAPTATION DYNAMIQUE EN 1 CLIC (Étape 5) -->
+                <div class="adaptation-toolbar-card">
+                    <div class="adaptation-toolbar-title">
+                        <span>⚡ Personnaliser cette recette en 1 clic :</span>
+                        <span id="modal-adaptation-badge" class="adaptation-badge-pill" style="display:none;"></span>
+                    </div>
+                    <div class="adaptation-buttons-row">
+                        <button type="button" class="adapt-btn" id="adapt-btn-pro" onclick="App.applyRecipeAdaptation('plus_proteines')">
+                            💪 + Protéines
+                        </button>
+                        <button type="button" class="adapt-btn" id="adapt-btn-eco" onclick="App.applyRecipeAdaptation('moins_cher')">
+                            💰 Moins cher (-25%)
+                        </button>
+                        <button type="button" class="adapt-btn" id="adapt-btn-light" onclick="App.applyRecipeAdaptation('legere_lipides')">
+                            🌿 Alléger en huile
+                        </button>
+                        <button type="button" class="adapt-btn" id="adapt-btn-target" onclick="App.applyRecipeAdaptation('cible_calorique')">
+                            🎯 Calibrer sur ma cible
+                        </button>
+                        <button type="button" class="adapt-btn adapt-btn-reset" id="adapt-btn-reset" onclick="App.resetRecipeAdaptation()" style="display:none;">
+                            ↩️ Recette d'origine
+                        </button>
+                    </div>
+
+                    <!-- DIFF COMPARATIF AVANT / APRÈS (Apparaît si adapté) -->
+                    <div class="diff-comparison-card" id="recipe-diff-card" style="display:none;">
+                        <div class="diff-card-title">📊 Comparatif Avant / Après Adaptation :</div>
+                        <div class="diff-stats-grid">
+                            <div class="diff-stat-item">
+                                <div class="diff-stat-lbl">Calories / pers</div>
+                                <div class="diff-stat-val" id="diff-val-calories">0 kcal</div>
+                                <div class="diff-stat-delta" id="diff-delta-calories">-0 kcal</div>
+                            </div>
+                            <div class="diff-stat-item">
+                                <div class="diff-stat-lbl">Protéines / pers</div>
+                                <div class="diff-stat-val" id="diff-val-proteins">0g</div>
+                                <div class="diff-stat-delta" id="diff-delta-proteins">+0g</div>
+                            </div>
+                            <div class="diff-stat-item">
+                                <div class="diff-stat-lbl">Budget Total (FCFA)</div>
+                                <div class="diff-stat-val" id="diff-val-cost">0 FCFA</div>
+                                <div class="diff-stat-delta" id="diff-delta-cost">-0 FCFA</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Jauges nutritionnelles calculées par NutriCalculator -->
                 <div style="margin-bottom:8px; font-weight:700; font-size:0.95rem; color:var(--secondary); display:flex; justify-content:space-between;">
                     <span>🔬 Profil Nutritionnel Exact (NutriCalculator)</span>
@@ -707,6 +754,7 @@
                                 <th>Ingrédient</th>
                                 <th>Quantité</th>
                                 <th>Coût indicatif</th>
+                                <th>Substituer 🔄</th>
                             </tr>
                         </thead>
                         <tbody id="modal-ingredients-tbody">
@@ -812,6 +860,7 @@
     <script src="services/nutritionCalculator.js"></script>
     <script src="services/userProfileService.js"></script>
     <script src="services/recipeService.js"></script>
+    <script src="services/recipeAdaptationService.js"></script>
     <script src="app.js"></script>
 </body>
 

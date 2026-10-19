@@ -1590,3 +1590,208 @@
     }
 }
 
+/* ============================================
+   Étape 5 : Adaptation Dynamique & Substitutions Locales
+   ============================================ */
+
+/* Barre d'outils d'adaptation */
+.adaptation-toolbar-card {
+    background: #F8FAFC;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.adaptation-toolbar-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.adaptation-badge-pill {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: #ECFDF5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+    animation: fadeIn 0.3s ease;
+}
+
+.adaptation-buttons-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.adapt-btn {
+    padding: 8px 14px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.adapt-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.adapt-btn.active {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.25);
+}
+
+.adapt-btn-reset {
+    background: #FEF2F2;
+    color: #991B1B;
+    border-color: #FCA5A5;
+}
+
+.adapt-btn-reset:hover {
+    background: #FEE2E2;
+    border-color: #EF4444;
+    color: #7F1D1D;
+}
+
+/* Card comparatif Avant / Après */
+.diff-comparison-card {
+    background: var(--white);
+    border: 1px solid #E2E8F0;
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-top: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    animation: fadeIn 0.3s ease;
+}
+
+.diff-card-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.diff-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.diff-stat-item {
+    background: var(--bg-alt);
+    padding: 8px 10px;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #EDF2F7;
+}
+
+.diff-stat-lbl {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-bottom: 2px;
+}
+
+.diff-stat-val {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 2px;
+}
+
+.diff-stat-delta {
+    font-size: 0.78rem;
+    font-weight: 800;
+    border-radius: 12px;
+    padding: 1px 6px;
+    display: inline-block;
+}
+
+.delta-good {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.delta-neutral {
+    background: #E0F2FE;
+    color: #0369A1;
+}
+
+.delta-alert {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+/* Bouton et sélecteur de substitution d'ingrédient */
+.substitute-btn {
+    padding: 3px 8px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.substitute-btn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.substitute-options-box {
+    background: #F8FAFC;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 6px;
+    font-size: 0.82rem;
+    animation: fadeIn 0.2s ease;
+}
+
+.substitute-option-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.substitute-option-item:hover {
+    border-color: var(--primary);
+    background: #F0FDF4;
+    transform: translateX(3px);
+}
+
+
