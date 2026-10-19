@@ -312,6 +312,122 @@
                 "Mixer à pleine puissance pendant 45 secondes jusqu'à consistance mousseuse.",
                 "Servir bien frais avec quelques glaçons."
             ]
+        },
+        {
+            id: "recette-mafe-vegetarien-niebe",
+            title: "Mafé Végétarien au Niébé & Patates Douces",
+            mealType: "dejeuner",
+            prepTimeMinutes: 20,
+            cookingTimeMinutes: 40,
+            difficulty: "Facile",
+            baseServings: 4,
+            imageEmoji: "🍲",
+            description: "Une version végétale du classique Mafé dakarois où le haricot niébé apporte toutes les protéines nécessaires, sublimé par la pâte d'arachide et les patates douces fondantes.",
+            chefTip: "Délayez toujours la pâte d'arachide dans une louche de bouillon chaud avant de l'incorporer pour une sauce soyeuse et sans grumeaux.",
+            tags: ["vegetarien", "sans-gluten", "riche-en-proteines", "terroir", "economique"],
+            ingredients: [
+                { ingredientId: "niebe", quantity: 200, unit: "g" },
+                { ingredientId: "pate-arachide", quantity: 100, unit: "g" },
+                { ingredientId: "patate-douce", quantity: 300, unit: "g" },
+                { ingredientId: "carotte", quantity: 150, unit: "g" },
+                { ingredientId: "chou-blanc", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 150, unit: "g" },
+                { ingredientId: "tomate-concentree", quantity: 50, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 320, unit: "g" }
+            ],
+            steps: [
+                "Cuire préalablement le niébé 25 minutes dans de l'eau bouillante non salée.",
+                "Dans une marmite, faire revenir l'oignon haché et la tomate concentrée avec un fond d'eau.",
+                "Ajouter 1 litre d'eau, porter à ébullition et incorporer les patates douces, carottes et chou en gros morceaux.",
+                "Délayer la pâte d'arachide pure avec un peu de bouillon chaud et l'ajouter à la marmite. Ajouter le niébé précuit.",
+                "Laisser mijoter à feu doux 25 minutes jusqu'à ce que la sauce épaississe et prenne une texture onctueuse.",
+                "Cuire le riz blanc à la vapeur en accompagnement. Servir la sauce mafé bien chaude sur le riz."
+            ]
+        },
+        {
+            id: "recette-thiere-mboum-poulet",
+            title: "Thiéré Mboum au Poulet & Feuilles de Moringa",
+            mealType: "diner",
+            prepTimeMinutes: 25,
+            cookingTimeMinutes: 35,
+            difficulty: "Moyen",
+            baseServings: 4,
+            imageEmoji: "🥣",
+            description: "Le réconfortant couscous de mil sénégalais nappé d'une sauce verte Mboum aux feuilles de Moringa fraîches, réputé pour sa richesse en fer et son extrême digestibilité.",
+            chefTip: "Le Moringa perd ses vitamines en surcuisson : n'ajoutez les feuilles hachées qu'au dernier quart d'heure de mijotage !",
+            tags: ["traditionnel", "sans-gluten", "riche-en-fer", "volaille"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 500, unit: "g" },
+                { ingredientId: "thiakry-mil", quantity: 300, unit: "g" },
+                { ingredientId: "moringa-nebeday", quantity: 80, unit: "g" },
+                { ingredientId: "arachides-crues", quantity: 40, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 25, unit: "ml" },
+                { ingredientId: "oignon-jaune", quantity: 150, unit: "g" },
+                { ingredientId: "soumbala-netetou", quantity: 15, unit: "g" }
+            ],
+            steps: [
+                "Faire dorer les morceaux de poulet dans une sauteuse avec l'huile d'arachide et l'oignon haché.",
+                "Piler les arachides avec le nététou pour former une poudre aromatique.",
+                "Mouiller avec 700 ml d'eau, incorporer la poudre d'arachides-nététou et laisser mijoter 20 minutes.",
+                "Pendant ce temps, cuire le couscous de mil à la vapeur.",
+                "Ajouter les feuilles de moringa lavées et émincées dans la sauce. Poursuivre la cuisson 10 minutes à feu doux.",
+                "Dresser le couscous de mil chaud et napper généreusement de sauce Mboum."
+            ]
+        },
+        {
+            id: "recette-fonde-mil-kossam",
+            title: "Fondé Onctueux de Mil au Kossam & Bouye",
+            mealType: "petit_dejeuner",
+            prepTimeMinutes: 10,
+            cookingTimeMinutes: 20,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥣",
+            description: "Un petit-déjeuner traditionnel revigorant composé de boulettes de mil mijotées, servies avec du Kossam crémeux parfumé d'une note acidulée de pain de singe.",
+            chefTip: "Le mélange mil + Kossam offre une combinaison protéines/calcium idéale pour soutenir une matinée active sans coup de pompe.",
+            tags: ["vegetarien", "sans-gluten", "energie", "petit-dejeuner"],
+            ingredients: [
+                { ingredientId: "mil-arraw", quantity: 120, unit: "g" },
+                { ingredientId: "lait-caille-kossam", quantity: 250, unit: "g" },
+                { ingredientId: "pain-de-singe-bouye", quantity: 25, unit: "g" },
+                { ingredientId: "banane-douce", quantity: 1, unit: "piece" }
+            ],
+            steps: [
+                "Porter 500 ml d'eau à frémissement dans une casserole.",
+                "Verser l'arraw de mil et laisser cuire à feu moyen 18 minutes en remuant jusqu'à ce que les granules soient tendres.",
+                "Diluer la pulpe de bouye dans 3 cuillères à soupe d'eau tiède et l'incorporer au lait caillé Kossam.",
+                "Répartir le fondé de mil chaud dans deux bols.",
+                "Verser le coulis de Kossam au bouye sur le dessus et garnir de rondelles de banane douce."
+            ]
+        },
+        {
+            id: "recette-salade-fraicheur-mangue-oeuf",
+            title: "Salade Fraîcheur des Niayes (Mangue & Œufs)",
+            mealType: "diner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 10,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Une salade croquante et légère qui marie la douceur de la mangue mûre du Sénégal aux œufs durs locaux et légumes râpés des Niayes.",
+            chefTip: "Pour une vinaigrette dakaroise tonique, ajoutez une pointe de gingembre râpé à l'huile d'arachide.",
+            tags: ["vegetarien", "sans-gluten", "rapide", "vitamines"],
+            ingredients: [
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "mangue-locale", quantity: 150, unit: "g" },
+                { ingredientId: "carotte", quantity: 120, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 120, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 60, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire les 2 œufs 9 minutes dans de l'eau frémissante pour obtenir des œufs durs. Écaler et couper en quartiers.",
+                "Râper les carottes et tailler les tomates en petits dés.",
+                "Émincer très finement l'oignon.",
+                "Peler la mangue et la couper en fines lamelles.",
+                "Disposer les carottes râpées, dés de tomates et mangue dans un plat.",
+                "Poser les quartiers d'œufs durs au sommet, assaisonner d'huile d'arachide et d'une pincée de sel marin."
+            ]
         }
     ];
 

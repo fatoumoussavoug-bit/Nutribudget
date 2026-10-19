@@ -124,9 +124,11 @@
                         <span class="sidebar-icon">🍽️</span> Recettes Terroir & IA
                         <span style="font-size:0.65rem; margin-left:auto; background:var(--primary); color:white; padding:2px 7px; border-radius:10px; font-weight:700;">Nouveau</span>
                     </button>
-                    <button class="sidebar-item sidebar-item--disabled" id="sidebar-menu" onclick="App.showComingSoon('Planificateur de menus')">
-                        <span class="sidebar-icon">📅</span> Planificateur
-                        <span style="font-size:0.65rem; margin-left:auto; background:var(--primary-light); color:var(--primary-dark); padding:2px 6px; border-radius:8px; font-weight:700;">Étape 6</span>
+                    <button class="sidebar-item" id="sidebar-planner" onclick="App.showTab('planner')">
+                        <span class="sidebar-icon">📅</span> Planificateur Hebdo
+                    </button>
+                    <button class="sidebar-item" id="sidebar-shopping" onclick="App.showTab('shopping')">
+                        <span class="sidebar-icon">🛒</span> Liste de Courses
                     </button>
                 </nav>
 
@@ -612,6 +614,158 @@
 
                 </div>
 
+                <!-- ===============================
+                     VUE : PLANIFICATEUR DE MENUS (Étape 6)
+                     =============================== -->
+                <div class="app-tab-view" id="tab-view-planner">
+                    
+                    <!-- En-tête -->
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+                        <div>
+                            <h2 style="font-size:1.6rem; color:var(--secondary); font-weight:800; display:flex; align-items:center; gap:10px;">
+                                <span>📅</span> Planificateur de Menus Hebdomadaire
+                            </h2>
+                            <p style="font-size:0.92rem; color:var(--text-light); margin-top:4px;">
+                                7 jours de repas sains, équilibrés et calibrés sur votre budget en FCFA.
+                            </p>
+                        </div>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <button type="button" class="btn btn-primary" onclick="App.generateWeeklyPlan()" style="padding:10px 18px; font-size:0.9rem;">
+                                ⚡ Générer ma semaine (1-clic)
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="App.showTab('shopping')" style="padding:10px 18px; font-size:0.9rem;">
+                                🛒 Voir la liste de courses →
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- KPI Grid -->
+                    <div class="planner-kpi-grid">
+                        <div class="planner-kpi-card">
+                            <div class="planner-kpi-icon">🎯</div>
+                            <div>
+                                <div class="planner-kpi-val" id="planner-kpi-cal">0 kcal/j</div>
+                                <div class="planner-kpi-lbl">Moyenne quotidienne</div>
+                            </div>
+                        </div>
+                        <div class="planner-kpi-card">
+                            <div class="planner-kpi-icon cost">💰</div>
+                            <div>
+                                <div class="planner-kpi-val" id="planner-kpi-cost">0 FCFA</div>
+                                <div class="planner-kpi-lbl">Budget Semaine estimé</div>
+                            </div>
+                        </div>
+                        <div class="planner-kpi-card">
+                            <div class="planner-kpi-icon person">👤</div>
+                            <div>
+                                <div class="planner-kpi-val" id="planner-kpi-cost-pers">0 FCFA</div>
+                                <div class="planner-kpi-lbl">Par convive / jour</div>
+                            </div>
+                        </div>
+                        <div class="planner-kpi-card">
+                            <div class="planner-kpi-icon progress">📊</div>
+                            <div>
+                                <div class="planner-kpi-val" id="planner-kpi-completion">0%</div>
+                                <div class="planner-kpi-lbl" id="planner-kpi-slots">0 / 28 repas planifiés</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barre de Contrôles & Filtres -->
+                    <div class="planner-controls-bar">
+                        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                            <span style="font-size:0.85rem; font-weight:700; color:var(--secondary);">Convives :</span>
+                            <div class="servings-selector">
+                                <button type="button" class="servings-btn" id="planner-serv-1" onclick="App.changePlannerServings(1)">1</button>
+                                <button type="button" class="servings-btn active" id="planner-serv-2" onclick="App.changePlannerServings(2)">2</button>
+                                <button type="button" class="servings-btn" id="planner-serv-4" onclick="App.changePlannerServings(4)">4</button>
+                                <button type="button" class="servings-btn" id="planner-serv-6" onclick="App.changePlannerServings(6)">6</button>
+                            </div>
+                            <button type="button" class="btn btn-outline" onclick="App.resetWeeklyPlan()" style="padding:6px 12px; font-size:0.8rem; margin-left:6px;">
+                                🔄 Réinitialiser
+                            </button>
+                        </div>
+
+                        <!-- Filtre des jours -->
+                        <div class="planner-day-filter-tabs">
+                            <button type="button" class="planner-day-tab-btn active" id="day-tab-all" onclick="App.filterPlannerDay('all')">Tous les 7 jours</button>
+                            <button type="button" class="planner-day-tab-btn" id="day-tab-lundi" onclick="App.filterPlannerDay('lundi')">Lun</button>
+                            <button type="button" class="planner-day-tab-btn" id="day-tab-mardi" onclick="App.filterPlannerDay('mardi')">Mar</button>
+                            <button type="button" class="planner-day-tab-btn" id="day-tab-mercredi" onclick="App.filterPlannerDay('mercredi')">Mer</button>
+                            <button type="button" class="planner-day-tab-btn" id="day-tab-jeudi" onclick="App.filterPlannerDay('jeudi')">Jeu</button>
+                            <button type="button" class="planner-day-tab-btn" id="day-tab-vendredi" onclick="App.filterPlannerDay('vendredi')">Ven</button>
+                            <button type="button" class="planner-day-tab-btn" id="day-tab-samedi" onclick="App.filterPlannerDay('samedi')">Sam</button>
+                            <button type="button" class="planner-day-tab-btn" id="day-tab-dimanche" onclick="App.filterPlannerDay('dimanche')">Dim</button>
+                        </div>
+                    </div>
+
+                    <!-- Grille des 7 jours de repas -->
+                    <div class="planner-week-grid" id="planner-week-container">
+                        <!-- Rendu dynamique par App.renderPlannerGrid() -->
+                    </div>
+                </div>
+
+                <!-- ===============================
+                     VUE : LISTE DE COURSES AUTOMATIQUE (Étape 6)
+                     =============================== -->
+                <div class="app-tab-view" id="tab-view-shopping">
+                    
+                    <!-- Hero Card Financière -->
+                    <div class="shopping-hero-card">
+                        <div class="shopping-hero-title">
+                            <span>🛒</span> Liste de Courses Intelligente & Consolidée
+                        </div>
+                        <div class="shopping-hero-subtitle">
+                            Ingrédients regroupés par étals du marché de Dakar avec déduction directe de votre placard.
+                        </div>
+                        <div class="shopping-metrics-row">
+                            <div class="shopping-metric-item">
+                                <div class="shopping-metric-val" id="shopping-stat-net">0 FCFA</div>
+                                <div class="shopping-metric-lbl">Budget net à prévoir au marché</div>
+                            </div>
+                            <div class="shopping-metric-item">
+                                <div class="shopping-metric-val green" id="shopping-stat-saved">-0 FCFA</div>
+                                <div class="shopping-metric-lbl">Économies grâce à votre placard</div>
+                            </div>
+                            <div class="shopping-metric-item">
+                                <div class="shopping-metric-val" id="shopping-stat-gross">0 FCFA</div>
+                                <div class="shopping-metric-lbl">Coût brut total des ingrédients</div>
+                            </div>
+                            <div class="shopping-metric-item">
+                                <div class="shopping-metric-val" id="shopping-stat-items">0 articles</div>
+                                <div class="shopping-metric-lbl" id="shopping-stat-items-sub">0 à acheter</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions & Filtres jours de courses -->
+                    <div class="shopping-toolbar-row">
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span style="font-size:0.85rem; font-weight:700; color:var(--secondary);">Période de courses :</span>
+                            <button type="button" class="planner-day-tab-btn active" id="shop-filter-all" onclick="App.filterShoppingPeriod('all')">Semaine entière (7j)</button>
+                            <button type="button" class="planner-day-tab-btn" id="shop-filter-first3" onclick="App.filterShoppingPeriod('first3')">Début de semaine (Lun-Mer)</button>
+                            <button type="button" class="planner-day-tab-btn" id="shop-filter-weekend" onclick="App.filterShoppingPeriod('weekend')">Fin de semaine (Jeu-Dim)</button>
+                        </div>
+
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <button type="button" class="whatsapp-share-btn" onclick="App.shareShoppingWhatsApp()">
+                                <span>📲</span> Copier / Partager sur WhatsApp
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="window.print()" style="padding:10px 14px; font-size:0.88rem;">
+                                🖨️ Imprimer
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="App.refreshShoppingList()" style="padding:10px 14px; font-size:0.88rem;">
+                                🔄 Actualiser
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grille des étals de Dakar -->
+                    <div class="shopping-stalls-grid" id="shopping-stalls-container">
+                        <!-- Rendu dynamique par App.renderShoppingStalls() -->
+                    </div>
+                </div>
+
             </main>
         </div>
     </div>
@@ -861,6 +1015,7 @@
     <script src="services/userProfileService.js"></script>
     <script src="services/recipeService.js"></script>
     <script src="services/recipeAdaptationService.js"></script>
+    <script src="services/mealPlannerService.js"></script>
     <script src="app.js"></script>
 </body>
 

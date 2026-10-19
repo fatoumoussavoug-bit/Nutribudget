@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests Unitaires - Planificateur de Menus & Liste de Courses (Étape 6)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F8FAFC;
+            color: #0F172A;
+            padding: 24px;
+            margin: 0;
+        }
+        .header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E2E8F0;
+        }
+        .header h1 {
+            color: #0B3B24;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .summary-bar {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+            background: #FFFFFF;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #E2E8F0;
+        }
+        .summary-item {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .summary-item.passed { color: #16A34A; }
+        .summary-item.failed { color: #DC2626; }
+        .test-card {
+            background: #FFFFFF;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            border-left: 6px solid #CBD5E1;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .test-card.passed {
+            border-left-color: #16A34A;
+        }
+        .test-card.failed {
+            border-left-color: #DC2626;
+            background: #FEF2F2;
+        }
+        .test-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .test-desc {
+            font-size: 0.88rem;
+            color: #64748B;
+            margin-bottom: 8px;
+        }
+        .test-details {
+            font-family: monospace;
+            font-size: 0.82rem;
+            background: #F1F5F9;
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: #1E293B;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1><span>📅</span> Tests Unitaires - Planificateur de Menus & Liste de Courses (Étape 6)</h1>
+        <p>Validation automatisée de la génération hebdomadaire, consolidation marchande et export WhatsApp.</p>
+    </div>
+
+    <div class="summary-bar" id="summary-bar">
+        <div class="summary-item" id="total-tests">Tests : 0</div>
+        <div class="summary-item passed" id="passed-tests">Succès : 0</div>
+        <div class="summary-item failed" id="failed-tests">Échecs : 0</div>
+    </div>
+
+    <div id="test-results"></div>
+
+    <!-- SCRIPTS CORE DU PROJET -->
+    <script src="../data/ingredients.js"></script>
+    <script src="../services/nutritionCalculator.js"></script>
+    <script src="../services/userProfileService.js"></script>
+    <script src="../services/recipeService.js"></script>
+    <script src="../services/recipeAdaptationService.js"></script>
+    <script src="../services/mealPlannerService.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const resultsContainer = document.getElementById("test-results");
+            let total = 0;
+            let passed = 0;
+            let failed = 0;
+
+            function assert(name, description, condition, details = "") {
+                total++;
+                const isSuccess = Boolean(condition);
+                if (isSuccess) passed++; else failed++;
+
+                const card = document.createElement("div");
+                card.className = `test-card ${isSuccess ? "passed" : "failed"}`;
+                card.innerHTML = `
+                    <div class="test-title">
+                        <span>${isSuccess ? "✅" : "❌"} ${name}</span>
+                        <span style="font-size:0.85rem; color:${isSuccess ? '#16A34A' : '#DC2626'}">
+                            ${isSuccess ? "SUCCÈS" : "ÉCHEC"}
+                        </span>
+                    </div>
+                    <div class="test-desc">${description}</div>
+                    ${details ? `<div class="test-details">${details}</div>` : ""}
+                `;
+                resultsContainer.appendChild(card);
+
+                document.getElementById("total-tests").textContent = `Tests : ${total}`;
+                document.getElementById("passed-tests").textContent = `Succès : ${passed}`;
+                document.getElementById("failed-tests").textContent = `Échecs : ${failed}`;
+            }
+
+            // ========================================================
+            // EXÉCUTION DES TESTS UNITAIRES ÉTAPE 6
+            // ========================================================
+
+            // TEST 1 : Structure d'un plan hebdomadaire vide
+            const emptyPlan = window.NutriPlanner.createEmptyWeeklyPlan(4);
+            const has7Days = Object.keys(emptyPlan.days).length === 7;
+            const has4Slots = Object.keys(emptyPlan.days.lundi.meals).length === 4;
+            assert(
+                "Structure du plan hebdomadaire vide",
+                "Crée une grille de 7 jours (Lundi à Dimanche) avec 4 créneaux de repas par jour",
+                has7Days && has4Slots && emptyPlan.servings === 4,
+                `Jours créés : ${Object.keys(emptyPlan.days).join(', ')} | Créneaux Lundi : ${Object.keys(emptyPlan.days.lundi.meals).join(', ')}`
+            );
+
+            // TEST 2 : Génération automatique d'une semaine complète
+            const smartPlan = window.NutriPlanner.generateSmartWeeklyPlan({
+                servings: 2,
+                targetCalories: 2100
+            });
+            const allSlotsFilled = smartPlan.summary.filledSlotsCount === 28;
+            assert(
+                "Génération automatique d'un menu hebdomadaire complet (7j)",
+                "Remplit les 28 créneaux de repas de la semaine avec des recettes variées",
+                allSlotsFilled && smartPlan.summary.completionPercent === 100,
+                `Créneaux remplis : ${smartPlan.summary.filledSlotsCount}/28 (100%) | Calories moy/jour : ${smartPlan.summary.avgCaloriesPerDay} kcal`
+            );
+
+            // TEST 3 : Respect strict des exclusions alimentaires (ex: Poisson & Fruits de mer)
+            const veggiePlan = window.NutriPlanner.generateSmartWeeklyPlan({
+                servings: 2,
+                exclusions: ["poisson"]
+            });
+            let fishFound = false;
+            Object.values(veggiePlan.days).forEach(d => {
+                Object.values(d.meals).forEach(m => {
+                    if (m && m.scaledIngredients) {
+                        m.scaledIngredients.forEach(i => {
+                            if (i.ingredientId.includes("poisson") || i.ingredientId.includes("yaboye") || i.ingredientId.includes("thiof") || i.ingredientId.includes("guedj")) {
+                                fishFound = true;
+                            }
+                        });
+                    }
+                });
+            });
+            assert(
+                "Respect strict des exclusions alimentaires santé",
+                "Exclut formellement les ingrédients interdits (ex: poisson) de tous les repas générés",
+                !fishFound,
+                "Zéro poisson ni fruit de mer détecté sur l'ensemble des 28 créneaux de la semaine."
+            );
+
+            // TEST 4 : Calcul déterministe obligatoire via NutriCalculator
+            const lundiMeals = smartPlan.days.lundi.meals;
+            let sumLundiKcal = 0;
+            Object.values(lundiMeals).forEach(m => {
+                if (m && m.nutrition && m.nutrition.perServing) {
+                    sumLundiKcal += m.nutrition.perServing.calories;
+                }
+            });
+            const matchesReported = Math.round(sumLundiKcal) === smartPlan.days.lundi.totals.calories;
+            assert(
+                "Règle d'or de calcul déterministe quotidien via NutriCalculator",
+                "Les calories et totaux du jour correspondent exactement à la somme mathématique des portions",
+                matchesReported && smartPlan.days.lundi.totals.calories > 0,
+                `Somme calculée : ${sumLundiKcal} kcal === Total journalier : ${smartPlan.days.lundi.totals.calories} kcal`
+            );
+
+            // TEST 5 : Synthèse budgétaire en FCFA (Hebdomadaire & Par personne)
+            const weeklyCost = smartPlan.summary.weeklyCostFCFA;
+            const costPerPers = smartPlan.summary.costPerPersonPerDayFCFA;
+            assert(
+                "Chiffrage budgétaire précis en FCFA",
+                "Calcule le budget global de la semaine et le coût moyen par personne par jour",
+                weeklyCost > 0 && costPerPers > 0,
+                `Budget semaine : ${weeklyCost.toLocaleString('fr-FR')} FCFA | Coût moyen / pers / jour : ${costPerPers.toLocaleString('fr-FR')} FCFA`
+            );
+
+            // TEST 6 : Assignation manuelle et suppression d'un créneau
+            const testPlan = window.NutriPlanner.createEmptyWeeklyPlan(2);
+            window.NutriPlanner.setMealSlot(testPlan, "mercredi", "dejeuner", "recette-ceebu-jen-sain", 2);
+            const slotOccupied = testPlan.days.mercredi.meals.dejeuner !== null && testPlan.days.mercredi.meals.dejeuner.recipeId === "recette-ceebu-jen-sain";
+            window.NutriPlanner.removeMealSlot(testPlan, "mercredi", "dejeuner");
+            const slotCleared = testPlan.days.mercredi.meals.dejeuner === null;
+            assert(
+                "Modification interactive de la grille de repas",
+                "Permet d'assigner manuellement une recette à un créneau et de la retirer",
+                slotOccupied && slotCleared,
+                "Créneau mercredi midi : assigné puis supprimé avec succès."
+            );
+
+            // TEST 7 : Consolidation intelligente de la liste de courses
+            const shoppingList = window.NutriPlanner.generateShoppingList(smartPlan, {
+                selectedDays: ["lundi", "mardi", "mercredi"],
+                pantryIngredientIds: ["oignon-jaune", "huile-arachide"]
+            });
+            const hasItems = shoppingList.items.length > 0;
+            const uniqueIngredients = new Set(shoppingList.items.map(i => i.ingredientId)).size === shoppingList.items.length;
+            assert(
+                "Consolidation intelligente des ingrédients de la liste de courses",
+                "Regroupe les ingrédients identiques utilisés dans plusieurs repas sans aucun doublon",
+                hasItems && uniqueIngredients,
+                `Articles consolidés pour 3 jours : ${shoppingList.items.length} ingrédients distincts.`
+            );
+
+            // TEST 8 : Déduction des économies du placard dans la liste de courses
+            const pantrySavings = shoppingList.totals.pantrySavingsFCFA;
+            const netCost = shoppingList.totals.netToBuyCostFCFA;
+            const grossCost = shoppingList.totals.grossCostFCFA;
+            const mathCorrect = Math.abs((netCost + pantrySavings) - grossCost) <= 2;
+            assert(
+                "Déduction automatique des économies du placard",
+                "Soustrait le coût des ingrédients déjà disponibles à la maison pour donner le budget net au marché",
+                pantrySavings > 0 && mathCorrect,
+                `Brut : ${grossCost} FCFA - Placard : ${pantrySavings} FCFA = Net à débourser : ${netCost} FCFA`
+            );
+
+            // TEST 9 : Organisation par étals du marché de Dakar
+            const stalls = shoppingList.stalls;
+            const hasFishOrMeatStall = stalls.viandes_poissons && stalls.viandes_poissons.items !== undefined;
+            const hasVegStall = stalls.legumes_condiments && stalls.legumes_condiments.items !== undefined;
+            const hasCerealStall = stalls.cereales_feculents && stalls.cereales_feculents.items !== undefined;
+            assert(
+                "Organisation par étals des marchés de Dakar",
+                "Ventile les courses entre Poissonnerie/Boucherie, Maraîchers des Niayes, Céréales, Épicerie",
+                hasFishOrMeatStall && hasVegStall && hasCerealStall,
+                `Étals générés : ${Object.keys(stalls).map(k => stalls[k].title.split(' ')[1]).join(', ')}`
+            );
+
+            // TEST 10 : Formatage prêt pour WhatsApp
+            const waText = window.NutriPlanner.formatWhatsAppShoppingList(shoppingList, smartPlan.summary);
+            const hasWaHeader = waText.includes("LISTE DE COURSES NUTRIBUDGET");
+            const hasFCFA = waText.includes("FCFA");
+            const hasEmoji = waText.includes("🇸🇳") && waText.includes("💰");
+            assert(
+                "Génération du message WhatsApp pour les courses",
+                "Produit un texte élégamment mis en forme, prêt à être envoyé par WhatsApp pour faire les courses",
+                hasWaHeader && hasFCFA && hasEmoji,
+                `Longueur message : ${waText.length} caractères avec sections d'étals et budget estimé.`
+            );
+
+            // TEST 11 : Persistance LocalStorage
+            window.NutriPlanner.saveWeeklyPlan(smartPlan);
+            const reloaded = window.NutriPlanner.loadWeeklyPlan();
+            const persistOk = reloaded && reloaded.summary && reloaded.summary.weeklyCostFCFA === smartPlan.summary.weeklyCostFCFA;
+            assert(
+                "Persistance du plan hebdomadaire dans LocalStorage",
+                "Sauvegarde et recharge fidèlement la semaine de repas sans altération des calculs",
+                persistOk,
+                `Plan rechargé avec succès : ${reloaded.summary.weeklyCostFCFA} FCFA`
+            );
+        });
+    </script>
+</body>
+</html>
