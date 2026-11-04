@@ -142,6 +142,8 @@ const App = (function () {
         if (tabName === "dashboard") loadDashboard();
         if (tabName === "profile") loadProfileForm();
         if (tabName === "recipes") loadRecipesTab();
+        if (tabName === "planner") loadPlannerTab();
+        if (tabName === "shopping") loadShoppingTab();
     }
 
     function showComingSoon(featureName) {
@@ -217,12 +219,35 @@ const App = (function () {
         const budget = calc.budget;
         if (budget && budget.amountFCFA > 0) {
             document.getElementById("budget-card").style.display = "block";
+            const curr = budget.currency || "FCFA";
+            const days = budget.days || 7;
+            const periodLabels = { "7": "Semaine (7 j)", "15": "15 jours", "30": "Mois (30 j)", "custom": `${days} jours` };
+            const periodLabel = periodLabels[budget.period] || `${days} jours`;
+
+            const cardCurrEl = document.getElementById("budget-card-currency");
+            if (cardCurrEl) cardCurrEl.textContent = curr;
+
+            const badgeEl = document.getElementById("budget-period-badge");
+            if (badgeEl) badgeEl.textContent = `Période : ${periodLabel}`;
+
+            const totalStatedEl = document.getElementById("budget-total-stated");
+            if (totalStatedEl) totalStatedEl.textContent = `${budget.amountFCFA.toLocaleString("fr-FR")} ${curr}`;
+
+            const daysStatedEl = document.getElementById("budget-days-stated");
+            if (daysStatedEl) daysStatedEl.textContent = `${days} jour${days > 1 ? "s" : ""}`;
+
+            const hhStatedEl = document.getElementById("budget-household-stated");
+            if (hhStatedEl) {
+                const hh = budget.householdSize || 1;
+                hhStatedEl.textContent = `${hh} personne${hh > 1 ? "s" : ""}`;
+            }
+
             document.getElementById("budget-daily-total").textContent =
-                budget.dailyTotalFCFA.toLocaleString("fr-FR") + " FCFA";
+                budget.dailyTotalFCFA.toLocaleString("fr-FR") + " " + curr;
             document.getElementById("budget-daily-person").textContent =
-                budget.dailyPerPersonFCFA.toLocaleString("fr-FR") + " FCFA";
+                budget.dailyPerPersonFCFA.toLocaleString("fr-FR") + " " + curr;
             document.getElementById("budget-per-meal").textContent =
-                budget.perMealPerPersonFCFA.toLocaleString("fr-FR") + " FCFA";
+                budget.perMealPerPersonFCFA.toLocaleString("fr-FR") + " " + curr;
         } else {
             document.getElementById("budget-card").style.display = "none";
         }
@@ -242,11 +267,97 @@ const App = (function () {
     }
 
     // ============================================================
+    // GESTION DU BUDGET FLEXIBLE & CONDITIONS EN TEMPS RÉEL
+    // ============================================================
+    function updateBudgetCalculation() {
+        const amountInput = document.getElementById("prof-budget-amount");
+        const periodSelect = document.getElementById("prof-budget-period");
+        const customGroup = document.getElementById("prof-budget-custom-days-group");
+        const customDaysInput = document.getElementById("prof-budget-custom-days");
+        const householdInput = document.getElementById("prof-household");
+        const previewEl = document.getElementById("prof-budget-preview");
+        const dailyCalcEl = document.getElementById("prof-budget-daily-calc");
+        const perPersonCalcEl = document.getElementById("prof-budget-per-person-calc");
+        const currencySelect = document.getElementById("prof-budget-currency");
+
+        if (!amountInput || !periodSelect) return;
+
+        const period = periodSelect.value;
+        const isCustom = period === "custom";
+        if (customGroup) {
+            customGroup.style.display = isCustom ? "block" : "none";
+        }
+
+        const amount = parseFloat(amountInput.value) || 0;
+        let days = 7;
+        if (isCustom) {
+            days = parseInt(customDaysInput?.value) || 0;
+        } else {
+            days = parseInt(period) || (period === "journalier" ? 1 : 7);
+        }
+
+        const household = Math.max(1, parseInt(householdInput?.value) || 1);
+        const currency = currencySelect?.value || "FCFA";
+
+        if (amount > 0 && days > 0) {
+            const daily = Math.round(amount / days);
+            const perPerson = Math.round(daily / household);
+            const perMeal = Math.round(perPerson / 3);
+
+            if (dailyCalcEl) {
+                dailyCalcEl.textContent = `${daily.toLocaleString("fr-FR")} ${currency} / jour`;
+            }
+            if (perPersonCalcEl) {
+                perPersonCalcEl.innerHTML = `
+                    <span>Soit environ <strong>${perPerson.toLocaleString("fr-FR")} ${currency}</strong> / jour par personne</span>
+                    <span style="display:inline-block; margin-left:6px; opacity:0.85;">(~${perMeal.toLocaleString("fr-FR")} ${currency} / repas pour ${household} pers.)</span>
+                `;
+            }
+            if (previewEl) {
+                previewEl.style.display = "block";
+            }
+        } else {
+            if (previewEl) {
+                previewEl.style.display = "none";
+            }
+        }
+    }
+
+    function toggleOtherCondition() {
+        const cb = document.getElementById("cond-autre-cb");
+        const group = document.getElementById("cond-autre-group");
+        if (cb && group) {
+            group.style.display = cb.checked ? "block" : "none";
+        }
+    }
+
+    function initProfileDynamicListeners() {
+        ["prof-budget-amount", "prof-budget-period", "prof-budget-custom-days", "prof-household", "prof-budget-currency"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el && !el._budgetBound) {
+                el.addEventListener("input", updateBudgetCalculation);
+                el.addEventListener("change", updateBudgetCalculation);
+                el._budgetBound = true;
+            }
+        });
+        const otherCb = document.getElementById("cond-autre-cb");
+        if (otherCb && !otherCb._bound) {
+            otherCb.addEventListener("change", toggleOtherCondition);
+            otherCb._bound = true;
+        }
+    }
+
+    // ============================================================
     // FORMULAIRE PROFIL — Chargement & Sauvegarde
     // ============================================================
     function loadProfileForm() {
+        initProfileDynamicListeners();
+
         const profile = NutriProfile.getProfile();
-        if (!profile) return;
+        if (!profile) {
+            updateBudgetCalculation();
+            return;
+        }
 
         // Remplir les champs
         setValue("prof-age", profile.age);
@@ -255,7 +366,26 @@ const App = (function () {
         setValue("prof-gender", profile.gender);
         setValue("prof-activity", profile.activityLevel);
         setValue("prof-budget-amount", profile.budgetAmountFCFA || "");
-        setValue("prof-budget-period", profile.budgetPeriod || "hebdomadaire");
+
+        // Période du budget
+        let periodVal = "7";
+        if (profile.budgetPeriod === "custom") {
+            periodVal = "custom";
+        } else if (profile.budgetPeriod === "15") {
+            periodVal = "15";
+        } else if (profile.budgetPeriod === "30" || profile.budgetPeriod === "mensuel") {
+            periodVal = "30";
+        } else if (profile.budgetPeriod === "journalier" || profile.budgetPeriod === "1") {
+            periodVal = "custom";
+        } else {
+            periodVal = "7";
+        }
+        setValue("prof-budget-period", periodVal);
+
+        if (periodVal === "custom") {
+            setValue("prof-budget-custom-days", profile.budgetDays || profile.customDays || (profile.budgetPeriod === "journalier" ? 1 : ""));
+        }
+        setValue("prof-budget-currency", profile.budgetCurrency || "FCFA");
         setValue("prof-household", profile.householdSize || 1);
 
         // Objectif (radio)
@@ -264,16 +394,29 @@ const App = (function () {
         if (goalRadio) goalRadio.checked = true;
 
         // Conditions médicales
+        const conds = Array.isArray(profile.specialConditions) ? profile.specialConditions : [];
         document.querySelectorAll('input[name="conditions"]').forEach(cb => {
-            cb.checked = Array.isArray(profile.specialConditions) &&
-                profile.specialConditions.includes(cb.value);
+            cb.checked = conds.includes(cb.value);
         });
+
+        // Autre condition
+        const hasOtherCond = conds.includes("autre") || Boolean(profile.otherCondition);
+        const condAutreCb = document.getElementById("cond-autre-cb");
+        if (condAutreCb) condAutreCb.checked = hasOtherCond;
+        setValue("prof-other-condition", profile.otherCondition || "");
+        toggleOtherCondition();
 
         // Exclusions alimentaires
         document.querySelectorAll('input[name="exclusions"]').forEach(cb => {
             cb.checked = Array.isArray(profile.exclusions) &&
                 profile.exclusions.includes(cb.value);
         });
+
+        // Autres aliments que je ne mange pas (case de texte libre)
+        setValue("prof-custom-exclusions", profile.customExclusions || "");
+
+        // Recalculer le budget affiché en temps réel
+        updateBudgetCalculation();
     }
 
     function handleSaveProfile(e) {
@@ -286,6 +429,27 @@ const App = (function () {
         const goalEl = document.querySelector('input[name="prof-goal"]:checked');
         const conditions = [...document.querySelectorAll('input[name="conditions"]:checked')].map(cb => cb.value);
         const exclusions = [...document.querySelectorAll('input[name="exclusions"]:checked')].map(cb => cb.value);
+        const customExclusions = document.getElementById("prof-custom-exclusions") ? document.getElementById("prof-custom-exclusions").value.trim() : "";
+        const otherCondition = document.getElementById("prof-other-condition") ? document.getElementById("prof-other-condition").value.trim() : "";
+        const budgetPeriod = document.getElementById("prof-budget-period").value;
+        const customDays = parseInt(document.getElementById("prof-budget-custom-days")?.value) || 0;
+        const budgetCurrency = document.getElementById("prof-budget-currency") ? document.getElementById("prof-budget-currency").value : "FCFA";
+        const budgetAmount = parseFloat(document.getElementById("prof-budget-amount").value) || 0;
+
+        let budgetDays = 7;
+        if (budgetPeriod === "custom") {
+            budgetDays = customDays;
+        } else {
+            budgetDays = parseInt(budgetPeriod) || 7;
+        }
+
+        // Validation période personnalisée
+        if (budgetAmount > 0 && budgetPeriod === "custom" && (!customDays || customDays < 1)) {
+            errEl.textContent = "Veuillez préciser le nombre exact de jours (au moins 1) pour votre période personnalisée.";
+            errEl.style.display = "block";
+            errEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            return;
+        }
 
         const profileData = {
             age: parseInt(document.getElementById("prof-age").value),
@@ -294,11 +458,15 @@ const App = (function () {
             gender: document.getElementById("prof-gender").value,
             goal: goalEl ? goalEl.value : "maintien",
             activityLevel: document.getElementById("prof-activity").value,
-            budgetAmountFCFA: parseFloat(document.getElementById("prof-budget-amount").value) || 0,
-            budgetPeriod: document.getElementById("prof-budget-period").value,
+            budgetAmountFCFA: budgetAmount,
+            budgetPeriod: budgetPeriod,
+            budgetDays: budgetDays,
+            budgetCurrency: budgetCurrency,
             householdSize: parseInt(document.getElementById("prof-household").value) || 1,
             specialConditions: conditions,
-            exclusions: exclusions
+            otherCondition: otherCondition,
+            exclusions: exclusions,
+            customExclusions: customExclusions
         };
 
         // Validation de l'activité
@@ -340,6 +508,15 @@ const App = (function () {
     let activeAdaptationType = null;
     let activeSubstitutionTarget = null;
     let cachedFilteredRecipes = [];
+
+    // ============================================================
+    // ÉTAT — Planificateur Hebdo & Liste de Courses (Étape 6)
+    // ============================================================
+    let currentWeeklyPlan = null;
+    let activeShoppingPeriod = "all";
+    let activePlannerDayFilter = "all";
+    let plannerServings = 2;
+    let shoppingChecklist = {};
 
     function loadRecipesTab() {
         // Initialiser les portions selon le profil si disponible
@@ -509,7 +686,11 @@ const App = (function () {
 
         // Récupérer les exclusions du profil utilisateur connecté
         const profile = NutriProfile.getProfile();
-        const exclusions = (profile && Array.isArray(profile.exclusions)) ? profile.exclusions : [];
+        let exclusions = (profile && Array.isArray(profile.exclusions)) ? [...profile.exclusions] : [];
+        if (profile && profile.customExclusions) {
+            const extra = profile.customExclusions.split(/[,;\n]+/).map(s => s.trim().toLowerCase()).filter(Boolean);
+            exclusions = Array.from(new Set([...exclusions, ...extra]));
+        }
 
         const pantryArray = Array.from(selectedPantryIngredients);
 
@@ -754,6 +935,376 @@ const App = (function () {
         } catch (err) {
             showToast("Impossible de substituer : " + err.message, "error");
         }
+    }
+
+    // ============================================================
+    // PLANIFICATEUR DE MENUS HEBDOMADAIRE (Étape 6)
+    // ============================================================
+
+    function loadPlannerTab() {
+        if (!window.NutriPlanner) return;
+        // Charger un plan sauvegardé ou créer un plan vide
+        const saved = window.NutriPlanner.loadWeeklyPlan();
+        if (saved && saved.days) {
+            currentWeeklyPlan = saved;
+            plannerServings = saved.servings || 2;
+        } else {
+            currentWeeklyPlan = window.NutriPlanner.createEmptyWeeklyPlan(plannerServings);
+        }
+        // Synchroniser les boutons convives
+        [1, 2, 4, 6].forEach(s => {
+            const btn = document.getElementById("planner-serv-" + s);
+            if (btn) btn.classList.toggle("active", s === plannerServings);
+        });
+        renderPlannerGrid(currentWeeklyPlan, activePlannerDayFilter);
+        updatePlannerKPIs(currentWeeklyPlan);
+    }
+
+    function generateWeeklyPlan() {
+        if (!window.NutriPlanner) { showToast("Service planificateur non disponible", "error"); return; }
+        const profile = NutriProfile.getProfile();
+        let exclusions = (profile && Array.isArray(profile.exclusions)) ? [...profile.exclusions] : [];
+        if (profile && profile.customExclusions) {
+            const extra = profile.customExclusions.split(/[,;\n]+/).map(s => s.trim().toLowerCase()).filter(Boolean);
+            exclusions = Array.from(new Set([...exclusions, ...extra]));
+        }
+        const targetCalories = (profile && profile.calculated) ? profile.calculated.targetCalories : 2000;
+        showToast("⚡ Génération de votre menu de la semaine...", "info");
+        try {
+            currentWeeklyPlan = window.NutriPlanner.generateSmartWeeklyPlan({
+                servings: plannerServings,
+                exclusions,
+                targetCalories
+            });
+            window.NutriPlanner.saveWeeklyPlan(currentWeeklyPlan);
+            renderPlannerGrid(currentWeeklyPlan, activePlannerDayFilter);
+            updatePlannerKPIs(currentWeeklyPlan);
+            showToast("✅ Plan de la semaine généré avec succès !", "success");
+        } catch (err) {
+            showToast("Erreur lors de la génération : " + err.message, "error");
+        }
+    }
+
+    function resetWeeklyPlan() {
+        if (!window.NutriPlanner) return;
+        currentWeeklyPlan = window.NutriPlanner.createEmptyWeeklyPlan(plannerServings);
+        window.NutriPlanner.saveWeeklyPlan(currentWeeklyPlan);
+        renderPlannerGrid(currentWeeklyPlan, activePlannerDayFilter);
+        updatePlannerKPIs(currentWeeklyPlan);
+        showToast("🔄 Plan réinitialisé.", "info");
+    }
+
+    function changePlannerServings(n) {
+        plannerServings = Number(n) || 2;
+        [1, 2, 4, 6].forEach(s => {
+            const btn = document.getElementById("planner-serv-" + s);
+            if (btn) btn.classList.toggle("active", s === plannerServings);
+        });
+        // Regénérer si un plan existe
+        if (currentWeeklyPlan && currentWeeklyPlan.summary && currentWeeklyPlan.summary.filledSlotsCount > 0) {
+            generateWeeklyPlan();
+        } else {
+            if (currentWeeklyPlan) { currentWeeklyPlan.servings = plannerServings; }
+        }
+    }
+
+    function filterPlannerDay(dayKey) {
+        activePlannerDayFilter = dayKey;
+        // Mettre à jour les boutons de filtre
+        document.querySelectorAll(".planner-day-tab-btn").forEach(btn => {
+            btn.classList.remove("active");
+        });
+        const activeBtn = document.getElementById("day-tab-" + dayKey);
+        if (activeBtn) activeBtn.classList.add("active");
+        renderPlannerGrid(currentWeeklyPlan, dayKey);
+    }
+
+    function renderPlannerGrid(plan, dayFilter) {
+        const container = document.getElementById("planner-week-container");
+        if (!container) return;
+        if (!plan || !plan.days) {
+            container.innerHTML = `<div style="text-align:center;padding:48px;color:var(--text-light)">Aucun plan disponible. Cliquez sur "Générer ma semaine".</div>`;
+            return;
+        }
+
+        const days = window.NutriPlanner ? window.NutriPlanner.DAYS_ORDER : [];
+        const slots = window.NutriPlanner ? window.NutriPlanner.MEAL_SLOTS : [];
+        const filteredDays = (dayFilter && dayFilter !== "all") ? days.filter(d => d.key === dayFilter) : days;
+
+        const slotLabels = { petit_dejeuner: "☀️ Petit-déj", dejeuner: "🍲 Déjeuner", collation: "🥭 Collation", diner: "🌙 Dîner" };
+
+        container.innerHTML = filteredDays.map(day => {
+            const dayData = plan.days[day.key];
+            const dayTotals = dayData && dayData.totals ? dayData.totals : { calories: 0, costFCFA: 0 };
+
+            const slotsHtml = slots.map(slot => {
+                const meal = dayData && dayData.meals ? dayData.meals[slot.key] : null;
+                if (meal && meal.recipeId) {
+                    const nut = meal.nutrition || { perServing: {}, total: {} };
+                    const ps = nut.perServing || {};
+                    const tot = nut.total || {};
+                    return `<div class="planner-slot-card filled">
+                        <div class="slot-meal-type">${slotLabels[slot.key] || slot.label}</div>
+                        <div class="slot-recipe-title">${escapeHtml(meal.imageEmoji || "🍲")} ${escapeHtml(meal.title)}</div>
+                        <div class="slot-recipe-meta">
+                            <span>🔥 ${Math.round(ps.calories || 0)} kcal</span>
+                            <span>💰 ${Math.round(tot.costFCFA || 0)} FCFA</span>
+                        </div>
+                        <button type="button" class="slot-remove-btn" onclick="App.removeMealFromSlot('${day.key}', '${slot.key}')" title="Retirer">✕</button>
+                    </div>`;
+                } else {
+                    return `<div class="planner-slot-card empty" onclick="App.openMealSelectorModal('${day.key}', '${slot.key}')">
+                        <div class="slot-meal-type">${slotLabels[slot.key] || slot.label}</div>
+                        <div class="slot-empty-hint">+ Ajouter un repas</div>
+                    </div>`;
+                }
+            }).join("");
+
+            return `<div class="planner-day-column">
+                <div class="planner-day-header">
+                    <span class="day-name">${day.label}</span>
+                    <span class="day-summary">${dayTotals.calories > 0 ? dayTotals.calories + " kcal · " + dayTotals.costFCFA.toLocaleString("fr-FR") + " FCFA" : "Vide"}</span>
+                </div>
+                ${slotsHtml}
+            </div>`;
+        }).join("");
+    }
+
+    function updatePlannerKPIs(plan) {
+        if (!plan || !plan.summary) {
+            setText("planner-kpi-cal", "0 kcal/j");
+            setText("planner-kpi-cost", "0 FCFA");
+            setText("planner-kpi-cost-pers", "0 FCFA");
+            setText("planner-kpi-completion", "0%");
+            setText("planner-kpi-slots", "0 / 28 repas planifiés");
+            return;
+        }
+        const s = plan.summary;
+        setText("planner-kpi-cal", (s.avgCaloriesPerDay || 0).toLocaleString("fr-FR") + " kcal/j");
+        setText("planner-kpi-cost", (s.weeklyCostFCFA || 0).toLocaleString("fr-FR") + " FCFA");
+        setText("planner-kpi-cost-pers", (s.costPerPersonPerDayFCFA || 0).toLocaleString("fr-FR") + " FCFA");
+        setText("planner-kpi-completion", (s.completionPercent || 0) + "%");
+        setText("planner-kpi-slots", (s.filledSlotsCount || 0) + " / 28 repas planifiés");
+    }
+
+    function openMealSelectorModal(dayKey, slotKey) {
+        if (!window.NutriRecipes) return;
+        const slotLabels = { petit_dejeuner: "Petit-déjeuner", dejeuner: "Déjeuner", collation: "Collation", diner: "Dîner" };
+        const catalog = window.NutriRecipes.getCatalog();
+        // Filtrer les recettes compatibles avec le slot
+        const compat = catalog.filter(r => {
+            if (slotKey === "diner") return r.mealType === "diner" || r.mealType === "dejeuner";
+            if (slotKey === "collation") return r.mealType === "collation" || r.mealType === "boisson";
+            if (slotKey === "petit_dejeuner") return r.mealType === "petit_dejeuner" || r.mealType === "boisson";
+            return r.mealType === slotKey;
+        });
+
+        // Créer une modale légère
+        const existing = document.getElementById("meal-selector-modal");
+        if (existing) existing.remove();
+
+        const modal = document.createElement("div");
+        modal.id = "meal-selector-modal";
+        modal.className = "recipe-modal-backdrop";
+        modal.style.cssText = "display:flex;z-index:9999;";
+        modal.innerHTML = `
+            <div class="recipe-modal-dialog" style="max-width:640px;max-height:80vh;overflow-y:auto;" onclick="event.stopPropagation()">
+                <div class="recipe-modal-header" style="padding:20px 24px;">
+                    <div>
+                        <div style="font-size:0.85rem;font-weight:700;color:var(--primary-dark);margin-bottom:4px;">CHOISIR UN REPAS</div>
+                        <h3 style="font-size:1.2rem;font-weight:800;color:var(--secondary);">📅 ${escapeHtml(slotLabels[slotKey] || slotKey)}</h3>
+                    </div>
+                    <button type="button" class="modal-close-btn" onclick="document.getElementById('meal-selector-modal').remove()">✕</button>
+                </div>
+                <div style="padding:16px 24px 24px;">
+                    <div class="meal-selector-grid">
+                        ${compat.map(r => `
+                            <div class="meal-selector-card" onclick="App.selectMealForSlot('${dayKey}','${slotKey}','${r.id}')">
+                                <span style="font-size:2rem;">${r.imageEmoji || "🍲"}</span>
+                                <div>
+                                    <div style="font-size:0.88rem;font-weight:700;color:var(--secondary);">${escapeHtml(r.title)}</div>
+                                    <div style="font-size:0.78rem;color:var(--text-light);margin-top:2px;">⏱️ ${(r.prepTimeMinutes || 0) + (r.cookingTimeMinutes || 0)} min</div>
+                                </div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+            </div>`;
+        modal.addEventListener("click", (e) => { if (e.target === modal) modal.remove(); });
+        document.body.appendChild(modal);
+    }
+
+    function selectMealForSlot(dayKey, slotKey, recipeId) {
+        if (!window.NutriPlanner || !currentWeeklyPlan) return;
+        currentWeeklyPlan = window.NutriPlanner.setMealSlot(currentWeeklyPlan, dayKey, slotKey, recipeId);
+        window.NutriPlanner.saveWeeklyPlan(currentWeeklyPlan);
+        const modal = document.getElementById("meal-selector-modal");
+        if (modal) modal.remove();
+        renderPlannerGrid(currentWeeklyPlan, activePlannerDayFilter);
+        updatePlannerKPIs(currentWeeklyPlan);
+        showToast("✅ Repas ajouté au planning !", "success");
+    }
+
+    function removeMealFromSlot(dayKey, slotKey) {
+        if (!window.NutriPlanner || !currentWeeklyPlan) return;
+        currentWeeklyPlan = window.NutriPlanner.removeMealSlot(currentWeeklyPlan, dayKey, slotKey);
+        window.NutriPlanner.saveWeeklyPlan(currentWeeklyPlan);
+        renderPlannerGrid(currentWeeklyPlan, activePlannerDayFilter);
+        updatePlannerKPIs(currentWeeklyPlan);
+        showToast("🗑️ Repas retiré du planning.", "info");
+    }
+
+    // ============================================================
+    // LISTE DE COURSES AUTOMATIQUE (Étape 6)
+    // ============================================================
+
+    function loadShoppingTab() {
+        if (!window.NutriPlanner) return;
+        // Charger la checklist sauvegardée
+        shoppingChecklist = window.NutriPlanner.loadShoppingChecklist() || {};
+        // Récupérer le plan actuel (ou le charger)
+        if (!currentWeeklyPlan || !currentWeeklyPlan.days) {
+            const saved = window.NutriPlanner.loadWeeklyPlan();
+            if (saved) { currentWeeklyPlan = saved; }
+        }
+        refreshShoppingList();
+    }
+
+    function refreshShoppingList() {
+        if (!window.NutriPlanner) return;
+        if (!currentWeeklyPlan || !currentWeeklyPlan.days) {
+            const container = document.getElementById("shopping-stalls-container");
+            if (container) container.innerHTML = `<div style="text-align:center;padding:48px;color:var(--text-light);grid-column:1/-1;">Aucun plan de menus disponible. Générez d'abord votre semaine dans le Planificateur.</div>`;
+            return;
+        }
+        try {
+            const pantry = Array.from(selectedPantryIngredients);
+            const shopList = window.NutriPlanner.generateShoppingList(currentWeeklyPlan, {
+                pantryIngredients: pantry,
+                period: activeShoppingPeriod
+            });
+            updateShoppingHeroStats(shopList.totals || {});
+            renderShoppingStalls(shopList);
+        } catch (err) {
+            showToast("Erreur liste de courses : " + err.message, "error");
+        }
+    }
+
+    function filterShoppingPeriod(period) {
+        activeShoppingPeriod = period;
+        ["all", "first3", "weekend"].forEach(p => {
+            const btn = document.getElementById("shop-filter-" + p);
+            if (btn) btn.classList.toggle("active", p === period);
+        });
+        refreshShoppingList();
+    }
+
+    function updateShoppingHeroStats(totals) {
+        setText("shopping-stat-net", (totals.netCostFCFA || totals.totalCostFCFA || 0).toLocaleString("fr-FR") + " FCFA");
+        const saved = totals.savedFCFA || 0;
+        setText("shopping-stat-saved", (saved > 0 ? "-" : "") + saved.toLocaleString("fr-FR") + " FCFA");
+        setText("shopping-stat-gross", (totals.grossCostFCFA || totals.totalCostFCFA || 0).toLocaleString("fr-FR") + " FCFA");
+        const totalItems = totals.totalItems || totals.itemCount || 0;
+        const toByItems = totals.itemsToBuy || totalItems;
+        setText("shopping-stat-items", totalItems + " articles");
+        setText("shopping-stat-items-sub", toByItems + " à acheter");
+    }
+
+    function renderShoppingStalls(shopList) {
+        const container = document.getElementById("shopping-stalls-container");
+        if (!container || !window.NutriPlanner) return;
+
+        const stalls = window.NutriPlanner.MARKET_STALLS;
+        const stallItems = shopList.byStall || shopList.stalls || {};
+
+        const stallKeys = Object.keys(stalls);
+        if (stallKeys.length === 0 || Object.keys(stallItems).length === 0) {
+            container.innerHTML = `<div style="text-align:center;padding:48px;color:var(--text-light);grid-column:1/-1;">La liste de courses est vide. Générez un plan de menus d'abord.</div>`;
+            return;
+        }
+
+        container.innerHTML = stallKeys.map(stallKey => {
+            const stall = stalls[stallKey];
+            const items = stallItems[stallKey] || [];
+            if (items.length === 0) return "";
+
+            const stallTotal = items.reduce((sum, it) => sum + (it.needToBuy ? (it.estimatedCostFCFA || it.costFCFA || 0) : 0), 0);
+
+            const itemsHtml = items.map(item => {
+                const checked = shoppingChecklist[item.id || item.ingredientId] || false;
+                const inPantry = !item.needToBuy;
+                return `<div class="shopping-item-row ${checked ? 'checked' : ''} ${inPantry ? 'in-pantry' : ''}">
+                    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;">
+                        <input type="checkbox" ${checked ? 'checked' : ''} ${inPantry ? 'disabled' : ''}
+                            onchange="App.toggleShoppingItem('${item.id || item.ingredientId}')"
+                            style="width:16px;height:16px;accent-color:var(--primary);">
+                        <span style="font-size:0.9rem;font-weight:${inPantry ? '400' : '600'};color:${inPantry ? 'var(--text-light)' : 'var(--secondary)'};text-decoration:${checked ? 'line-through' : 'none'};">
+                            ${escapeHtml(item.name || item.ingredientId)}
+                        </span>
+                        ${inPantry ? '<span style="font-size:0.72rem;background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:20px;">✓ Au placard</span>' : ''}
+                    </label>
+                    <div style="text-align:right;">
+                        <div style="font-size:0.82rem;color:var(--text-light);">${item.totalQuantityFormatted || (Math.round(item.totalQuantity || 0) + " g")}</div>
+                        ${!inPantry ? `<div style="font-size:0.85rem;font-weight:700;color:var(--primary-dark);">${Math.round(item.estimatedCostFCFA || item.costFCFA || 0).toLocaleString('fr-FR')} FCFA</div>` : ''}
+                    </div>
+                </div>`;
+            }).join("");
+
+            return `<div class="stall-card" style="--stall-color:${stall.color || 'var(--primary)'}">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
+                    <div>
+                        <div style="font-size:1rem;font-weight:800;color:var(--secondary);">${stall.title}</div>
+                        <div style="font-size:0.78rem;color:var(--text-light);margin-top:2px;">${stall.subtitle}</div>
+                    </div>
+                    <div style="font-size:0.9rem;font-weight:800;color:var(--primary-dark);background:var(--primary-light);padding:4px 10px;border-radius:20px;white-space:nowrap;">${Math.round(stallTotal).toLocaleString("fr-FR")} FCFA</div>
+                </div>
+                <div>${itemsHtml}</div>
+            </div>`;
+        }).join("");
+    }
+
+    function toggleShoppingItem(ingredientId) {
+        if (!ingredientId || !window.NutriPlanner) return;
+        shoppingChecklist[ingredientId] = !shoppingChecklist[ingredientId];
+        window.NutriPlanner.saveShoppingChecklist(shoppingChecklist);
+        // Re-render pour refléter le changement visuel
+        refreshShoppingList();
+    }
+
+    function shareShoppingWhatsApp() {
+        if (!window.NutriPlanner || !currentWeeklyPlan) {
+            showToast("Aucune liste de courses disponible.", "error");
+            return;
+        }
+        try {
+            const pantry = Array.from(selectedPantryIngredients);
+            const shopList = window.NutriPlanner.generateShoppingList(currentWeeklyPlan, {
+                pantryIngredients: pantry,
+                period: activeShoppingPeriod
+            });
+            const text = window.NutriPlanner.formatWhatsAppShoppingList(shopList);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast("📲 Liste copiée ! Collez-la dans WhatsApp.", "success");
+                });
+            } else {
+                // Fallback
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                ta.remove();
+                showToast("📲 Liste copiée ! Collez-la dans WhatsApp.", "success");
+            }
+        } catch (err) {
+            showToast("Impossible de copier : " + err.message, "error");
+        }
+    }
+
+    function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
     }
 
     function renderRecipeModalContent(recipe) {
@@ -1093,6 +1644,8 @@ const App = (function () {
         showTab,
         showComingSoon,
         handleSaveProfile,
+        updateBudgetCalculation,
+        toggleOtherCondition,
         showToast,
         // Méthodes Étape 4 (Recettes & Placard)
         setRecipeCategory,
@@ -1118,7 +1671,19 @@ const App = (function () {
         applyRecipeAdaptation,
         resetRecipeAdaptation,
         toggleIngredientSubstitution,
-        applyIngredientSubstitution
+        applyIngredientSubstitution,
+        // Méthodes Étape 6 (Planificateur & Liste de Courses)
+        generateWeeklyPlan,
+        resetWeeklyPlan,
+        changePlannerServings,
+        filterPlannerDay,
+        openMealSelectorModal,
+        selectMealForSlot,
+        removeMealFromSlot,
+        filterShoppingPeriod,
+        refreshShoppingList,
+        toggleShoppingItem,
+        shareShoppingWhatsApp
     };
 })();
 

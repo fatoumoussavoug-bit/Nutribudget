@@ -299,6 +299,58 @@
                 valResult.isValid === false && valResult.errors.length >= 3,
                 `Erreurs interceptées (${valResult.errors.length}) : ${valResult.errors.join(' | ')}`
             );
+
+            // TEST 11 : Budget flexible (15 jours, 30 jours et Personnalisé en FCFA)
+            const prof15d = {
+                age: 28, weight: 65, height: 170, gender: "femme", goal: "maintien",
+                activityLevel: "modere", householdSize: 2, budgetAmountFCFA: 30000,
+                budgetPeriod: "15"
+            };
+            const calc15d = Service.calculateEnergyNeeds(prof15d);
+            // 30 000 / 15 = 2 000 FCFA/j foyer. 2000 / 2 = 1000 FCFA/j/personne
+            const ok15d = calc15d.budget.dailyTotalFCFA === 2000 && calc15d.budget.dailyPerPersonFCFA === 1000;
+
+            const profCustom = {
+                age: 30, weight: 70, height: 175, gender: "homme", goal: "maintien",
+                activityLevel: "modere", householdSize: 3, budgetAmountFCFA: 50000,
+                budgetPeriod: "custom", budgetDays: 10, budgetCurrency: "FCFA"
+            };
+            const calcCustom = Service.calculateEnergyNeeds(profCustom);
+            // 50 000 / 10 = 5 000 FCFA/j foyer. 5000 / 3 = 1667 FCFA/j/personne
+            const okCustom = calcCustom.budget.dailyTotalFCFA === 5000 && calcCustom.budget.dailyPerPersonFCFA === 1667 && calcCustom.budget.currency === "FCFA";
+
+            assert(
+                "Budget flexible : Calculs automatiques pour 15 jours et Personnalisé (FCFA)",
+                "Vérifie la division automatique par la période (15j et personnalisé 10j) et la répartition foyer / personne en FCFA",
+                ok15d && okCustom,
+                `15 jours: ${calc15d.budget.dailyTotalFCFA} FCFA/j foyer | Personnalisé (10j): ${calcCustom.budget.dailyTotalFCFA} FCFA/j foyer`
+            );
+
+            // TEST 12 : Sauvegarde des préférences alimentaires libres & option autre condition
+            const profPrefs = {
+                age: 26, weight: 60, height: 165, gender: "femme", goal: "maintien",
+                activityLevel: "leger", householdSize: 1, budgetAmountFCFA: 14000,
+                budgetPeriod: "7",
+                exclusions: ["porc", "gluten"],
+                customExclusions: "crevettes, aubergine, piment fort",
+                specialConditions: ["autre"],
+                otherCondition: "allergie au sésame"
+            };
+            const calcPrefs = Service.calculateEnergyNeeds(profPrefs);
+            const hasOtherWarn = calcPrefs.warnings.some(w => w.code === "CUSTOM_CONDITION");
+            const savedPrefs = Service.saveProfile(profPrefs);
+            const retrievedPrefs = Service.getProfile();
+
+            const prefsOk = hasOtherWarn &&
+                retrievedPrefs.customExclusions === "crevettes, aubergine, piment fort" &&
+                retrievedPrefs.otherCondition === "allergie au sésame";
+
+            assert(
+                "Préférences alimentaires libres & Condition médicale personnalisée",
+                "Conserve fidèlement les exclusions de texte libre et la précision de condition médicale avec avertissement adapté",
+                prefsOk,
+                `Exclusions libres: "${retrievedPrefs?.customExclusions}", Condition: "${retrievedPrefs?.otherCondition}"`
+            );
         });
     </script>
 </body>

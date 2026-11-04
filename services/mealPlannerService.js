@@ -149,6 +149,12 @@
             if (exclSet.has("gluten") && (ingId.includes("pain") || ingId.includes("farine-ble"))) {
                 return false;
             }
+            // Détection générique pour tout aliment personnalisé
+            for (const ex of exclSet) {
+                if (ex && ex.length >= 3 && ingId.includes(ex)) {
+                    return false;
+                }
+            }
         }
         return true;
     }

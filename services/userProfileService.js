@@ -65,17 +65,24 @@
             errors.push("L'objectif doit être 'perte', 'maintien' ou 'prise'.");
         }
 
-        if (data.householdSize !== undefined) {
+        if (data.householdSize !== undefined && data.householdSize !== null && data.householdSize !== "") {
             const size = Number(data.householdSize);
             if (isNaN(size) || size < 1 || size > 20) {
                 errors.push("Le nombre de personnes au foyer doit être compris entre 1 et 20.");
             }
         }
 
-        if (data.budgetAmountFCFA !== undefined) {
+        if (data.budgetAmountFCFA !== undefined && data.budgetAmountFCFA !== null && data.budgetAmountFCFA !== "") {
             const budget = Number(data.budgetAmountFCFA);
-            if (isNaN(budget) || budget <= 0) {
+            if (isNaN(budget) || budget < 0) {
                 errors.push("Le budget alimentaire doit être un montant positif en FCFA.");
+            }
+        }
+
+        if (data.budgetPeriod === "custom" && data.budgetAmountFCFA && Number(data.budgetAmountFCFA) > 0) {
+            const days = Number(data.budgetDays);
+            if (isNaN(days) || days < 1) {
+                errors.push("Veuillez préciser le nombre exact de jours (au moins 1) pour la période personnalisée.");
             }
         }
 
@@ -247,6 +254,13 @@
                     message: "Hypertension : Privilégiez le Nététou et les herbes aromatiques à la place des cubes salés, et intégrez des infusions de Bissap rouge réputées régulatrices."
                 });
             }
+            if (profile.otherCondition && profile.otherCondition.trim()) {
+                warnings.push({
+                    type: "warning",
+                    code: "CUSTOM_CONDITION",
+                    message: `Condition particulière signalée (${profile.otherCondition.trim()}) : Assurez-vous d'adapter vos choix alimentaires selon l'avis de votre professionnel de santé.`
+                });
+            }
         }
 
         if (bmiInfo.bmi < 18.5 && goal === "perte") {
@@ -283,11 +297,22 @@
         // ====================================================
         // CALCUL DU BUDGET ALIMENTAIRE (FCFA)
         // ====================================================
+        let budgetDays = 7;
+        if (profile.budgetDays && Number(profile.budgetDays) > 0) {
+            budgetDays = Math.round(Number(profile.budgetDays));
+        } else if (budgetPeriod === "15" || budgetPeriod === "15_jours") {
+            budgetDays = 15;
+        } else if (budgetPeriod === "30" || budgetPeriod === "30_jours" || budgetPeriod === "mensuel") {
+            budgetDays = 30;
+        } else if (budgetPeriod === "journalier" || budgetPeriod === "1") {
+            budgetDays = 1;
+        } else {
+            budgetDays = 7;
+        }
+
         let dailyBudgetTotalFCFA = 0;
-        if (budgetAmount > 0) {
-            dailyBudgetTotalFCFA = budgetPeriod === "hebdomadaire"
-                ? Math.round(budgetAmount / 7)
-                : Math.round(budgetAmount);
+        if (budgetAmount > 0 && budgetDays > 0) {
+            dailyBudgetTotalFCFA = Math.round(budgetAmount / budgetDays);
         }
 
         const dailyBudgetPerPersonFCFA = householdSize > 0
@@ -318,6 +343,8 @@
             },
             budget: {
                 period: budgetPeriod,
+                days: budgetDays,
+                currency: profile.budgetCurrency || "FCFA",
                 amountFCFA: budgetAmount,
                 householdSize,
                 dailyTotalFCFA: dailyBudgetTotalFCFA,

@@ -260,23 +260,26 @@
 
                         <!-- Budget alimentaire -->
                         <div class="budget-card" id="budget-card" style="display:none;">
-                            <h3>💰 Budget alimentaire estimé (FCFA)</h3>
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                                <h3 style="margin:0;">💰 Budget alimentaire estimé (<span id="budget-card-currency">FCFA</span>)</h3>
+                                <span id="budget-period-badge" style="font-size:0.8rem; font-weight:700; color:var(--primary-dark); background:var(--primary-light); padding:4px 12px; border-radius:20px; border:1px solid rgba(46,204,113,0.3);">Période : 7 jours</span>
+                            </div>
                             <div class="budget-grid">
                                 <div class="budget-item">
                                     <div class="budget-amount" id="budget-daily-total">—</div>
-                                    <div class="budget-label">FCFA par jour (foyer)</div>
+                                    <div class="budget-label"><span class="budget-curr-label">FCFA</span> par jour (foyer)</div>
                                 </div>
                                 <div class="budget-item">
                                     <div class="budget-amount" id="budget-daily-person">—</div>
-                                    <div class="budget-label">FCFA par jour / personne</div>
+                                    <div class="budget-label"><span class="budget-curr-label">FCFA</span> par jour / personne</div>
                                 </div>
                                 <div class="budget-item">
                                     <div class="budget-amount" id="budget-per-meal">—</div>
-                                    <div class="budget-label">FCFA par repas / personne</div>
+                                    <div class="budget-label"><span class="budget-curr-label">FCFA</span> par repas / personne</div>
                                 </div>
                             </div>
-                            <p class="budget-disclaimer">
-                                💡 Les prix sont des estimations basées sur les marchés de Dakar (Sandaga, Tilène). Ils varient selon la saison et le quartier. Vous pouvez les ajuster dans votre profil.
+                            <p class="budget-disclaimer" id="budget-disclaimer-text">
+                                💡 Calcul basé sur un budget de <strong id="budget-total-stated">—</strong> pour <strong id="budget-days-stated">7 jours</strong> (<span id="budget-household-stated">1 personne</span>).
                             </p>
                         </div>
 
@@ -381,17 +384,43 @@
                             <div class="form-grid-2">
                                 <div class="form-group">
                                     <label for="prof-budget-amount">Budget alimentaire (FCFA)</label>
-                                    <input type="number" id="prof-budget-amount" placeholder="Ex : 35000" min="0" step="500">
+                                    <div style="display:flex; gap:8px;">
+                                        <input type="number" id="prof-budget-amount" placeholder="Ex : 35000" min="0" step="500" style="flex:1;">
+                                        <select id="prof-budget-currency" style="width:105px; flex-shrink:0;">
+                                            <option value="FCFA" selected>FCFA</option>
+                                        </select>
+                                    </div>
                                     <p class="form-hint">Laissez vide si vous ne souhaitez pas de suivi budgétaire.</p>
                                 </div>
                                 <div class="form-group">
                                     <label for="prof-budget-period">Période du budget</label>
                                     <select id="prof-budget-period">
-                                        <option value="hebdomadaire">Par semaine (7 jours)</option>
-                                        <option value="journalier">Par jour</option>
+                                        <option value="7">7 jours (Semaine)</option>
+                                        <option value="15">15 jours</option>
+                                        <option value="30">30 jours (Mois)</option>
+                                        <option value="custom">Personnalisé</option>
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- Nombre exact de jours si Personnalisé -->
+                            <div class="form-group" id="prof-budget-custom-days-group" style="display:none; margin-top:4px;">
+                                <label for="prof-budget-custom-days">Nombre exact de jours</label>
+                                <input type="number" id="prof-budget-custom-days" placeholder="Ex : 10" min="1" max="365">
+                                <p class="form-hint">Indiquez la durée exacte de votre cycle de budget (en jours).</p>
+                            </div>
+
+                            <!-- Calcul automatique en temps réel du budget par jour -->
+                            <div id="prof-budget-preview" style="display:none; margin:14px 0 16px 0; padding:12px 16px; background:var(--primary-light); border:1px solid rgba(46, 204, 113, 0.35); border-radius:var(--radius-sm);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                                    <span style="font-size:0.88rem; font-weight:600; color:var(--primary-dark);">📊 Budget journalier recalculé :</span>
+                                    <span id="prof-budget-daily-calc" style="font-size:1.05rem; font-weight:700; color:var(--primary-dark);">0 FCFA / jour</span>
+                                </div>
+                                <div id="prof-budget-per-person-calc" style="font-size:0.82rem; color:var(--text-main); margin-top:4px;">
+                                    Soit 0 FCFA / jour par personne
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="prof-household">Nombre de personnes à nourrir</label>
                                 <input type="number" id="prof-household" placeholder="Ex : 4" min="1" max="20" value="1">
@@ -422,6 +451,13 @@
                                     <label class="checkbox-item">
                                         <input type="checkbox" name="conditions" value="insuffisance_renale"> 🫘 Insuff. rénale
                                     </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="conditions" value="autre" id="cond-autre-cb"> ➕ Autre
+                                    </label>
+                                </div>
+                                <div class="form-group" id="cond-autre-group" style="display:none; margin-top:14px;">
+                                    <label for="prof-other-condition" style="font-size:0.88rem; font-weight:600;">Précisez votre autre maladie ou condition</label>
+                                    <input type="text" id="prof-other-condition" placeholder="Ex : cholestérol, goutte, allergie au sésame..." style="width:100%; border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:10px 14px; font-family:inherit; font-size:0.92rem;">
                                 </div>
                             </div>
                         </div>
@@ -457,6 +493,14 @@
                                 <label class="checkbox-item">
                                     <input type="checkbox" name="exclusions" value="gluten"> 🌾 Gluten
                                 </label>
+                            </div>
+                            <!-- Grande case pour écrire librement -->
+                            <div class="form-group" style="margin-top:22px;">
+                                <label for="prof-custom-exclusions" style="font-weight:600; display:block; margin-bottom:6px;">
+                                    ✍️ Autres aliments que je ne mange pas
+                                </label>
+                                <textarea id="prof-custom-exclusions" rows="3" placeholder="Écrivez librement ici les autres aliments ou ingrédients que vous ne mangez pas (ex : crevettes, poivron, piment fort, aubergine, sucre ajouté, mayonnaise...)" style="width:100%; border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; font-family:inherit; font-size:0.92rem; resize:vertical; background:var(--white); color:var(--text-main); line-height:1.5;"></textarea>
+                                <p class="form-hint">Ces aliments seront sauvegardés dans votre profil et automatiquement pris en compte pour adapter vos repas et suggestions.</p>
                             </div>
                         </div>
 

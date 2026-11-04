@@ -560,6 +560,13 @@
                             containsExcluded = true;
                             break;
                         }
+                        // Détection générique pour tout aliment personnalisé
+                        if (ex && ex.length >= 3) {
+                            if (ingId.includes(ex) || ingName.includes(ex) || ingTags.some(t => t.includes(ex)) || ingCat.includes(ex)) {
+                                containsExcluded = true;
+                                break;
+                            }
+                        }
                     }
                     if (containsExcluded) break;
                 }
