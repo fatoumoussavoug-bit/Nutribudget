@@ -29,10 +29,319 @@
     "use strict";
 
     // ============================================================
-    // CATALOGUE OFFICIEL DES RECETTES DU TERROIR SÉNÉGALAIS
-    // Avec ingrédients strictement alignés sur SEN_INGREDIENTS
+    // CATALOGUE OFFICIEL DES VRAIES RECETTES HEALTHY DU MONDE & DU SÉNÉGAL
+    // Vraies recettes qui existent, saines, équilibrées et en français simple
     // ============================================================
     const RECIPE_CATALOG = [
+        {
+            id: "recette-salade-avocat-oeuf-poulet",
+            title: "Salade d'avocat, œufs durs et poulet grillé",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 10,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Une grande salade complète, riche en protéines maigres et bonnes graisses mono-insaturées, avec avocat crémeux et poulet grillé.",
+            chefTip: "Faites dorer le poulet à sec ou avec une goutte d'huile d'olive, puis laissez-le tiédir avant de le mélanger aux crudités fraîches.",
+            tags: ["sans-gluten", "riche-en-proteines", "bonnes-graisses", "healthy", "salade"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 300, unit: "g" },
+                { ingredientId: "avocat", quantity: 1, unit: "piece" },
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "salade-verte", quantity: 150, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 150, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Assaisonner les blancs de poulet d'une pincée de sel et de poivre, puis les faire griller à la poêle 4 à 5 minutes par face.",
+                "Cuire les œufs 9 minutes dans de l'eau bouillante pour obtenir des œufs durs, les refroidir sous l'eau froide et les écaler.",
+                "Laver et essorer la salade verte. Couper les tomates en quartiers et l'avocat en lamelles régulières.",
+                "Dresser le lit de salade verte dans deux grandes assiettes ou bols.",
+                "Trancher le poulet grillé en lamelles et le disposer sur la salade avec l'avocat, les tomates et les œufs coupés en deux.",
+                "Arroser d'un filet d'huile d'olive et d'un trait de jus de citron avant de déguster."
+            ]
+        },
+        {
+            id: "recette-poulet-grille-riz-legumes",
+            title: "Poulet grillé, riz et légumes sautés",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 20,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍗",
+            description: "Le déjeuner équilibré par excellence : morceaux de poulet dorés, riz blanc léger et poêlée croquante de courgettes et carottes.",
+            chefTip: "Faites sauter les légumes à feu vif pendant quelques minutes seulement pour préserver leur texture croquante et leurs vitamines.",
+            tags: ["sans-gluten", "riche-en-proteines", "equilibre", "legumes-frais"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 350, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "courgette", quantity: 200, unit: "g" },
+                { ingredientId: "carotte", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 100, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Rincer le riz blanc et le faire cuire dans deux fois son volume d'eau légèrement salée pendant 15 minutes.",
+                "Couper les carottes et les courgettes en fines rondelles, et émincer l'oignon.",
+                "Dans une poêle avec la moitié de l'huile, faire dorer les morceaux de poulet assaisonnés de sel et de poivre pendant 10 minutes.",
+                "Dans une seconde poêle bien chaude, faire sauter l'oignon, les carottes et les courgettes avec le reste d'huile pendant 7 à 8 minutes.",
+                "Dresser les assiettes avec une portion de riz blanc, les légumes sautés croquants et le poulet grillé bien chaud."
+            ]
+        },
+        {
+            id: "recette-omelette-legumes-pain",
+            title: "Omelette aux légumes et pain",
+            mealType: "petit_dejeuner",
+            prepTimeMinutes: 10,
+            cookingTimeMinutes: 8,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🍳",
+            description: "Une omelette fondante et colorée aux tomates fraîches, oignons doux et poivrons, servie avec du bon pain croustillant.",
+            chefTip: "Ajoutez une cuillère à soupe d'eau aux œufs battus pour rendre l'omelette encore plus aérée et moelleuse.",
+            tags: ["vegetarien", "rapide", "petit-dejeuner", "diner-leger", "proteines"],
+            ingredients: [
+                { ingredientId: "oeuf-poule", quantity: 4, unit: "piece" },
+                { ingredientId: "tomate-fraiche", quantity: 120, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "poivron", quantity: 100, unit: "g" },
+                { ingredientId: "pain-frais", quantity: 120, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Émincer l'oignon et le poivron, et couper la tomate en petits dés.",
+                "Faire revenir les légumes dans une poêle avec l'huile d'olive pendant 4 minutes pour les attendrir.",
+                "Battre les 4 œufs entiers dans un bol avec une pincée de sel et un tour de poivre.",
+                "Verser les œufs battus sur les légumes dans la poêle chaude.",
+                "Laisser cuire à feu moyen 4 minutes en ramenant délicatement les bords vers le centre.",
+                "Plier l'omelette en deux et servir immédiatement avec les tranches de pain frais."
+            ]
+        },
+        {
+            id: "recette-poisson-grille-pommes-salade",
+            title: "Poisson grillé, pommes de terre vapeur et salade",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 20,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🐟",
+            description: "Filet de poisson frais délicatement grillé, servi avec des pommes de terre fondantes cuites à la vapeur et une salade verte fraîche.",
+            chefTip: "Un simple filet de jus de citron frais au moment de servir rehausse la finesse du poisson sans ajouter de sodium.",
+            tags: ["sans-gluten", "omega-3", "poisson", "healthy", "faible-gras"],
+            ingredients: [
+                { ingredientId: "poisson-blanc", quantity: 350, unit: "g" },
+                { ingredientId: "pommes-de-terre", quantity: 300, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 120, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 100, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Éplucher les pommes de terre, les couper en morceaux et les cuire à la vapeur ou à l'eau bouillante salée pendant 18 à 20 minutes.",
+                "Assaisonner les filets de poisson frais avec sel, poivre et un peu d'ail émincé.",
+                "Dans une poêle antiadhésive avec un filet d'huile d'olive, saisir le poisson 3 à 4 minutes de chaque côté jusqu'à cuisson parfaite.",
+                "Laver la salade verte et couper la tomate en dés.",
+                "Dresser harmonieusement : le poisson grillé, les pommes de terre vapeur arrosées d'un filet d'huile d'olive et la salade verte croquante."
+            ]
+        },
+        {
+            id: "recette-salade-thon-haricots-oeufs",
+            title: "Salade de thon, haricots verts et œufs",
+            mealType: "diner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 10,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Une salade fraîche et rassasiante façon niçoise : haricots verts croquants, thon au naturel émietté, œufs durs et tomates juteuses.",
+            chefTip: "Plongez les haricots verts dans l'eau très froide juste après la cuisson pour stopper la cuisson et fixer leur belle couleur verte.",
+            tags: ["sans-gluten", "riche-en-proteines", "faible-calorie", "healthy", "salade"],
+            ingredients: [
+                { ingredientId: "thon-naturel", quantity: 160, unit: "g" },
+                { ingredientId: "haricots-verts", quantity: 250, unit: "g" },
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "tomate-fraiche", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 50, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Équeuter les haricots verts et les plonger 8 à 10 minutes dans l'eau bouillante salée, puis les égoutter.",
+                "Faire cuire les œufs 9 minutes dans de l'eau frémissante, les refroidir, les écaler et les couper en deux.",
+                "Égoutter le thon au naturel et l'émietter à la fourchette.",
+                "Couper les tomates en quartiers et émincer l'oignon très finement.",
+                "Dans un grand saladier, réunir les haricots verts tiédis, les tomates, l'oignon et le thon émietté.",
+                "Disposer les œufs durs sur le dessus, arroser d'huile d'olive, saler et poivrer légèrement."
+            ]
+        },
+        {
+            id: "recette-bowl-healthy-poulet-avocat",
+            title: "Bowl healthy au poulet, avocat et riz",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥑",
+            description: "Un bowl complet équilibré : riz blanc tiède, émincé de poulet grillé, tranches d'avocat crémeux, carottes râpées et concombres croquants.",
+            chefTip: "Ce bowl réunit tous les macronutriments idéaux (protéines pures, glucides complexes, bonnes graisses et fibres végétales).",
+            tags: ["sans-gluten", "healthy", "riche-en-proteines", "bonnes-graisses"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 300, unit: "g" },
+                { ingredientId: "avocat", quantity: 1, unit: "piece" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "carotte", quantity: 120, unit: "g" },
+                { ingredientId: "concombre", quantity: 120, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz blanc dans de l'eau bouillante salée pendant 15 minutes, égoutter et laisser tiédir.",
+                "Couper le poulet en aiguillettes et le faire dorer à la poêle avec un filet d'huile d'olive 8 minutes.",
+                "Râper les carottes, trancher le concombre en rondelles et découper l'avocat en lamelles.",
+                "Dans deux grands bols, disposer une base de riz blanc.",
+                "Ajouter par sections le poulet grillé, les lamelles d'avocat, les carottes et le concombre.",
+                "Arroser d'un filet d'huile d'olive et déguster immédiatement."
+            ]
+        },
+        {
+            id: "recette-salade-thon-avocat-crudites",
+            title: "Salade fraîche au thon et avocat",
+            mealType: "diner",
+            prepTimeMinutes: 12,
+            cookingTimeMinutes: 0,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥑",
+            description: "Une salade fraîche sans cuisson associant le thon au naturel, des dés d'avocat fondant, des concombres croquants et des tomates fraîches.",
+            chefTip: "Idéale pour les soirs chauds ou quand on n'a pas le temps de cuisiner : prête en 10 minutes montre en main !",
+            tags: ["sans-gluten", "sans-cuisson", "rapide", "healthy", "omega-3"],
+            ingredients: [
+                { ingredientId: "thon-naturel", quantity: 160, unit: "g" },
+                { ingredientId: "avocat", quantity: 1, unit: "piece" },
+                { ingredientId: "tomate-fraiche", quantity: 150, unit: "g" },
+                { ingredientId: "concombre", quantity: 120, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 100, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Laver et essorer la salade verte, la répartir dans deux assiettes creuses.",
+                "Couper l'avocat et les tomates en dés réguliers.",
+                "Peler et trancher le concombre en fines rondelles.",
+                "Égoutter le thon au naturel et le déposer au centre de chaque assiette.",
+                "Garnir avec les dés d'avocat, de tomates et les rondelles de concombre.",
+                "Assaisonner d'huile d'olive, d'une pincée de sel marin et d'un tour de moulin à poivre."
+            ]
+        },
+        {
+            id: "recette-poisson-riz-haricots-verts",
+            title: "Filet de poisson, riz et haricots verts",
+            mealType: "dejeuner",
+            prepTimeMinutes: 12,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🐟",
+            description: "Un plat sain et digeste : poisson blanc cuit à la poêle avec un filet d'huile d'olive, accompagné de riz blanc et de haricots verts vapeur.",
+            chefTip: "Un repas hypocalorique riche en protéines maigres parfait pour les objectifs de maintien ou de perte de poids progressive.",
+            tags: ["sans-gluten", "faible-calorie", "proteines-maigres", "healthy"],
+            ingredients: [
+                { ingredientId: "poisson-blanc", quantity: 350, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "haricots-verts", quantity: 250, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz blanc dans de l'eau bouillante salée pendant 15 minutes.",
+                "Équeuter les haricots verts et les cuire 10 minutes à la vapeur ou dans l'eau bouillante.",
+                "Chauffer l'huile d'olive dans une poêle et saisir les filets de poisson 3 minutes de chaque côté avec sel et poivre.",
+                "Servir le poisson moelleux entouré du riz blanc et des haricots verts vapeur bien chauds."
+            ]
+        },
+        {
+            id: "recette-boeuf-saute-poivrons-riz",
+            title: "Poêlée de bœuf aux poivrons, oignons et riz",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥩",
+            description: "Fines lanières de bœuf saisies rapidement à la poêle avec des poivrons colorés et des oignons doux, servies sur un lit de riz blanc.",
+            chefTip: "Saisissez la viande à feu vif pendant 2 à 3 minutes maximum pour qu'elle reste juteuse et tendre sans sécher.",
+            tags: ["sans-gluten", "riche-en-fer", "proteines", "equilibre"],
+            ingredients: [
+                { ingredientId: "viande-boeuf", quantity: 300, unit: "g" },
+                { ingredientId: "poivron", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 150, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz blanc dans de l'eau bouillante salée pendant 15 minutes, égoutter.",
+                "Couper le bœuf en fines lanières. Émincer les oignons et tailler les poivrons en lamelles.",
+                "Dans une poêle bien chaude avec la moitié de l'huile, saisir le bœuf 3 minutes à feu vif, saler, poivrer et réserver.",
+                "Faire sauter les poivrons et les oignons dans la même poêle avec le reste d'huile 6 minutes pour les dorer.",
+                "Remettre le bœuf avec les légumes 1 minute pour réchauffer l'ensemble.",
+                "Servir aussitôt avec le riz blanc bien chaud."
+            ]
+        },
+        {
+            id: "recette-toast-avocat-oeuf",
+            title: "Toast d'avocat, œufs et salade verte",
+            mealType: "petit_dejeuner",
+            prepTimeMinutes: 10,
+            cookingTimeMinutes: 5,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥑",
+            description: "Pain croustillant tartiné d'avocat écrasé au citron, surmonté d'œufs pochés ou au plat, accompagné de salade verte croquante.",
+            chefTip: "Un petit-déjeuner complet plébiscité dans le monde entier pour son énergie saine et durable toute la matinée.",
+            tags: ["vegetarien", "rapide", "petit-dejeuner", "bonnes-graisses"],
+            ingredients: [
+                { ingredientId: "pain-frais", quantity: 120, unit: "g" },
+                { ingredientId: "avocat", quantity: 1, unit: "piece" },
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "salade-verte", quantity: 80, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 80, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Faire griller les tranches de pain frais au grille-pain ou à la poêle.",
+                "Écraser la chair d'avocat à la fourchette avec sel, poivre et une goutte de jus de citron.",
+                "Dans une poêle avec l'huile d'olive, cuire les deux œufs au plat 3 minutes à feu moyen.",
+                "Tartiner généreusement l'avocat écrasé sur le pain croustillant.",
+                "Déposer un œuf au plat sur chaque tartine.",
+                "Servir immédiatement avec une salade verte fraîche parsemée de dés de tomate."
+            ]
+        },
+        {
+            id: "recette-poulet-roti-pommes-de-terre",
+            title: "Poulet rôti, pommes de terre et haricots verts",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 30,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍗",
+            description: "Morceaux de poulet dorés et croustillants, accompagnés de pommes de terre fondantes et de haricots verts cuits à la vapeur.",
+            chefTip: "Faites rôtir les pommes de terre avec un peu d'oignon émincé pour leur donner une saveur caramélisée sans excès de matière grasse.",
+            tags: ["sans-gluten", "riche-en-proteines", "familial", "healthy"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 400, unit: "g" },
+                { ingredientId: "pommes-de-terre", quantity: 350, unit: "g" },
+                { ingredientId: "haricots-verts", quantity: 200, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 100, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Éplucher les pommes de terre, les tailler en morceaux réguliers et émincer l'oignon.",
+                "Mettre les pommes de terre et les oignons dans un plat avec l'huile d'olive, sel et poivre, et enfourner 30 minutes à 200°C.",
+                "Assaisonner les morceaux de poulet et les faire dorer à la poêle ou au four avec les pommes de terre.",
+                "Cuire les haricots verts à la vapeur pendant 10 minutes pour qu'ils restent bien verts et fermes.",
+                "Dresser le poulet rôti croustillant avec les pommes de terre fondantes et les haricots verts chauds."
+            ]
+        },
         {
             id: "recette-ceebu-jen-sain",
             title: "Ceebu Jën Penda Mbaye Équilibré",

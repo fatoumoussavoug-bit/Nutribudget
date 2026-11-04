@@ -6,6 +6,10 @@
 const App = (function () {
     "use strict";
 
+    // Variables pour la vérification email lors de l'inscription
+    let _pendingVerifyCode = null;
+    let _pendingUser = null;
+
     // ============================================================
     // INITIALISATION
     // ============================================================
@@ -53,7 +57,14 @@ const App = (function () {
         tabs.forEach(t => {
             document.getElementById("tab-" + t).classList.toggle("active", t === tab);
             document.getElementById("form-" + t).classList.toggle("active", t === tab);
+            document.getElementById("form-" + t).style.display = (t === tab) ? "block" : "none";
         });
+        // Cacher la vérification email si on revient aux onglets normaux
+        const verifyForm = document.getElementById("form-verify-email");
+        if (verifyForm) verifyForm.style.display = "none";
+        // Réafficher les onglets
+        const authTabs = document.querySelector(".auth-tabs");
+        if (authTabs) authTabs.style.display = "flex";
         // Effacer les erreurs
         document.getElementById("login-error").style.display = "none";
         document.getElementById("register-error").style.display = "none";
@@ -103,10 +114,26 @@ const App = (function () {
                 const user = NutriProfile.register(email, password, name);
                 btn.innerHTML = "Créer mon compte";
                 btn.classList.remove("loading");
-                showToast("Compte créé avec succès ! Bienvenue " + (user.name || "") + " 🎉", "success");
-                showApp(user);
-                // Rediriger vers le profil pour le remplir
-                setTimeout(() => showTab("profile"), 800);
+
+                // Générer un code de vérification à 6 chiffres
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
+                _pendingVerifyCode = code;
+                _pendingUser = user;
+
+                // Afficher le code dans la console (simulation d'envoi email)
+                console.log("%c[NutriBudget DEV] 📧 Code de vérification pour " + email + " : " + code,
+                    "background:#2ECC71; color:white; padding:6px 12px; border-radius:4px; font-size:14px; font-weight:bold;");
+
+                // Afficher l'étape de vérification
+                document.getElementById("form-register").style.display = "none";
+                document.getElementById("form-register").classList.remove("active");
+                document.getElementById("verify-email-display").textContent = email;
+                document.getElementById("verify-code-input").value = "";
+                document.getElementById("verify-error").style.display = "none";
+                document.getElementById("form-verify-email").style.display = "block";
+
+                showToast("Code envoyé ! Vérifiez la console (F12) pour les tests 🔑", "info");
+
             } catch (err) {
                 btn.innerHTML = "Créer mon compte";
                 btn.classList.remove("loading");
@@ -114,6 +141,62 @@ const App = (function () {
                 errEl.style.display = "block";
             }
         }, 400);
+    }
+
+    function handleVerifyEmail() {
+        const input = document.getElementById("verify-code-input").value.trim();
+        const errEl = document.getElementById("verify-error");
+        const btn = document.getElementById("verify-submit-btn");
+
+        errEl.style.display = "none";
+
+        if (!input || input.length !== 6) {
+            errEl.textContent = "Veuillez entrer le code à 6 chiffres.";
+            errEl.style.display = "block";
+            return;
+        }
+
+        if (input !== _pendingVerifyCode) {
+            errEl.textContent = "Code incorrect. Réessayez ou renvoyez un nouveau code.";
+            errEl.style.display = "block";
+            // Faire vibrer l'input
+            const inp = document.getElementById("verify-code-input");
+            inp.style.borderColor = "#E74C3C";
+            setTimeout(() => { inp.style.borderColor = ""; }, 1500);
+            return;
+        }
+
+        // Code correct !
+        btn.innerHTML = '<span class="spinner"></span>';
+        btn.classList.add("loading");
+
+        setTimeout(() => {
+            btn.innerHTML = "✅ Valider mon compte";
+            btn.classList.remove("loading");
+
+            const user = _pendingUser;
+            _pendingVerifyCode = null;
+            _pendingUser = null;
+
+            showToast("Email vérifié ! Bienvenue " + (user.name || "") + " 🎉", "success");
+            showApp(user);
+            // Rediriger vers le profil pour le remplir
+            setTimeout(() => showTab("profile"), 800);
+        }, 500);
+    }
+
+    function resendVerifyCode() {
+        if (!_pendingUser) return;
+        const email = _pendingUser.email;
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        _pendingVerifyCode = code;
+
+        console.log("%c[NutriBudget DEV] 📧 Nouveau code de vérification pour " + email + " : " + code,
+            "background:#E67E22; color:white; padding:6px 12px; border-radius:4px; font-size:14px; font-weight:bold;");
+
+        document.getElementById("verify-code-input").value = "";
+        document.getElementById("verify-error").style.display = "none";
+        showToast("Nouveau code envoyé ! Vérifiez la console (F12) 🔑", "info");
     }
 
     function logout() {
@@ -1640,6 +1723,8 @@ const App = (function () {
         switchAuthTab,
         handleLogin,
         handleRegister,
+        handleVerifyEmail,
+        resendVerifyCode,
         logout,
         showTab,
         showComingSoon,

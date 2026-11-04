@@ -283,8 +283,8 @@ const SEN_INGREDIENTS = [
             fats: 9.9,
             fiber: 0.0
         },
-        defaultPricePerKg: 2270, // ~125 FCFA l'œuf = 2270 FCFA / kg (ou 125 FCFA pièce)
-        pricePerPiece: 125,
+        defaultPricePerKg: 2182, // ~120 FCFA pièce (prix réel marché)
+        pricePerPiece: 120,
         priceUnit: "piece",
         isLocalSenegal: true,
         tags: ["sans-gluten", "proteines-completes", "economique"],
@@ -312,7 +312,7 @@ const SEN_INGREDIENTS = [
     },
     {
         id: "poulet-fermier",
-        name: "Poulet local découpé",
+        name: "Blanc et morceaux de poulet",
         category: "poissons_viandes_oeufs",
         categoryLabel: "Poissons, Viandes & Œufs",
         servingUnit: "g",
@@ -323,7 +323,7 @@ const SEN_INGREDIENTS = [
             fats: 8.5,
             fiber: 0.0
         },
-        defaultPricePerKg: 3000, // ~3000 FCFA / kg (poulet ~1.2kg à 3500 FCFA)
+        defaultPricePerKg: 3500, // ~3500 FCFA / kg (poulet ~1.2kg à 4000 FCFA)
         priceUnit: "kg",
         isLocalSenegal: true,
         tags: ["sans-gluten", "proteines-maigres", "yassa-poulet"],
@@ -445,7 +445,7 @@ const SEN_INGREDIENTS = [
             fats: 0.1,
             fiber: 1.7
         },
-        defaultPricePerKg: 500, // ~500 FCFA / kg (selon récoltes des Niayes)
+        defaultPricePerKg: 600, // ~600 FCFA / kg prix réel du marché 2026
         priceUnit: "kg",
         isLocalSenegal: true,
         tags: ["sans-gluten", "antioxydant", "base-cuisson"],
@@ -831,6 +831,230 @@ const SEN_INGREDIENTS = [
         isLocalSenegal: true,
         tags: ["sans-gluten", "probiotique-traditionnel", "substitut-cube", "proteines", "vegan"],
         description: "Super-exhausteur de goût naturel ouest-africain, excellente alternative saine aux cubes industriels trop salés !"
+    },
+    // ==========================================
+    // INGRÉDIENTS FRAIS & HEALTHY DU MONDE (Français simple, Prix réels FCFA)
+    // ==========================================
+    {
+        id: "avocat",
+        name: "Avocat frais",
+        category: "fruits",
+        categoryLabel: "Fruits",
+        servingUnit: "piece",
+        unitWeightGrams: 200,
+        per100g: {
+            calories: 160,
+            proteins: 2.0,
+            carbs: 8.5,
+            fats: 14.7,
+            fiber: 6.7
+        },
+        defaultPricePerKg: 1500, // ~300 FCFA la pièce de 200g
+        pricePerPiece: 300,
+        priceUnit: "piece",
+        isLocalSenegal: true,
+        tags: ["bonnes-graisses", "sans-gluten", "fibres", "potassium", "crudite"],
+        description: "Riche en acides gras mono-insaturés protecteurs du cœur, texture onctueuse idéale pour les salades composées."
+    },
+    {
+        id: "thon-naturel",
+        name: "Thon au naturel (boîte)",
+        category: "poissons_viandes_oeufs",
+        categoryLabel: "Poissons, Viandes & Œufs",
+        servingUnit: "g",
+        unitWeightGrams: 160,
+        per100g: {
+            calories: 116,
+            proteins: 26.0,
+            carbs: 0.0,
+            fats: 1.0,
+            fiber: 0.0
+        },
+        defaultPricePerKg: 6250, // ~1000 FCFA la boîte de 160g
+        priceUnit: "kg",
+        isLocalSenegal: false,
+        tags: ["sans-gluten", "riche-en-proteines", "omega-3", "rapide", "salade"],
+        description: "Protéine maigre ultra-pratique, sans matière grasse superflue, parfaite pour les salades fraîches équilibrées."
+    },
+    {
+        id: "haricots-verts",
+        name: "Haricots verts frais",
+        category: "legumes",
+        categoryLabel: "Légumes & Feuilles",
+        servingUnit: "g",
+        unitWeightGrams: 10,
+        per100g: {
+            calories: 31,
+            proteins: 1.8,
+            carbs: 7.0,
+            fats: 0.2,
+            fiber: 3.4
+        },
+        defaultPricePerKg: 800, // ~800 FCFA / kg
+        priceUnit: "kg",
+        isLocalSenegal: true,
+        tags: ["sans-gluten", "faible-calorie", "fibres", "vitamines", "vert"],
+        description: "Légume vert croquant pauvre en calories, excellent pour la satiété et la régulation du transit."
+    },
+    {
+        id: "pommes-de-terre",
+        name: "Pommes de terre fraîches",
+        category: "cereales_feculents",
+        categoryLabel: "Céréales & Féculents",
+        servingUnit: "g",
+        unitWeightGrams: 150,
+        per100g: {
+            calories: 77,
+            proteins: 2.0,
+            carbs: 17.5,
+            fats: 0.1,
+            fiber: 2.2
+        },
+        defaultPricePerKg: 700, // ~700 FCFA / kg
+        priceUnit: "kg",
+        isLocalSenegal: true,
+        tags: ["sans-gluten", "feculent-sain", "potassium", "energie"],
+        description: "Féculent digeste et très rassasiant, parfait cuit à la vapeur ou rôti au four avec peu d'huile."
+    },
+    {
+        id: "salade-verte",
+        name: "Salade verte / Laitue",
+        category: "legumes",
+        categoryLabel: "Légumes & Feuilles",
+        servingUnit: "g",
+        unitWeightGrams: 200,
+        per100g: {
+            calories: 15,
+            proteins: 1.4,
+            carbs: 2.9,
+            fats: 0.2,
+            fiber: 1.3
+        },
+        defaultPricePerKg: 1500, // ~300 FCFA le pied de 200g
+        priceUnit: "kg",
+        isLocalSenegal: true,
+        tags: ["sans-gluten", "hydratant", "faible-calorie", "crudite"],
+        description: "Feuilles fraîches et croquantes gorgées d'eau et de minéraux, base idéale des repas légers."
+    },
+    {
+        id: "concombre",
+        name: "Concombre frais",
+        category: "legumes",
+        categoryLabel: "Légumes & Feuilles",
+        servingUnit: "g",
+        unitWeightGrams: 250,
+        per100g: {
+            calories: 15,
+            proteins: 0.7,
+            carbs: 3.6,
+            fats: 0.1,
+            fiber: 0.5
+        },
+        defaultPricePerKg: 500, // ~500 FCFA / kg
+        priceUnit: "kg",
+        isLocalSenegal: true,
+        tags: ["sans-gluten", "hydratant", "detox", "faible-calorie", "crudite"],
+        description: "Légume rafraîchissant composé à 96% d'eau, apporte du croquant naturel aux salades du monde."
+    },
+    {
+        id: "courgette",
+        name: "Courgettes fraîches",
+        category: "legumes",
+        categoryLabel: "Légumes & Feuilles",
+        servingUnit: "g",
+        unitWeightGrams: 200,
+        per100g: {
+            calories: 17,
+            proteins: 1.2,
+            carbs: 3.1,
+            fats: 0.3,
+            fiber: 1.0
+        },
+        defaultPricePerKg: 700, // ~700 FCFA / kg
+        priceUnit: "kg",
+        isLocalSenegal: true,
+        tags: ["sans-gluten", "faible-calorie", "legume-saute", "digeste"],
+        description: "Légume doux fondant, idéal sauté à la poêle avec un filet d'huile d'olive et de l'ail."
+    },
+    {
+        id: "poivron",
+        name: "Poivron doux (vert ou rouge)",
+        category: "legumes",
+        categoryLabel: "Légumes & Feuilles",
+        servingUnit: "g",
+        unitWeightGrams: 150,
+        per100g: {
+            calories: 26,
+            proteins: 1.0,
+            carbs: 6.0,
+            fats: 0.3,
+            fiber: 2.1
+        },
+        defaultPricePerKg: 800, // ~800 FCFA / kg
+        priceUnit: "kg",
+        isLocalSenegal: true,
+        tags: ["sans-gluten", "vitamine-c", "antioxydant", "legume-saute"],
+        description: "Champion de la vitamine C, parfait pour relever de couleurs et de parfums les poêlées équilibrées."
+    },
+    {
+        id: "pain-frais",
+        name: "Pain frais / Baguette",
+        category: "cereales_feculents",
+        categoryLabel: "Céréales & Féculents",
+        servingUnit: "g",
+        unitWeightGrams: 250,
+        per100g: {
+            calories: 265,
+            proteins: 9.0,
+            carbs: 54.0,
+            fats: 1.2,
+            fiber: 2.8
+        },
+        defaultPricePerKg: 800, // ~200 FCFA la baguette de 250g
+        priceUnit: "kg",
+        isLocalSenegal: true,
+        tags: ["energie", "petit-dejeuner", "base-cereale"],
+        description: "Pain traditionnel croustillant pour accompagner les œufs brouillés ou l'omelette aux légumes."
+    },
+    {
+        id: "huile-olive",
+        name: "Huile d'olive extra-vierge",
+        category: "huiles_condiments",
+        categoryLabel: "Matières Grasses & Assaisonnements",
+        servingUnit: "ml",
+        unitWeightGrams: 15,
+        per100g: {
+            calories: 884,
+            proteins: 0.0,
+            carbs: 0.0,
+            fats: 100.0,
+            fiber: 0.0
+        },
+        defaultPricePerKg: 3500, // ~3500 FCFA / litre
+        priceUnit: "l",
+        isLocalSenegal: false,
+        tags: ["sans-gluten", "omega-9", "bonnes-graisses", "anti-inflammatoire"],
+        description: "Riche en antioxydants et acides gras bénéfiques, la matière grasse saine par excellence pour assaisonner."
+    },
+    {
+        id: "poisson-blanc",
+        name: "Filet de poisson frais (Merlu / Tilapia)",
+        category: "poissons_viandes_oeufs",
+        categoryLabel: "Poissons, Viandes & Œufs",
+        servingUnit: "g",
+        unitWeightGrams: 150,
+        per100g: {
+            calories: 96,
+            proteins: 20.0,
+            carbs: 0.0,
+            fats: 1.7,
+            fiber: 0.0
+        },
+        defaultPricePerKg: 2500, // ~2500 FCFA / kg
+        priceUnit: "kg",
+        isLocalSenegal: true,
+        tags: ["sans-gluten", "proteines-maigres", "poisson", "omega-3"],
+        description: "Chair blanche tendre et digeste, riche en protéines complètes sans graisses saturées."
     }
 ];
 

@@ -101,6 +101,41 @@
                     <a onclick="App.switchAuthTab('login')">Se connecter</a>
                 </p>
             </form>
+
+            <!-- Vérification Email (étape après inscription) -->
+            <div class="auth-form" id="form-verify-email" style="display:none;">
+                <div style="text-align:center; margin-bottom:20px;">
+                    <div style="font-size:3rem; margin-bottom:12px;">📧</div>
+                    <h3 style="color:var(--primary); font-size:1.2rem; margin-bottom:8px;">Vérifiez votre email</h3>
+                    <p style="color:var(--text-light); font-size:0.9rem; line-height:1.5;">
+                        Nous avons envoyé un code à 6 chiffres à<br>
+                        <strong id="verify-email-display" style="color:var(--text-dark);"></strong>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label for="verify-code-input">Code de vérification</label>
+                    <input type="text" id="verify-code-input"
+                        placeholder="123456"
+                        maxlength="6"
+                        style="text-align:center; font-size:1.5rem; letter-spacing:8px; font-weight:700;"
+                        autocomplete="one-time-code"
+                        inputmode="numeric"
+                        pattern="[0-9]{6}">
+                    <p class="form-hint">Entrez le code à 6 chiffres reçu par email.</p>
+                </div>
+                <div id="verify-error" style="color:#E74C3C; font-size:0.85rem; margin-bottom:12px; display:none;"></div>
+                <button type="button" class="btn btn-primary" style="width:100%;" id="verify-submit-btn"
+                    onclick="App.handleVerifyEmail()">
+                    ✅ Valider mon compte
+                </button>
+                <p class="auth-footer-text" style="margin-top:16px;">
+                    Vous n'avez pas reçu le code ?
+                    <a onclick="App.resendVerifyCode()" style="cursor:pointer;">Renvoyer le code</a>
+                </p>
+                <p class="auth-footer-text">
+                    <a onclick="App.switchAuthTab('register')" style="cursor:pointer; color:var(--text-light);">← Revenir à l'inscription</a>
+                </p>
+            </div>
         </div>
     </div>
 
