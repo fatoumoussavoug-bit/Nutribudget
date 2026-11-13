@@ -343,6 +343,284 @@
             ]
         },
         {
+            id: "recette-salade-mediterraneenne-oeufs",
+            title: "Salade méditerranéenne : avocat, œufs durs et concombres",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 9,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Une grande salade méditerranéenne fraîche et croquante mariant l'onctuosité de l'avocat, le croquant du concombre et les protéines des œufs durs.",
+            chefTip: "Un filet de jus de citron et une pincée d'origan sublime cette salade sans avoir besoin de sauces grasses.",
+            tags: ["healthy", "vegetarien", "sans-gluten", "salade"],
+            ingredients: [
+                { ingredientId: "avocat", quantity: 1, unit: "piece" },
+                { ingredientId: "oeuf-poule", quantity: 3, unit: "piece" },
+                { ingredientId: "concombre", quantity: 150, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 150, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 120, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire les œufs 9 minutes dans de l'eau bouillante salée, les refroidir et les écaler.",
+                "Couper le concombre en fines rondelles et les tomates en dés.",
+                "Détailler l'avocat en lamelles régulières.",
+                "Disposer la salade verte essorée dans un saladier ou deux grandes assiettes creuses.",
+                "Ajouter les crudités, l'avocat et les œufs coupés en deux.",
+                "Arroser d'un filet d'huile d'olive, saler et poivrer légèrement."
+            ]
+        },
+        {
+            id: "recette-poisson-vapeur-courgettes-riz",
+            title: "Filet de poisson blanc vapeur, courgettes et riz",
+            mealType: "diner",
+            prepTimeMinutes: 12,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🐟",
+            description: "Un dîner léger, digeste et équilibré : poisson blanc cuit à la vapeur avec des rondelles de courgettes fondantes et du riz blanc.",
+            chefTip: "La cuisson vapeur préserve la délicatesse de la chair du poisson et tous les micronutriments des légumes.",
+            tags: ["healthy", "faible-calorie", "poisson", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poisson-blanc", quantity: 350, unit: "g" },
+                { ingredientId: "courgette", quantity: 250, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 12, unit: "ml" }
+            ],
+            steps: [
+                "Faire cuire le riz blanc dans de l'eau bouillante salée pendant 15 minutes.",
+                "Laver les courgettes et les couper en rondelles fines.",
+                "Cuire les filets de poisson et les courgettes à la vapeur pendant 10 à 12 minutes.",
+                "Dresser le poisson fondant avec les courgettes vapeur et le riz chaud.",
+                "Arroser d'un filet d'huile d'olive et de jus de citron."
+            ]
+        },
+        {
+            id: "recette-boeuf-haricots-pommes-de-terre",
+            title: "Poêlée de bœuf émincé, haricots verts et pommes de terre",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥩",
+            description: "Un plat complet riche en fer et protéines : émincé de bœuf poêlé avec haricots verts frais et dés de pommes de terre vapeur.",
+            chefTip: "Saisissez la viande à feu très vif pendant 2 minutes seulement pour qu'elle reste tendre et juteuse.",
+            tags: ["healthy", "riche-en-fer", "riche-en-proteines", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "viande-boeuf", quantity: 300, unit: "g" },
+                { ingredientId: "haricots-verts", quantity: 200, unit: "g" },
+                { ingredientId: "pommes-de-terre", quantity: 250, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Éplucher les pommes de terre, les couper en dés et les cuire à l'eau 15 minutes.",
+                "Cuire les haricots verts à l'eau bouillante 8 à 10 minutes, puis égoutter.",
+                "Émincer le bœuf en fines lanières.",
+                "Dans une poêle avec l'huile d'olive, faire revenir l'oignon 3 minutes puis saisir le bœuf à feu vif 2 à 3 minutes.",
+                "Ajouter les dés de pommes de terre et les haricots verts pour réchauffer le tout 2 minutes.",
+                "Servir bien chaud."
+            ]
+        },
+        {
+            id: "recette-omelette-courgettes-salade-pain",
+            title: "Omelette moelleuse aux courgettes, salade et pain",
+            mealType: "diner",
+            prepTimeMinutes: 10,
+            cookingTimeMinutes: 8,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🍳",
+            description: "Omelette végétarienne légère et aérée aux fines rondelles de courgettes sautées, servie avec une salade verte et du pain frais.",
+            chefTip: "Faites bien dorer les courgettes avant de verser les œufs pour faire ressortir leur saveur douce.",
+            tags: ["healthy", "vegetarien", "rapide", "faible-calorie"],
+            ingredients: [
+                { ingredientId: "oeuf-poule", quantity: 4, unit: "piece" },
+                { ingredientId: "courgette", quantity: 200, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 60, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 80, unit: "g" },
+                { ingredientId: "pain-frais", quantity: 120, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 12, unit: "ml" }
+            ],
+            steps: [
+                "Laver la courgette et la tailler en fines demi-rondelles, émincer l'oignon.",
+                "Dans une poêle avec un filet d'huile, faire suer l'oignon et dorer les courgettes 5 minutes.",
+                "Battre les 4 œufs dans un bol avec sel et poivre.",
+                "Verser les œufs sur les courgettes et cuire à feu moyen 4 minutes en repliant les bords.",
+                "Dresser avec une salade verte assaisonnée et le pain frais croustillant."
+            ]
+        },
+        {
+            id: "recette-poulet-saute-poivrons-riz",
+            title: "Poulet émincé sauté aux poivrons, carottes et riz",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 18,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍗",
+            description: "Wok sain et coloré : morceaux de poulet fermier sautés avec poivrons croquants et carottes, sur un lit de riz blanc.",
+            chefTip: "Un plat plein de couleur et d'antioxydants grâce au mélange poivron rouge/vert et carottes.",
+            tags: ["healthy", "riche-en-proteines", "equilibre", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 350, unit: "g" },
+                { ingredientId: "poivron", quantity: 150, unit: "g" },
+                { ingredientId: "carotte", quantity: 120, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes, égoutter.",
+                "Tailler le poulet en aiguillettes et émincer les poivrons, carottes et oignons.",
+                "Faire dorer le poulet dans une poêle chaude avec l'huile 8 minutes, puis réserver.",
+                "Sauter les légumes dans la même poêle 6 minutes à feu vif.",
+                "Remettre le poulet pour lier les saveurs et servir avec le riz chaud."
+            ]
+        },
+        {
+            id: "recette-salade-pommes-terre-thon-oeufs",
+            title: "Salade de pommes de terre vapeur, thon et œufs durs",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 18,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Salade rustique et nourrissante : pommes de terre fondantes tièdes, thon au naturel émietté, œufs durs et persil ou oignons doux.",
+            chefTip: "Assaisonnez les pommes de terre encore tièdes : elles absorberont délicatement l'huile d'olive sans devenir grasses.",
+            tags: ["healthy", "riche-en-proteines", "sans-gluten", "salade"],
+            ingredients: [
+                { ingredientId: "pommes-de-terre", quantity: 350, unit: "g" },
+                { ingredientId: "thon-naturel", quantity: 160, unit: "g" },
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "oignon-jaune", quantity: 50, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 80, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Éplucher les pommes de terre, les couper en dés et les cuire à la vapeur 18 minutes.",
+                "Cuire les œufs 9 minutes dans de l'eau bouillante, les refroidir, les écaler et les couper en morceaux.",
+                "Égoutter et émietter le thon au naturel.",
+                "Émincer très finement l'oignon.",
+                "Dans un saladier, mélanger les pommes de terre tièdes, le thon, l'oignon et les œufs.",
+                "Disposer sur un lit de salade verte et arroser d'huile d'olive et de poivre."
+            ]
+        },
+        {
+            id: "recette-poulet-haricots-patates-douces",
+            title: "Blanc de poulet grillé, haricots verts et patates douces rôties",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 25,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍗",
+            description: "Le combo santé par excellence des sportifs : protéines maigres du poulet fermier, glucides à IG bas de la patate douce et fibres des haricots verts.",
+            chefTip: "La patate douce rôtie au four développe un goût naturellement doux et sucré qui contraste à merveille avec les haricots verts.",
+            tags: ["healthy", "fitness", "riche-en-proteines", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 350, unit: "g" },
+                { ingredientId: "patate-douce", quantity: 300, unit: "g" },
+                { ingredientId: "haricots-verts", quantity: 200, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Peler les patates douces, les tailler en cubes et les faire rôtir au four à 200°C avec un filet d'huile 25 minutes.",
+                "Cuire les haricots verts 10 minutes à la vapeur pour préserver leur couleur verte et leur croquant.",
+                "Assaisonner les blancs de poulet et les griller à la poêle 5 minutes par face.",
+                "Dresser les assiettes avec les cubes de patate douce dorés, les haricots verts et le poulet tranché."
+            ]
+        },
+        {
+            id: "recette-salade-avocat-thon-oeufs",
+            title: "Salade complète avocat, thon au naturel et œufs durs",
+            mealType: "diner",
+            prepTimeMinutes: 12,
+            cookingTimeMinutes: 9,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Un concentré d'oméga-3 et de bonnes graisses : demi-avocats crémeux, thon au naturel, œufs durs et tomates fraîches.",
+            chefTip: "Un dîner complet prêt en 10 minutes sans aucune cuisson autre que les œufs durs.",
+            tags: ["healthy", "riche-en-proteines", "omega-3", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "avocat", quantity: 1, unit: "piece" },
+                { ingredientId: "thon-naturel", quantity: 160, unit: "g" },
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "tomate-fraiche", quantity: 150, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 100, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 12, unit: "ml" }
+            ],
+            steps: [
+                "Cuire les œufs 9 minutes dans de l'eau frémissante, les refroidir, les écaler et les couper en deux.",
+                "Laver la salade et découper les tomates en quartiers.",
+                "Peler et découper l'avocat en lamelles généreuses.",
+                "Dresser la salade verte, déposer le thon émietté, les lamelles d'avocat, les tomates et les œufs.",
+                "Arroser d'huile d'olive, d'un filet de jus de citron, saler et poivrer."
+            ]
+        },
+        {
+            id: "recette-poisson-roti-tomates-poivrons-riz",
+            title: "Poisson blanc rôti aux tomates fraîches, poivrons et riz",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 18,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🐟",
+            description: "Filets de poisson blanc cuits sur une compotée de tomates fraîches, oignons et poivrons doux, accompagnés de riz blanc.",
+            chefTip: "Les sucs de tomate et de poivron créent une sauce légère et parfumée naturelle sans ajouter de crème ni beurre.",
+            tags: ["healthy", "omega-3", "poisson", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poisson-blanc", quantity: 350, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 200, unit: "g" },
+                { ingredientId: "poivron", quantity: 120, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes, puis égoutter.",
+                "Faire fondre les oignons, les dés de tomates et les lamelles de poivrons dans une sauteuse 8 minutes.",
+                "Déposer les filets de poisson assaisonnés sur le lit de légumes et couvrir 8 à 10 minutes à feu doux.",
+                "Servir le poisson nappé de la fondue de légumes avec le riz bien chaud."
+            ]
+        },
+        {
+            id: "recette-bowl-veggie-avocat-oeuf-riz",
+            title: "Bowl végétarien équilibré : riz, avocat, œufs mollets et crudités",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥑",
+            description: "Un bowl végétarien complet et sain : base de riz blanc tiède, œufs mollets coulants, demi-avocat, concombres et carottes râpées.",
+            chefTip: "Cuisez les œufs 6 minutes dans l'eau bouillante pour un jaune bien coulant qui fait office de sauce naturelle crémeuse.",
+            tags: ["healthy", "vegetarien", "sans-gluten", "equilibre"],
+            ingredients: [
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "avocat", quantity: 1, unit: "piece" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "concombre", quantity: 120, unit: "g" },
+                { ingredientId: "carotte", quantity: 120, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes, égoutter et laisser tiédir.",
+                "Cuire les œufs 6 minutes dans l'eau bouillante pour des œufs mollets, puis les refroidir et les écaler.",
+                "Râper les carottes, couper le concombre en dés et l'avocat en lamelles.",
+                "Dresser une base de riz au fond de deux bols.",
+                "Disposer harmonieusement l'avocat, les carottes, le concombre et l'œuf mollet fendu en deux.",
+                "Arroser d'un filet d'huile d'olive et parsemer d'un tour de moulin à poivre."
+            ]
+        },
+        {
             id: "recette-ceebu-jen-sain",
             title: "Ceebu Jën Penda Mbaye Équilibré",
             mealType: "dejeuner",
