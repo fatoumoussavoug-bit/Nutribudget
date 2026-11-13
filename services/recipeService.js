@@ -621,6 +621,157 @@
             ]
         },
         {
+            id: "recette-bibimbap-coreen-healthy",
+            title: "Bibimbap coréen healthy au bœuf et légumes sautés",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥢",
+            description: "Grand bol coréen complet et équilibré : riz chaud garni de lamelles de bœuf maigre poêlé, carottes et courgettes sautées, œuf au plat et concombre frais.",
+            chefTip: "Chaque légume est sauté séparément rapidement pour garder ses couleurs vives et sa texture croquante.",
+            tags: ["asiatique", "coreen", "riche-en-proteines", "sans-gluten", "healthy"],
+            ingredients: [
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "viande-boeuf", quantity: 200, unit: "g" },
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "courgette", quantity: 150, unit: "g" },
+                { ingredientId: "carotte", quantity: 120, unit: "g" },
+                { ingredientId: "concombre", quantity: 100, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes, égoutter et garder au chaud.",
+                "Tailler le bœuf en fines lamelles et le saisir 2 minutes à feu vif dans une poêle avec un filet d'huile.",
+                "Faire sauter séparément les carottes râpées et les courgettes en julienne 3 minutes chacune.",
+                "Cuire deux œufs au plat dans la même poêle.",
+                "Dresser le riz au fond de deux grands bols, disposer les légumes et la viande en sections autour, et déposer un œuf au centre.",
+                "Mélanger délicatement avant de déguster."
+            ]
+        },
+        {
+            id: "recette-wok-poulet-legumes-asiatique",
+            title: "Wok asiatique de poulet sauté et légumes croquants",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 12,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥢",
+            description: "Une poêlée asiatique vive et saine : aiguillettes de poulet fermier sautées à feu vif avec poivrons, courgettes et oignons, servies avec riz blanc.",
+            chefTip: "Ajoutez un peu de gingembre frais râpé pour apporter la note aromatique asiatique authentique.",
+            tags: ["asiatique", "wok", "riche-en-proteines", "sans-gluten", "healthy"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 350, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "poivron", quantity: 120, unit: "g" },
+                { ingredientId: "courgette", quantity: 120, unit: "g" },
+                { ingredientId: "carotte", quantity: 100, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 10, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans l'eau bouillante salée 15 minutes, puis égoutter.",
+                "Émincer le poulet en fines lanières et découper tous les légumes en bâtonnets.",
+                "Dans un wok ou une poêle très chaude avec l'huile, faire sauter le poulet avec le gingembre 5 minutes.",
+                "Ajouter les légumes et faire sauter 5 minutes à feu vif pour garder le croquant.",
+                "Servir bien chaud sur le lit de riz."
+            ]
+        },
+        {
+            id: "recette-shakshuka-oeufs-pain",
+            title: "Shakshuka orientale aux œufs pochés, poivrons et pain frais",
+            cuisine: "moyen_orient",
+            mealType: "dejeuner",
+            prepTimeMinutes: 12,
+            cookingTimeMinutes: 15,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🧆",
+            description: "Le plat emblématique du Moyen-Orient : des œufs pochés dans une compotée mijotée de tomates fraîches, poivrons doux et oignons, dégusté avec du bon pain.",
+            chefTip: "Créez de petits puits dans la sauce tomate pour y casser délicatement les œufs afin que les blancs cuisent tout en gardant les jaunes coulants.",
+            tags: ["moyen_orient", "vegetarien", "healthy", "rapide"],
+            ingredients: [
+                { ingredientId: "oeuf-poule", quantity: 4, unit: "piece" },
+                { ingredientId: "tomate-fraiche", quantity: 300, unit: "g" },
+                { ingredientId: "poivron", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 100, unit: "g" },
+                { ingredientId: "pain-frais", quantity: 150, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Émincer l'oignon et le poivron, couper les tomates en dés.",
+                "Faire revenir l'oignon et le poivron dans une poêle avec l'huile d'olive pendant 6 minutes.",
+                "Ajouter les dés de tomates, saler, poivrer et laisser compoter 6 minutes à feu moyen.",
+                "Former 4 petits creux dans la sauce et y casser délicatement les œufs.",
+                "Couvrir et laisser cuire 4 à 5 minutes jusqu'à ce que les blancs soient pris et les jaunes encore coulants.",
+                "Servir directement à la poêle avec le pain frais croustillant."
+            ]
+        },
+        {
+            id: "recette-chili-healthy-boeuf-riz",
+            title: "Chili con carne healthy au bœuf maigre, haricots et riz",
+            cuisine: "americaine",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 25,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥘",
+            description: "Version saine et équilibrée du classique américain : bœuf émincé mijoté aux tomates, poivrons et haricots protéinés, servi avec du riz blanc.",
+            chefTip: "Le mélange haricots + bœuf permet de réduire la quantité de viande tout en augmentant l'apport en fibres rassasiantes.",
+            tags: ["americaine", "riche-en-fibres", "riche-en-proteines", "sans-gluten", "healthy"],
+            ingredients: [
+                { ingredientId: "viande-boeuf", quantity: 200, unit: "g" },
+                { ingredientId: "niebe", quantity: 120, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 200, unit: "g" },
+                { ingredientId: "poivron", quantity: 100, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire les haricots préalablement dans l'eau bouillante 25 minutes et égoutter.",
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes.",
+                "Faire dorer le bœuf émincé avec l'oignon et l'huile d'olive dans une sauteuse 5 minutes.",
+                "Ajouter les dés de tomates, le poivron et les haricots cuits avec un demi-verre d'eau.",
+                "Laisser mijoter 15 minutes à feu doux jusqu'à sauce onctueuse.",
+                "Dresser le chili parfumé sur le lit de riz chaud."
+            ]
+        },
+        {
+            id: "recette-chawarma-poulet-leger-pain",
+            title: "Chawarma léger de poulet mariné, salade et pain frais",
+            cuisine: "moyen_orient",
+            mealType: "diner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 12,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥙",
+            description: "Chawarma maison sain et diététique : lanières de poulet grillé aux épices douces, garniture fraîche de salade, tomates et concombres dans du pain frais.",
+            chefTip: "Faites mariner le poulet avec un filet d'huile d'olive et un trait de jus de citron 10 minutes avant cuisson pour une viande ultra moelleuse.",
+            tags: ["moyen_orient", "rapide", "riche-en-proteines", "healthy"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 300, unit: "g" },
+                { ingredientId: "pain-frais", quantity: 150, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 100, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 120, unit: "g" },
+                { ingredientId: "concombre", quantity: 100, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 12, unit: "ml" }
+            ],
+            steps: [
+                "Couper le poulet en fines lamelles et l'assaisonner de sel, poivre et jus de citron.",
+                "Griller le poulet à feu vif dans une poêle avec l'huile d'olive 6 à 8 minutes jusqu'à ce qu'il soit bien doré.",
+                "Trancher les tomates et le concombre, effeuiller la salade.",
+                "Ouvrir le pain frais et garnir avec les crudités croquantes.",
+                "Ajouter les lamelles de poulet grillé tiède et déguster aussitôt."
+            ]
+        },
+        {
             id: "recette-ceebu-jen-sain",
             title: "Ceebu Jën Penda Mbaye Équilibré",
             mealType: "dejeuner",
@@ -1090,6 +1241,7 @@
     function matchRecipesWithIngredients(userIngredientIds = [], options = {}) {
         const availableSet = new Set((userIngredientIds || []).map(id => String(id).toLowerCase().trim()));
         const mealType = options.mealType || "all";
+        const cuisine = options.cuisine || "all";
         const maxBudget = options.maxBudget ? Number(options.maxBudget) : null;
         const maxPrepTime = options.maxPrepTime ? Number(options.maxPrepTime) : null;
         const servings = options.servings || 2;
@@ -1103,6 +1255,15 @@
             // 1. Filtre type de repas
             if (mealType !== "all" && rawRecipe.mealType !== mealType) {
                 return;
+            }
+
+            // 1b. Filtre cuisine du monde (africaine, asiatique, europeenne, americaine, moyen_orient)
+            if (cuisine !== "all") {
+                const rCuisine = rawRecipe.cuisine || "";
+                const rTags = rawRecipe.tags || [];
+                if (rCuisine !== cuisine && !rTags.includes(cuisine)) {
+                    return;
+                }
             }
 
             // 2. Filtre temps de préparation
@@ -1243,6 +1404,151 @@
 
         let recipe = null;
 
+        // Requêtes spécifiques par cuisine du monde
+        if (text.includes("bibimbap") || text.includes("coreen") || text.includes("coréen")) {
+            recipe = {
+                title: "Bibimbap coréen healthy au bœuf et légumes",
+                cuisine: "asiatique",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 15,
+                difficulty: "Facile",
+                imageEmoji: "🥢",
+                description: "Le fameux bol coréen rééquilibré : base de riz blanc tiède, émincé de bœuf maigre poêlé, carottes et courgettes sautées au wok et œuf au plat.",
+                chefTip: "Faites sauter chaque légume rapidement pour préserver son croquant et ses vitamines.",
+                tags: ["asiatique", "coreen", "riche-en-proteines", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                    { ingredientId: "viande-boeuf", quantity: 100 * servings, unit: "g" },
+                    { ingredientId: "oeuf-poule", quantity: 1 * servings, unit: "piece" },
+                    { ingredientId: "courgette", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "carotte", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "concombre", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 8 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Cuire le riz dans de l'eau bouillante salée 15 minutes, puis égoutter.",
+                    "Saisir les lamelles de bœuf 2 minutes à feu vif dans une poêle légèrement huilée.",
+                    "Faire sauter séparément les carottes râpées et les courgettes en julienne 3 minutes.",
+                    "Cuire les œufs au plat.",
+                    "Dresser le riz au centre des bols, disposer les légumes et le bœuf en sections, et déposer un œuf au plat au sommet."
+                ]
+            };
+        }
+        else if (text.includes("shakshuka") || text.includes("chachouka")) {
+            recipe = {
+                title: "Shakshuka orientale aux œufs pochés, poivrons et pain frais",
+                cuisine: "moyen_orient",
+                mealType: "dejeuner",
+                prepTimeMinutes: 12,
+                cookingTimeMinutes: 15,
+                difficulty: "Très facile",
+                imageEmoji: "🧆",
+                description: "Plat traditionnel du Moyen-Orient : œufs pochés dans une compotée de tomates fraîches, poivrons doux et oignons, servi avec du pain frais.",
+                chefTip: "Pochez les œufs à feu doux à couvert pour garder les jaunes coulants.",
+                tags: ["moyen_orient", "vegetarien", "healthy", "rapide"],
+                ingredients: [
+                    { ingredientId: "oeuf-poule", quantity: 2 * servings, unit: "piece" },
+                    { ingredientId: "tomate-fraiche", quantity: 150 * servings, unit: "g" },
+                    { ingredientId: "poivron", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "pain-frais", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 8 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Faire fondre les oignons et les lamelles de poivrons dans une sauteuse avec l'huile 6 minutes.",
+                    "Ajouter les dés de tomates, saler, poivrer et laisser mijoter 6 minutes.",
+                    "Casser les œufs dans des petits creux de la sauce et laisser pocher 4 minutes à couvert.",
+                    "Servir chaud directement à la poêle avec le pain frais."
+                ]
+            };
+        }
+        else if (text.includes("chili")) {
+            recipe = {
+                title: "Chili con carne healthy au bœuf maigre, haricots et riz",
+                cuisine: "americaine",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 25,
+                difficulty: "Facile",
+                imageEmoji: "🥘",
+                description: "Version healthy du plat américain : bœuf émincé mijoté aux tomates fraîches, poivrons et haricots riches en fibres, sur un lit de riz.",
+                chefTip: "Un plat complet riche en protéines et en glucides complexes qui cale durablement.",
+                tags: ["americaine", "riche-en-fibres", "riche-en-proteines", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "viande-boeuf", quantity: 100 * servings, unit: "g" },
+                    { ingredientId: "niebe", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                    { ingredientId: "tomate-fraiche", quantity: 100 * servings, unit: "g" },
+                    { ingredientId: "poivron", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 40 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 8 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Cuire les haricots à l'eau bouillante 25 minutes, et cuire le riz séparément.",
+                    "Faire revenir le bœuf émincé avec l'oignon et l'huile 5 minutes.",
+                    "Ajouter les tomates, poivrons et haricots égouttés avec un demi-verre d'eau.",
+                    "Laisser mijoter 15 minutes et servir sur le riz blanc chaud."
+                ]
+            };
+        }
+        else if (text.includes("chawarma") || text.includes("shawarma")) {
+            recipe = {
+                title: "Chawarma léger de poulet mariné, salade et pain frais",
+                cuisine: "moyen_orient",
+                mealType: "diner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 12,
+                difficulty: "Très facile",
+                imageEmoji: "🥙",
+                description: "Chawarma sain : lamelles de poulet grillé aux aromates, crudités croquantes et pain frais.",
+                chefTip: "Arrosez d'un filet de citron frais pour apporter fraîcheur et peps sans calories superflues.",
+                tags: ["moyen_orient", "rapide", "riche-en-proteines"],
+                ingredients: [
+                    { ingredientId: "poulet-fermier", quantity: 150 * servings, unit: "g" },
+                    { ingredientId: "pain-frais", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "salade-verte", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "tomate-fraiche", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "concombre", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 6 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Assaisonner le poulet d'une pointe d'ail, de sel et d'huile d'olive.",
+                    "Griller les lamelles de poulet à la poêle 7 minutes jusqu'à ce qu'elles soient bien dorées.",
+                    "Garnir le pain frais de salade verte, tomates et concombres.",
+                    "Déposer le poulet chaud dans le pain et servir."
+                ]
+            };
+        }
+        else if (text.includes("wok") || (text.includes("asiatique") && hasPoulet)) {
+            recipe = {
+                title: "Wok asiatique de poulet sauté et légumes croquants",
+                cuisine: "asiatique",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 12,
+                difficulty: "Facile",
+                imageEmoji: "🥢",
+                description: "Poêlée asiatique vive et saine : poulet sauté à feu vif avec courgettes, carottes et poivrons sur lit de riz.",
+                chefTip: "La cuisson vive et brève préserve tout le croquant des légumes.",
+                tags: ["asiatique", "wok", "riche-en-proteines", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "poulet-fermier", quantity: 175 * servings, unit: "g" },
+                    { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                    { ingredientId: "poivron", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "courgette", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "carotte", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 8 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Cuire le riz dans l'eau bouillante salée 15 minutes, égoutter.",
+                    "Émincer le poulet et tailler les légumes en bâtonnets.",
+                    "Faire sauter le poulet 5 minutes à feu vif dans un wok ou sauteuse huilée.",
+                    "Ajouter les légumes et faire sauter 5 minutes en remuant sans arrêt.",
+                    "Dresser sur le lit de riz bien chaud."
+                ]
+            };
+        }
         // 1. Avocat + Œufs + Poulet
         if (hasAvocat && hasOeuf && hasPoulet) {
             recipe = {

@@ -774,6 +774,7 @@ const App = (function () {
         if (!window.NutriRecipes) return;
 
         const mealType = document.getElementById("filter-meal-type") ? document.getElementById("filter-meal-type").value : "all";
+        const cuisine = document.getElementById("filter-cuisine-origin") ? document.getElementById("filter-cuisine-origin").value : "all";
         const maxBudget = document.getElementById("filter-max-budget") ? document.getElementById("filter-max-budget").value : "";
 
         // Récupérer les exclusions du profil utilisateur connecté
@@ -788,6 +789,7 @@ const App = (function () {
 
         cachedFilteredRecipes = window.NutriRecipes.matchRecipesWithIngredients(pantryArray, {
             mealType,
+            cuisine,
             maxBudget: maxBudget ? Number(maxBudget) : null,
             servings: activeServings,
             userExclusions: exclusions
@@ -837,6 +839,13 @@ const App = (function () {
                 matchBadgeHtml = `<span class="recipe-match-pill" style="background:#F1F5F9; color:#64748B;">À acheter au marché</span>`;
             }
 
+            let cuisineBadge = "";
+            if (recipe.cuisine === "asiatique") cuisineBadge = `<span style="background:#FEF3C7; color:#92400E; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:10px;">🥢 Asiatique</span>`;
+            else if (recipe.cuisine === "europeenne") cuisineBadge = `<span style="background:#E0E7FF; color:#3730A3; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:10px;">🥖 Européenne</span>`;
+            else if (recipe.cuisine === "americaine") cuisineBadge = `<span style="background:#FCE7F3; color:#9D174D; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:10px;">🥑 Américaine</span>`;
+            else if (recipe.cuisine === "moyen_orient") cuisineBadge = `<span style="background:#FEF08A; color:#854D0E; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:10px;">🧆 Moyen-Orient</span>`;
+            else if (recipe.cuisine === "africaine") cuisineBadge = `<span style="background:#DCFCE7; color:#166534; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:10px;">🌍 Africaine</span>`;
+
             const mealLabels = {
                 dejeuner: "Déjeuner",
                 diner: "Dîner",
@@ -859,6 +868,7 @@ const App = (function () {
                             <span>${escapeHtml(recipe.title)}</span>
                         </div>
                         <div class="recipe-meta-sub">
+                            ${cuisineBadge}
                             <span>${mealLabels[recipe.mealType] || "Repas"}</span>
                             <span>⏱️ ${recipe.prepTimeMinutes + recipe.cookingTimeMinutes} min</span>
                             <span>👥 ${recipe.activeServings} pers</span>
@@ -1403,7 +1413,15 @@ const App = (function () {
         const nut = recipe.nutrition || { total: {}, perServing: {}, macroDistribution: {}, items: [] };
 
         document.getElementById("modal-recipe-title").innerHTML = `<span>${recipe.imageEmoji || "🍲"}</span> ${escapeHtml(recipe.title)}`;
-        document.getElementById("modal-recipe-category").textContent = `${recipe.mealType.toUpperCase()} · ${recipe.difficulty || "Facile"} · MARCHÉS DU SÉNÉGAL`;
+        const cuisineNames = {
+            asiatique: "Cuisine Asiatique",
+            europeenne: "Cuisine Européenne",
+            americaine: "Cuisine Américaine",
+            moyen_orient: "Cuisine Moyen-Orientale",
+            africaine: "Cuisine Africaine"
+        };
+        const cuisineLabel = cuisineNames[recipe.cuisine] || "Cuisine du Monde";
+        document.getElementById("modal-recipe-category").textContent = `${recipe.mealType.toUpperCase()} · ${recipe.difficulty || "Facile"} · ${cuisineLabel.toUpperCase()} · PRIX DU MARCHÉ LOCAL`;
         document.getElementById("modal-recipe-meta").innerHTML = `
             <span>⏱️ Préparation : ${recipe.prepTimeMinutes} min</span>
             <span>🔥 Cuisson : ${recipe.cookingTimeMinutes} min</span>

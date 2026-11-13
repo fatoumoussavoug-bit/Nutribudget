@@ -60,6 +60,16 @@
         ],
 
         // Poissons & Viandes
+        "poisson-blanc": [
+            { id: "yaboye-sardinelle", reason: "Poisson frais local très économique (-60% du prix) et ultra-riche en oméga-3", category: "economie" },
+            { id: "poulet-fermier", reason: "Viande blanche maigre et facile à trouver partout", category: "praticite" },
+            { id: "thon-naturel", reason: "Alternative pratique en boîte prête à l'emploi", category: "praticite" }
+        ],
+        "thon-naturel": [
+            { id: "sardines-boite", reason: "Boîte de conserve locale très économique disponible dans toutes les boutiques", category: "economie" },
+            { id: "oeuf-poule", reason: "Protéines complètes rapides et très économiques", category: "economie" },
+            { id: "yaboye-sardinelle", reason: "Poisson frais local riche en oméga-3", category: "nutriments" }
+        ],
         "poulet-fermier": [
             { id: "yaboye-sardinelle", reason: "Économise 66% du coût protéique et apporte des oméga-3", category: "economie" },
             { id: "niebe", reason: "Protéine végétale économique, sans cholestérol", category: "vegan" },
@@ -81,20 +91,63 @@
         ],
 
         // Matières grasses
+        "huile-olive": [
+            { id: "huile-arachide", reason: "Huile végétale locale beaucoup plus économique (-65% du coût)", category: "economie" },
+            { id: "huile-palme-rouge", reason: "Huile brute locale riche en vitamine A naturelle", category: "nutriments" }
+        ],
         "huile-arachide": [
-            { id: "huile-palme-rouge", reason: "Apporte de la vitamine A naturelle et couleur rouge terroir", category: "nutriments" }
+            { id: "huile-palme-rouge", reason: "Apporte de la vitamine A naturelle et couleur rouge terroir", category: "nutriments" },
+            { id: "huile-olive", reason: "Graisses mono-insaturées protectrices du système cardiovasculaire", category: "sante" }
         ],
         "huile-palme-rouge": [
             { id: "huile-arachide", reason: "Saveur plus neutre et teneur réduite en acides gras saturés", category: "sante" }
         ],
 
+        // Féculents & Pommes de terre
+        "pommes-de-terre": [
+            { id: "patate-douce", reason: "Tubercule local économique, riche en vitamine A et à index glycémique plus modéré", category: "sante" },
+            { id: "manioc", reason: "Féculent local très nourrissant et très accessible", category: "economie" },
+            { id: "riz-brise-ordinaire", reason: "Féculent universel rapide à préparer", category: "praticite" }
+        ],
+        "pain-frais": [
+            { id: "pain-tapalapa", reason: "Pain artisanal traditionnel très consistant et plus économique", category: "economie" },
+            { id: "riz-brise-ordinaire", reason: "Base glucidique locale très accessible", category: "praticite" }
+        ],
+
+        // Fruits & Bonnes graisses
+        "avocat": [
+            { id: "oeuf-poule", reason: "Alternative crémeuse et riche en protéines complètes", category: "proteines" },
+            { id: "pate-arachide", reason: "Bonnes graisses végétales locales et onctuosité", category: "terroir" }
+        ],
+
         // Légumineuses
+        "haricots-verts": [
+            { id: "niebe", reason: "Légumineuse locale économique ultra-protéinée (24g/100g) et rassasiante", category: "economie" },
+            { id: "courgette", reason: "Légume vert tendre et très digeste", category: "praticite" },
+            { id: "chou-blanc", reason: "Légume vert économique et croquant", category: "economie" }
+        ],
         "niebe": [
             { id: "oeuf-poule", reason: "Protéines animales complètes", category: "proteines" },
-            { id: "arachides-crues", reason: "Apporte du croquant et de l'énergie", category: "energie" }
+            { id: "arachides-crues", reason: "Apporte du croquant et de l'énergie", category: "energie" },
+            { id: "haricots-verts", reason: "Légume vert léger pour alléger en calories", category: "sante" }
         ],
         "pate-arachide": [
             { id: "arachides-crues", reason: "Arachides entières concassées pour texture croquante", category: "texture" }
+        ],
+
+        // Légumes & Feuilles
+        "courgette": [
+            { id: "diakhatou", reason: "Légume local très économique et stimulant pour la digestion", category: "terroir" },
+            { id: "carotte", reason: "Croquant et riche en bêta-carotène", category: "vitamines" },
+            { id: "gombo-frais", reason: "Légume vert doux riche en fibres solubles", category: "nutriments" }
+        ],
+        "poivron": [
+            { id: "tomate-fraiche", reason: "Légume juteux riche en antioxydants", category: "praticite" },
+            { id: "carotte", reason: "Croquant et couleur vive", category: "vitamines" }
+        ],
+        "concombre": [
+            { id: "salade-verte", reason: "Feuille fraîche et croquante", category: "praticite" },
+            { id: "tomate-fraiche", quantity: 1, reason: "Crudité fraîche gorgée d'eau", category: "praticite" }
         ],
 
         // Légumes & Feuilles

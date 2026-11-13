@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NutriBudget - Votre espace personnel de nutrition et de budget alimentaire adapté aux produits locaux de Dakar.">
+    <meta name="description" content="NutriBudget - Votre espace personnel de nutrition et de budget pour cuisiner les recettes du monde entier adaptées aux ingrédients locaux.">
     <meta name="robots" content="noindex">
     <title>Mon Espace | NutriBudget</title>
     <link rel="stylesheet" href="style.css">
@@ -643,6 +643,18 @@
                             </div>
 
                             <div>
+                                <span class="controls-label" style="display:block; margin-bottom:4px;">Cuisine du monde</span>
+                                <select id="filter-cuisine-origin" class="controls-select" onchange="App.filterRecipes()">
+                                    <option value="all">🌍 Toutes les origines</option>
+                                    <option value="africaine">🌍 Africaine & Terroir</option>
+                                    <option value="asiatique">🥢 Asiatique (Wok, Corée)</option>
+                                    <option value="europeenne">🥖 Européenne & Méditerranée</option>
+                                    <option value="americaine">🥑 Américaine (Bowls & Salades)</option>
+                                    <option value="moyen_orient">🧆 Moyen-Orientale</option>
+                                </select>
+                            </div>
+
+                            <div>
                                 <span class="controls-label" style="display:block; margin-bottom:4px;">Portions (convives)</span>
                                 <div class="servings-selector">
                                     <button type="button" class="servings-btn" id="serv-btn-1" onclick="App.setRecipeServings(1)">1 pers</button>
@@ -799,7 +811,7 @@
                             <span>🛒</span> Liste de Courses Intelligente & Consolidée
                         </div>
                         <div class="shopping-hero-subtitle">
-                            Ingrédients regroupés par étals du marché de Dakar avec déduction directe de votre placard.
+                            Ingrédients regroupés par rayons et étals de votre marché local avec déduction directe de votre placard.
                         </div>
                         <div class="shopping-metrics-row">
                             <div class="shopping-metric-item">
@@ -859,7 +871,7 @@
             <div class="recipe-modal-header">
                 <div>
                     <div style="font-size:0.8rem; font-weight:700; color:var(--primary-dark); text-transform:uppercase; margin-bottom:4px;" id="modal-recipe-category">
-                        Déjeuner · Sénégal
+                        Déjeuner · Cuisine du Monde
                     </div>
                     <div class="recipe-modal-title" id="modal-recipe-title">
                         🍲 Titre de la recette
@@ -960,7 +972,7 @@
                 <!-- Budget & Impact Placard -->
                 <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:var(--radius-sm); padding:16px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                     <div>
-                        <div style="font-size:0.8rem; color:#166534; font-weight:600;">COÛT ESTIMÉ DU PLAT (MARCHÉS DE DAKAR)</div>
+                        <div style="font-size:0.8rem; color:#166534; font-weight:600;">COÛT ESTIMÉ DU PLAT (PRIX DU MARCHÉ LOCAL)</div>
                         <div style="font-size:1.4rem; font-weight:800; color:#15803D;" id="modal-cost-total">0 FCFA</div>
                         <div style="font-size:0.85rem; color:#166534;" id="modal-cost-per-serving">Soit 0 FCFA / personne</div>
                     </div>
