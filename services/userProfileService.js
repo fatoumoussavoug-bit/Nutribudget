@@ -513,6 +513,7 @@
         login,
         logout,
         getCurrentUser,
+        setCurrentUser,
         saveProfile,
         getProfile
     };

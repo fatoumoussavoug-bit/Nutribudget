@@ -127,8 +127,12 @@ const App = (function () {
                 // Afficher l'étape de vérification
                 document.getElementById("form-register").style.display = "none";
                 document.getElementById("form-register").classList.remove("active");
+                const authTabs = document.querySelector(".auth-tabs");
+                if (authTabs) authTabs.style.display = "none";
                 document.getElementById("verify-email-display").textContent = email;
                 document.getElementById("verify-code-input").value = "";
+                const codeBadge = document.getElementById("verify-code-badge");
+                if (codeBadge) codeBadge.textContent = code;
                 document.getElementById("verify-error").style.display = "none";
                 document.getElementById("form-verify-email").style.display = "block";
 
@@ -175,6 +179,9 @@ const App = (function () {
             btn.classList.remove("loading");
 
             const user = _pendingUser;
+            if (NutriProfile.setCurrentUser) {
+                NutriProfile.setCurrentUser(user);
+            }
             _pendingVerifyCode = null;
             _pendingUser = null;
 
@@ -195,6 +202,8 @@ const App = (function () {
             "background:#E67E22; color:white; padding:6px 12px; border-radius:4px; font-size:14px; font-weight:bold;");
 
         document.getElementById("verify-code-input").value = "";
+        const codeBadge = document.getElementById("verify-code-badge");
+        if (codeBadge) codeBadge.textContent = code;
         document.getElementById("verify-error").style.display = "none";
         showToast("Nouveau code envoyé ! Vérifiez la console (F12) 🔑", "info");
     }
@@ -1592,23 +1601,13 @@ const App = (function () {
     }
 
     function openAIPromptModal() {
-        if (!window.NutriRecipes) return;
-        const pantryArray = Array.from(selectedPantryIngredients);
-        const profile = NutriProfile.getProfile();
-
-        const prompts = window.NutriRecipes.generateAIPrompt({
-            selectedIngredientIds: pantryArray,
-            userGoal: profile ? profile.goal : "maintien",
-            targetCalories: profile && profile.calculated ? profile.calculated.targetCalories : 2000,
-            servings: activeServings,
-            mealType: document.getElementById("filter-meal-type") ? document.getElementById("filter-meal-type").value : "dejeuner"
-        });
-
-        document.getElementById("ai-prompt-system").value = prompts.systemPrompt;
-        document.getElementById("ai-prompt-user").value = prompts.userPrompt;
-
         const modal = document.getElementById("ai-prompt-modal");
-        if (modal) modal.classList.add("show");
+        if (!modal) return;
+        const promptInput = document.getElementById("ai-user-custom-prompt");
+        if (promptInput) promptInput.value = "";
+        const resultContainer = document.getElementById("ai-result-container");
+        if (resultContainer) resultContainer.style.display = "none";
+        modal.classList.add("show");
     }
 
     function closeAIPromptModal(event) {
@@ -1617,64 +1616,154 @@ const App = (function () {
         if (modal) modal.classList.remove("show");
     }
 
-    function copyPromptText(elementId) {
-        const textarea = document.getElementById(elementId);
-        if (!textarea) return;
-        textarea.select();
-        navigator.clipboard.writeText(textarea.value).then(() => {
-            showToast("Prompt copié dans le presse-papier ! 📋", "success");
-        }).catch(() => {
-            document.execCommand("copy");
-            showToast("Prompt copié ! 📋", "success");
-        });
-    }
+    let _lastGeneratedAIRecipe = null;
 
-    function loadMockAIResponse() {
-        const mock = {
-            title: "Mijoté Léger de Poulet aux Légumes des Niayes & Fonio",
-            mealType: "dejeuner",
-            prepTimeMinutes: 20,
-            cookingTimeMinutes: 25,
-            difficulty: "Facile",
-            imageEmoji: "🍲",
-            description: "Une recette d'inspiration dakaroise associant le poulet fermier et le fonio complet.",
-            chefTip: "Parfumez la sauce avec du nététou concassé pour une note umami sans excès de sodium.",
-            tags: ["senegalais", "sans-gluten", "ia-generee"],
-            ingredients: [
-                { ingredientId: "poulet-fermier", quantity: 500, unit: "g" },
-                { ingredientId: "fonio", quantity: 240, unit: "g" },
-                { ingredientId: "carotte", quantity: 150, unit: "g" },
-                { ingredientId: "oignon-jaune", quantity: 200, unit: "g" },
-                { ingredientId: "huile-arachide", quantity: 25, unit: "ml" },
-                { ingredientId: "soumbala-netetou", quantity: 15, unit: "g" }
-            ],
-            steps: [
-                "Découper et faire dorer le poulet fermier avec les oignons émincés.",
-                "Ajouter les carottes en rondelles, le nététou et un verre d'eau. Laisser mijoter 20 minutes.",
-                "Cuire le fonio à la vapeur ou 5 minutes à l'eau bouillante.",
-                "Dresser le ragoût surmontant le lit de fonio et déguster bien chaud."
-            ]
-        };
-        document.getElementById("ai-json-input").value = JSON.stringify(mock, null, 2);
-    }
-
-    function testAIReponse() {
+    function generateRecipeFromAIPrompt() {
         if (!window.NutriRecipes) return;
-        const text = document.getElementById("ai-json-input").value.trim();
-        if (!text) {
-            showToast("Veuillez coller un JSON de recette d'abord !", "error");
+        const promptInput = document.getElementById("ai-user-custom-prompt");
+        const promptText = promptInput ? promptInput.value.trim() : "";
+
+        if (!promptText) {
+            showToast("Veuillez décrire ce que vous souhaitez manger ! 🥗", "error");
+            if (promptInput) promptInput.focus();
             return;
         }
 
-        try {
-            const recipe = window.NutriRecipes.parseAndValidateAIRecipe(text, activeServings);
+        const btn = document.getElementById("ai-generate-btn");
+        if (btn) {
+            btn.innerHTML = '<span class="spinner"></span> Génération...';
+            btn.disabled = true;
+        }
+
+        setTimeout(() => {
+            try {
+                const recipe = window.NutriRecipes.generateRecipeFromPrompt(promptText, {
+                    servings: activeServings
+                });
+
+                _lastGeneratedAIRecipe = recipe;
+
+                // Afficher le résultat dans la modale
+                const resultContainer = document.getElementById("ai-result-container");
+                const recipeCard = document.getElementById("ai-recipe-card");
+
+                const ingredientsHtml = (recipe.ingredients || []).map(ing => {
+                    const ingObj = (window.NutriData && window.NutriData.SEN_INGREDIENTS)
+                        ? window.NutriData.SEN_INGREDIENTS.find(i => i.id === ing.ingredientId)
+                        : null;
+                    const name = ingObj ? ingObj.name.split("(")[0].trim() : ing.ingredientId;
+                    const unitStr = ing.unit === "piece" ? " pièce(s)" : " " + ing.unit;
+                    return `<li style="margin-bottom:6px; font-size:0.9rem;">
+                        <strong>${escapeHtml(name)}</strong> : ${ing.quantity}${unitStr}
+                    </li>`;
+                }).join("");
+
+                const stepsHtml = (recipe.steps || []).map((step, idx) => {
+                    return `<li style="margin-bottom:8px; font-size:0.88rem; line-height:1.5;">
+                        <span style="font-weight:700; color:var(--primary);">${idx + 1}.</span> ${escapeHtml(step)}
+                    </li>`;
+                }).join("");
+
+                recipeCard.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                        <div>
+                            <div style="font-size:1.8rem; margin-bottom:4px;">${recipe.imageEmoji || "🍽️"}</div>
+                            <h3 style="font-size:1.25rem; font-weight:800; color:var(--text-dark); margin:0 0 4px 0;">${escapeHtml(recipe.title)}</h3>
+                            <p style="font-size:0.88rem; color:var(--text-light); margin:0;">${escapeHtml(recipe.description || "")}</p>
+                        </div>
+                        <span style="background:var(--primary-light); color:var(--primary-dark); padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:700; text-transform:capitalize;">
+                            ${recipe.mealType || "Repas"}
+                        </span>
+                    </div>
+
+                    <!-- Badges d'impact nutritionnel et budget avec vrais prix -->
+                    <div style="display:flex; gap:12px; flex-wrap:wrap; margin:16px 0; padding:12px; background:var(--bg-alt); border-radius:var(--radius-sm);">
+                        <div style="flex:1; min-width:130px;">
+                            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; display:block;">Calories approx.</span>
+                            <strong style="font-size:1.15rem; color:#E67E22;">🔥 ~${Math.round(recipe.nutritionPerServing ? recipe.nutritionPerServing.calories : 450)} kcal</strong>
+                            <div style="font-size:0.75rem; color:var(--text-light);">par portion</div>
+                        </div>
+                        <div style="flex:1; min-width:130px;">
+                            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; display:block;">Prix estimé réel</span>
+                            <strong style="font-size:1.15rem; color:var(--primary);">💰 ${Math.round(recipe.estimatedCostFCFA || 0).toLocaleString("fr-FR")} FCFA</strong>
+                            <div style="font-size:0.75rem; color:var(--text-light);">total (${Math.round(recipe.costPerServingFCFA || 0).toLocaleString("fr-FR")} FCFA/portion)</div>
+                        </div>
+                        <div style="flex:1; min-width:130px;">
+                            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; display:block;">Temps total</span>
+                            <strong style="font-size:1.15rem; color:var(--text-dark);">⏱️ ${(recipe.prepTimeMinutes || 15) + (recipe.cookingTimeMinutes || 15)} min</strong>
+                            <div style="font-size:0.75rem; color:var(--text-light);">${recipe.difficulty || "Facile"}</div>
+                        </div>
+                    </div>
+
+                    <!-- Ingrédients en français simple -->
+                    <div style="margin-bottom:16px;">
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--secondary); margin-bottom:8px;">
+                            🛒 Ingrédients du marché (${recipe.baseServings || 2} portions) :
+                        </h4>
+                        <ul style="padding-left:18px; margin:0;">
+                            ${ingredientsHtml}
+                        </ul>
+                    </div>
+
+                    <!-- Étapes simples -->
+                    <div style="margin-bottom:18px;">
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--secondary); margin-bottom:8px;">
+                            👩‍🍳 Préparation étape par étape :
+                        </h4>
+                        <ol style="padding-left:0; list-style:none; margin:0;">
+                            ${stepsHtml}
+                        </ol>
+                    </div>
+
+                    ${recipe.chefTip ? `
+                    <div style="background:#FFFBEB; border-left:4px solid #F59E0B; padding:10px 14px; border-radius:4px; margin-bottom:18px; font-size:0.85rem; color:#92400E;">
+                        <strong>💡 Astuce Chef :</strong> ${escapeHtml(recipe.chefTip)}
+                    </div>
+                    ` : ""}
+
+                    <!-- Boutons d'action -->
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px; flex-wrap:wrap;">
+                        <button type="button" class="btn btn-secondary" onclick="App.saveAIGeneratedRecipe(false)" style="padding:8px 16px; font-size:0.88rem;">
+                            ⭐ Enregistrer dans mon profil
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="App.saveAIGeneratedRecipe(true)" style="padding:8px 16px; font-size:0.88rem;">
+                            🍽️ Voir la fiche complète
+                        </button>
+                    </div>
+                `;
+
+                if (resultContainer) resultContainer.style.display = "block";
+                resultContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+                showToast("✨ Recette saine générée avec succès !", "success");
+
+            } catch (err) {
+                showToast(err.message, "error");
+            } finally {
+                if (btn) {
+                    btn.innerHTML = "✨ Générer ma recette";
+                    btn.disabled = false;
+                }
+            }
+        }, 500);
+    }
+
+    function saveAIGeneratedRecipe(openDetail = false) {
+        if (!_lastGeneratedAIRecipe) return;
+        const recipe = _lastGeneratedAIRecipe;
+
+        // Ajouter aux favoris et au catalogue filtré
+        if (window.NutriRecipes && window.NutriRecipes.toggleFavorite) {
+            window.NutriRecipes.toggleFavorite(recipe.id);
+        }
+        cachedFilteredRecipes.unshift(recipe);
+        renderRecipeCards(cachedFilteredRecipes);
+
+        showToast("Recette enregistrée dans votre profil et vos favoris ! ⭐", "success");
+
+        if (openDetail) {
             closeAIPromptModal();
-            cachedFilteredRecipes.unshift(recipe);
-            renderRecipeCards(cachedFilteredRecipes);
             openRecipeModal(recipe.id);
-            showToast("Recette IA validée et calculée avec succès par NutriCalculator ! 🎉", "success");
-        } catch (err) {
-            showToast(err.message, "error");
         }
     }
 
@@ -1749,6 +1838,8 @@ const App = (function () {
         generateCreativeRecipeModal,
         openAIPromptModal,
         closeAIPromptModal,
+        generateRecipeFromAIPrompt,
+        saveAIGeneratedRecipe,
         copyPromptText,
         loadMockAIResponse,
         testAIReponse,

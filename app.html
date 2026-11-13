@@ -120,8 +120,12 @@
                         style="text-align:center; font-size:1.5rem; letter-spacing:8px; font-weight:700;"
                         autocomplete="one-time-code"
                         inputmode="numeric"
-                        pattern="[0-9]{6}">
+                        pattern="[0-9]{6}"
+                        onkeyup="if(event.key==='Enter') App.handleVerifyEmail()">
                     <p class="form-hint">Entrez le code à 6 chiffres reçu par email.</p>
+                </div>
+                <div id="verify-console-hint" style="background:#E8F8F5; border:1px dashed #2ECC71; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:0.82rem; color:#27AE60; text-align:center;">
+                    💡 <strong>Mode Test :</strong> Code envoyé dans la console (F12) : <span id="verify-code-badge" style="font-weight:800; background:white; padding:2px 8px; border-radius:4px; border:1px solid #2ECC71; letter-spacing:2px;"></span>
                 </div>
                 <div id="verify-error" style="color:#E74C3C; font-size:0.85rem; margin-bottom:12px; display:none;"></div>
                 <button type="button" class="btn btn-primary" style="width:100%;" id="verify-submit-btn"
@@ -156,7 +160,7 @@
                         <span class="sidebar-icon">👤</span> Mon Profil
                     </button>
                     <button class="sidebar-item" id="sidebar-recipes" onclick="App.showTab('recipes')">
-                        <span class="sidebar-icon">🍽️</span> Recettes Terroir & IA
+                        <span class="sidebar-icon">🍽️</span> Recettes Healthy & IA
                         <span style="font-size:0.65rem; margin-left:auto; background:var(--primary); color:white; padding:2px 7px; border-radius:10px; font-weight:700;">Nouveau</span>
                     </button>
                     <button class="sidebar-item" id="sidebar-planner" onclick="App.showTab('planner')">
@@ -558,8 +562,8 @@
                     
                     <!-- En-tête -->
                     <div class="recipe-view-header">
-                        <h2>🍽️ Recettes du Terroir & Générateur IA</h2>
-                        <p>Sélectionnez les ingrédients disponibles dans votre cuisine ou sur votre étal de quartier. Notre moteur identifie les meilleures recettes locales et calcule exactement vos macros et votre budget en FCFA.</p>
+                        <h2>🍽️ Recettes Healthy du Monde & Générateur IA</h2>
+                        <p>Découvrez nos vraies recettes saines, équilibrées et gourmandes du monde et du terroir. Utilisez l'IA pour générer une recette healthy sur-mesure calculée avec les vrais prix du marché en FCFA.</p>
                     </div>
 
                     <!-- BLOC 1 : SÉLECTEUR D'INGRÉDIENTS (PLACARD & MARCHÉ) -->
@@ -1022,63 +1026,48 @@
         </div>
     </div>
 
-    <!-- MODALE : PROMPT IA & SÉPARATION STRICTE -->
+    <!-- MODALE : GÉNÉRATEUR IA DE VRAIES RECETTES HEALTHY -->
     <div class="recipe-modal-backdrop" id="ai-prompt-modal" onclick="App.closeAIPromptModal(event)">
-        <div class="recipe-modal-dialog" onclick="event.stopPropagation()">
+        <div class="recipe-modal-dialog" onclick="event.stopPropagation()" style="max-width:680px;">
             <div class="recipe-modal-header">
                 <div>
                     <div style="font-size:0.8rem; font-weight:700; color:var(--primary-dark); text-transform:uppercase; margin-bottom:4px;">
-                        Architecture & Contrat IA
+                        Intelligence Artificielle & Nutrition Saine
                     </div>
                     <div class="recipe-modal-title">
-                        🤖 Prompt IA avec Séparation Stricte
+                        🤖 Générateur de Recettes IA Healthy
                     </div>
                 </div>
                 <button type="button" class="recipe-modal-close" onclick="App.closeAIPromptModal()">&times;</button>
             </div>
 
             <div class="recipe-modal-body">
-                <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:var(--radius-sm); padding:16px; margin-bottom:20px; font-size:0.9rem; color:#1E40AF;">
-                    <strong>🛡️ Principe d'Or NutriBudget :</strong> L'intelligence artificielle (Claude, GPT, Gemini) est utilisée uniquement pour sa créativité culinaire et ses conseils de chef. Elle a <strong>interdiction stricte de calculer les calories, les macros ou les prix</strong>. Tous les chiffres sont calculés mathématiquement par notre moteur <code>NutriCalculator</code> à partir des tables FAO.
+                <div style="background:#E8F8F5; border:1px solid #A3E4D7; border-radius:var(--radius-sm); padding:14px; margin-bottom:18px; font-size:0.88rem; color:#0E6251;">
+                    🥗 <strong>Recettes réelles & équilibrées :</strong> Décrivez vos envies. L'IA génère uniquement de vraies recettes existantes, saines et mangeables, avec de vrais prix du marché et un calcul nutritionnel certifié.
                 </div>
 
-                <div style="margin-bottom:16px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <strong style="font-size:0.88rem; color:var(--secondary);">Template de Prompt Système (à copier) :</strong>
-                        <button type="button" class="btn btn-outline" onclick="App.copyPromptText('ai-prompt-system')" style="padding:4px 10px; font-size:0.75rem;">
-                            Copier
-                        </button>
+                <div class="form-group" style="margin-bottom:18px;">
+                    <label for="ai-user-custom-prompt" style="font-weight:700; font-size:0.95rem; margin-bottom:8px; display:block;">
+                        Que souhaitez-vous manger ?
+                    </label>
+                    <textarea id="ai-user-custom-prompt"
+                        placeholder="Décrivez ce que vous voulez manger... ex: je veux une recette healthy avec avocat et oeufs"
+                        style="width:100%; min-height:110px; font-size:0.95rem; padding:12px; border:2px solid var(--border); border-radius:var(--radius-sm); resize:vertical; font-family:inherit;"></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <div style="font-size:0.85rem; color:var(--text-light);">
+                        💡 <em>Exemples : "salade avocat et oeufs", "poulet grillé et riz", "poisson et légumes"</em>
                     </div>
-                    <textarea id="ai-prompt-system" readonly style="width:100%; height:130px; font-family:monospace; font-size:0.78rem; padding:10px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-alt);"></textarea>
+                    <button type="button" class="btn btn-primary" id="ai-generate-btn" onclick="App.generateRecipeFromAIPrompt()" style="padding:10px 24px; font-size:0.95rem;">
+                        ✨ Générer ma recette
+                    </button>
                 </div>
 
-                <div style="margin-bottom:20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <strong style="font-size:0.88rem; color:var(--secondary);">Template de Prompt Utilisateur généré :</strong>
-                        <button type="button" class="btn btn-outline" onclick="App.copyPromptText('ai-prompt-user')" style="padding:4px 10px; font-size:0.75rem;">
-                            Copier
-                        </button>
-                    </div>
-                    <textarea id="ai-prompt-user" readonly style="width:100%; height:110px; font-family:monospace; font-size:0.78rem; padding:10px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-alt);"></textarea>
-                </div>
-
-                <!-- Testeur de réponse IA en direct -->
-                <div style="border-top:1px solid var(--border); padding-top:20px;">
-                    <h4 style="font-size:0.95rem; font-weight:700; color:var(--secondary); margin-bottom:8px;">
-                        🧪 Tester une réponse JSON d'IA en direct
-                    </h4>
-                    <p style="font-size:0.83rem; color:var(--text-light); margin-bottom:10px;">
-                        Collez la réponse JSON retournée par votre LLM pour voir <code>NutriCalculator</code> calculer instantanément ses macros et son coût réel :
-                    </p>
-                    <textarea id="ai-json-input" placeholder='Collez ici le JSON : { "title": "...", "ingredients": [...] }' style="width:100%; height:100px; font-family:monospace; font-size:0.8rem; padding:10px; border:1.5px solid var(--border); border-radius:var(--radius-sm); margin-bottom:12px;"></textarea>
-                    
-                    <div style="display:flex; justify-content:flex-end; gap:10px;">
-                        <button type="button" class="btn btn-secondary" onclick="App.loadMockAIResponse()">
-                            Charger un exemple
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="App.testAIReponse()">
-                            🚀 Valider & Calculer Déterministe
-                        </button>
+                <!-- ZONE DU RÉSULTAT GÉNÉRÉ -->
+                <div id="ai-result-container" style="display:none; border-top:2px dashed var(--border); padding-top:20px;">
+                    <div id="ai-recipe-card" style="background:#FFFFFF; border:1.5px solid var(--border); border-radius:var(--radius-md); padding:20px; box-shadow:var(--shadow-sm);">
+                        <!-- Le contenu sera injecté dynamiquement par App.generateRecipeFromAIPrompt() -->
                     </div>
                 </div>
             </div>

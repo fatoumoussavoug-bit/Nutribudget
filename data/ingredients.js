@@ -283,8 +283,8 @@ const SEN_INGREDIENTS = [
             fats: 9.9,
             fiber: 0.0
         },
-        defaultPricePerKg: 2182, // ~120 FCFA pièce (prix réel marché)
-        pricePerPiece: 120,
+        defaultPricePerKg: 2273, // ~125 FCFA pièce (prix réel marché)
+        pricePerPiece: 125,
         priceUnit: "piece",
         isLocalSenegal: true,
         tags: ["sans-gluten", "proteines-completes", "economique"],
@@ -445,7 +445,7 @@ const SEN_INGREDIENTS = [
             fats: 0.1,
             fiber: 1.7
         },
-        defaultPricePerKg: 600, // ~600 FCFA / kg prix réel du marché 2026
+        defaultPricePerKg: 500, // ~500 à 600 FCFA / kg prix réel du marché 2026
         priceUnit: "kg",
         isLocalSenegal: true,
         tags: ["sans-gluten", "antioxydant", "base-cuisson"],

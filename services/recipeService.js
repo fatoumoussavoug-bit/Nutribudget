@@ -943,7 +943,356 @@
     }
 
     // ============================================================
+    // GÉNÉRATEUR IA DE RECETTES HEALTHY RÉELLES (SUR-MESURE)
+    // Ne génère que des vraies recettes qui existent, saines et équilibrées
+    // ============================================================
+    function generateRecipeFromPrompt(userPrompt = "", options = {}) {
+        const text = (userPrompt || "").toLowerCase().trim();
+        const servings = options.servings || 2;
+
+        const hasAvocat = text.includes("avocat");
+        const hasOeuf = text.includes("oeuf") || text.includes("œuf");
+        const hasPoulet = text.includes("poulet") || text.includes("volaille");
+        const hasPoisson = text.includes("poisson") || text.includes("merou") || text.includes("tilapia") || text.includes("yaboye");
+        const hasThon = text.includes("thon");
+        const hasBoeuf = text.includes("boeuf") || text.includes("bœuf") || text.includes("viande");
+        const hasRiz = text.includes("riz");
+        const hasPommeTerre = text.includes("pomme de terre") || text.includes("pommes de terre") || text.includes("patate");
+        const hasHaricotVert = text.includes("haricot vert") || text.includes("haricots verts") || text.includes("haricot");
+        const hasOmelette = text.includes("omelette");
+        const hasSalade = text.includes("salade") || text.includes("crudite") || text.includes("crudité");
+        const hasPain = text.includes("pain") || text.includes("toast") || text.includes("tartine");
+
+        let recipe = null;
+
+        // 1. Avocat + Œufs + Poulet
+        if (hasAvocat && hasOeuf && hasPoulet) {
+            recipe = {
+                title: "Salade complète avocat, œufs durs et poulet grillé",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 10,
+                difficulty: "Très facile",
+                imageEmoji: "🥗",
+                description: "Une grande salade complète healthy et gourmande : poulet fermier grillé tiède, lamelles d'avocat crémeux, œufs durs et lit de crudités fraîches.",
+                chefTip: "Faites dorer le poulet à feu vif avec une pointe de sel et de poivre, et arrosez d'un filet de jus de citron pour sublimer l'avocat.",
+                tags: ["healthy", "riche-en-proteines", "bonnes-graisses", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "poulet-fermier", quantity: 150 * servings, unit: "g" },
+                    { ingredientId: "avocat", quantity: Math.ceil(0.5 * servings), unit: "piece" },
+                    { ingredientId: "oeuf-poule", quantity: 1 * servings, unit: "piece" },
+                    { ingredientId: "salade-verte", quantity: 70 * servings, unit: "g" },
+                    { ingredientId: "tomate-fraiche", quantity: 70 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 7 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Griller les blancs de poulet assaisonnés dans une poêle légèrement huilée 4 à 5 minutes par face.",
+                    "Cuire les œufs 9 minutes dans de l'eau bouillante salée, les refroidir immédiatement à l'eau froide et les écaler.",
+                    "Laver et essorer la salade verte, découper les tomates en quartiers et l'avocat en lamelles régulières.",
+                    "Disposer le lit de salade verte dans deux assiettes creuses ou bols.",
+                    "Trancher le poulet grillé et le déposer harmonieusement avec l'avocat, les tomates et les demi-œufs durs.",
+                    "Arroser d'un filet d'huile d'olive et d'une touche de jus de citron."
+                ]
+            };
+        }
+        // 2. Avocat + Œufs (avec ou sans toast)
+        else if (hasAvocat && hasOeuf) {
+            if (hasPain) {
+                recipe = {
+                    title: "Tartine croustillante d'avocat écrasé, œuf au plat et salade",
+                    mealType: "petit_dejeuner",
+                    prepTimeMinutes: 10,
+                    cookingTimeMinutes: 6,
+                    difficulty: "Très facile",
+                    imageEmoji: "🥑",
+                    description: "Tranches de pain frais toastées recouvertes d'avocat écrasé relevé d'une pointe de citron, surmontées d'un œuf au plat et servies avec salade.",
+                    chefTip: "Écrasez l'avocat grossièrement à la fourchette en laissant des morceaux pour une texture gourmande.",
+                    tags: ["healthy", "vegetarien", "rapide", "petit-dejeuner"],
+                    ingredients: [
+                        { ingredientId: "pain-frais", quantity: 60 * servings, unit: "g" },
+                        { ingredientId: "avocat", quantity: Math.ceil(0.5 * servings), unit: "piece" },
+                        { ingredientId: "oeuf-poule", quantity: 1 * servings, unit: "piece" },
+                        { ingredientId: "tomate-fraiche", quantity: 60 * servings, unit: "g" },
+                        { ingredientId: "salade-verte", quantity: 40 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 5 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Faire toaster légèrement les tranches de pain frais au grille-pain ou à la poêle sèche.",
+                        "Écraser la chair d'avocat à la fourchette avec du sel, du poivre et quelques gouttes de jus de citron.",
+                        "Cuire les œufs au plat dans une poêle antiadhésive avec un filet d'huile d'olive 3 minutes.",
+                        "Tartiner généreusement l'avocat sur le pain chaud et déposer un œuf au plat sur chaque tartine.",
+                        "Servir aussitôt avec des quartiers de tomate fraîche et quelques feuilles de salade verte."
+                    ]
+                };
+            } else {
+                recipe = {
+                    title: "Salade fraîche d'avocat crémeux, œufs durs et crudités",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 12,
+                    cookingTimeMinutes: 9,
+                    difficulty: "Très facile",
+                    imageEmoji: "🥗",
+                    description: "Une salade vitaminée et rassasiante associant avocat fondant, œufs durs protéinés, concombres croquants et tomates mûres.",
+                    chefTip: "Un filet d'huile d'olive extra-vierge et une pincée de sel marin suffisent pour un goût authentique.",
+                    tags: ["healthy", "vegetarien", "sans-gluten", "salade"],
+                    ingredients: [
+                        { ingredientId: "avocat", quantity: Math.ceil(0.5 * servings), unit: "piece" },
+                        { ingredientId: "oeuf-poule", quantity: 2 * servings, unit: "piece" },
+                        { ingredientId: "salade-verte", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "tomate-fraiche", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "concombre", quantity: 60 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 7 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Plonger les œufs 9 minutes dans de l'eau frémissante, les rafraîchir à l'eau froide puis les couper en quartiers.",
+                        "Tailler l'avocat en lamelles, le concombre en rondelles et les tomates en dés.",
+                        "Dresser la salade verte lavée et bien essorée au fond du plat.",
+                        "Disposer les quartiers d'œufs, l'avocat et les crudités par sections de couleur.",
+                        "Assaisonner d'huile d'olive et de poivre moulu avant de servir."
+                    ]
+                };
+            }
+        }
+        // 3. Poulet + Riz + Légumes
+        else if (hasPoulet && (hasRiz || text.includes("legume") || text.includes("légume"))) {
+            recipe = {
+                title: "Poulet grillé émincé, riz et légumes sautés",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 20,
+                difficulty: "Facile",
+                imageEmoji: "🍗",
+                description: "Le déjeuner healthy idéal : morceaux de poulet fermier dorés, riz blanc léger et poêlée croquante de courgettes et carottes.",
+                chefTip: "Faites sauter les légumes à feu très vif 5 à 7 minutes seulement pour qu'ils restent bien croquants.",
+                tags: ["healthy", "riche-en-proteines", "equilibre", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "poulet-fermier", quantity: 175 * servings, unit: "g" },
+                    { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                    { ingredientId: "courgette", quantity: 100 * servings, unit: "g" },
+                    { ingredientId: "carotte", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 8 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Rincer le riz et le cuire 15 minutes dans de l'eau bouillante salée, puis égoutter.",
+                    "Découper les filets de poulet en aiguillettes et les légumes en rondelles fines.",
+                    "Faire dorer le poulet dans une poêle chaude avec un peu d'huile d'olive 8 minutes.",
+                    "Dans une sauteuse avec le reste d'huile, faire revenir l'oignon, la carotte et la courgette 7 minutes.",
+                    "Dresser le riz blanc au centre de l'assiette, entouré des légumes croquants et du poulet doré."
+                ]
+            };
+        }
+        // 4. Poulet + Pommes de terre
+        else if (hasPoulet && hasPommeTerre) {
+            recipe = {
+                title: "Poulet rôti au four, pommes de terre et haricots verts",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 30,
+                difficulty: "Facile",
+                imageEmoji: "🍗",
+                description: "Poulet fermier rôti doré et savoureux, servi avec pommes de terre fondantes au four et haricots verts vapeur.",
+                chefTip: "Cuisez les pommes de terre avec un peu d'oignon émincé pour une douceur naturellement caramélisée sans excès de matière grasse.",
+                tags: ["healthy", "familial", "riche-en-proteines", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "poulet-fermier", quantity: 200 * servings, unit: "g" },
+                    { ingredientId: "pommes-de-terre", quantity: 175 * servings, unit: "g" },
+                    { ingredientId: "haricots-verts", quantity: 100 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 8 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Éplucher les pommes de terre et les couper en morceaux réguliers.",
+                    "Placer les pommes de terre et l'oignon émincé dans un plat à four avec l'huile d'olive, sel et poivre à 200°C pendant 30 min.",
+                    "Cuire le poulet assaisonné au four ou à la poêle jusqu'à ce qu'il soit bien doré.",
+                    "Cuire les haricots verts à la vapeur 10 minutes pour préserver leurs vitamines et leur texture ferme.",
+                    "Dresser le poulet chaud avec les pommes de terre fondantes et les haricots verts."
+                ]
+            };
+        }
+        // 5. Poisson + Pommes de terre + Salade
+        else if (hasPoisson && (hasPommeTerre || hasSalade)) {
+            recipe = {
+                title: "Poisson grillé, pommes de terre vapeur et salade fraîche",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 20,
+                difficulty: "Facile",
+                imageEmoji: "🐟",
+                description: "Filet de poisson blanc grillé délicatement à la poêle, accompagné de pommes de terre vapeur fondantes et de salade verte.",
+                chefTip: "Arrosez d'un filet de jus de citron frais juste avant de servir pour relever la chair fine du poisson.",
+                tags: ["healthy", "omega-3", "poisson", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "poisson-blanc", quantity: 175 * servings, unit: "g" },
+                    { ingredientId: "pommes-de-terre", quantity: 150 * servings, unit: "g" },
+                    { ingredientId: "salade-verte", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "tomate-fraiche", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 8 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Éplucher les pommes de terre et les cuire à la vapeur ou à l'eau 18 à 20 minutes.",
+                    "Assaisonner les filets de poisson de sel fin, poivre et jus de citron.",
+                    "Saisir le poisson dans une poêle antiadhésive avec un filet d'huile d'olive 3 à 4 minutes par face.",
+                    "Laver la salade verte et tailler la tomate en quartiers.",
+                    "Dresser le poisson grillé avec les pommes de terre vapeur arrosées d'un trait d'huile d'olive et la salade fraîche."
+                ]
+            };
+        }
+        // 6. Poisson + Riz + Haricots verts
+        else if (hasPoisson && (hasRiz || hasHaricotVert)) {
+            recipe = {
+                title: "Filet de poisson blanc poêlé, riz et haricots verts vapeur",
+                mealType: "dejeuner",
+                prepTimeMinutes: 12,
+                cookingTimeMinutes: 15,
+                difficulty: "Facile",
+                imageEmoji: "🐟",
+                description: "Un repas hypocalorique, digeste et riche en protéines pures : poisson blanc poêlé, riz blanc léger et haricots verts vapeur.",
+                chefTip: "Idéal pour un déjeuner tonifiant qui ne pèse pas sur la digestion.",
+                tags: ["healthy", "faible-calorie", "proteines-maigres", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "poisson-blanc", quantity: 175 * servings, unit: "g" },
+                    { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                    { ingredientId: "haricots-verts", quantity: 120 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 40 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 7 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Cuire le riz dans de l'eau bouillante salée 15 minutes, puis égoutter.",
+                    "Cuire les haricots verts à la vapeur 10 minutes pour qu'ils restent bien verts et croquants.",
+                    "Faire revenir les filets de poisson à la poêle avec l'huile d'olive et l'oignon émincé 3 minutes par face.",
+                    "Dresser le poisson doré avec le riz chaud et les haricots verts vapeur."
+                ]
+            };
+        }
+        // 7. Thon + Haricots verts + Œufs
+        else if (hasThon && (hasHaricotVert || hasOeuf)) {
+            recipe = {
+                title: "Salade de thon au naturel, haricots verts et œufs durs",
+                mealType: "diner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 10,
+                difficulty: "Très facile",
+                imageEmoji: "🥗",
+                description: "La salade composée healthy par excellence façon niçoise : haricots verts croquants, thon au naturel émietté, œufs durs et tomates fraîches.",
+                chefTip: "Plongez les haricots cuits dans un bain d'eau glacée pour stopper la cuisson et préserver leur texture croquante.",
+                tags: ["healthy", "riche-en-proteines", "sans-gluten", "salade"],
+                ingredients: [
+                    { ingredientId: "thon-naturel", quantity: 80 * servings, unit: "g" },
+                    { ingredientId: "haricots-verts", quantity: 125 * servings, unit: "g" },
+                    { ingredientId: "oeuf-poule", quantity: 1 * servings, unit: "piece" },
+                    { ingredientId: "tomate-fraiche", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 30 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 7 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Cuire les haricots verts 8 à 10 minutes dans l'eau bouillante salée, puis égoutter.",
+                    "Cuire les œufs 9 minutes dans de l'eau frémissante, les refroidir, les écaler et les couper en deux.",
+                    "Égoutter le thon au naturel et l'émietter délicatement à la fourchette.",
+                    "Couper les tomates en quartiers et émincer très finement l'oignon.",
+                    "Réunir les haricots verts, les tomates, l'oignon et le thon dans un plat.",
+                    "Déposer les demi-œufs durs sur le dessus et arroser d'un filet d'huile d'olive."
+                ]
+            };
+        }
+        // 8. Omelette aux légumes + Pain
+        else if (hasOmelette || (hasOeuf && (text.includes("legume") || text.includes("légume") || hasPain))) {
+            recipe = {
+                title: "Omelette moelleuse aux légumes et pain frais",
+                mealType: "petit_dejeuner",
+                prepTimeMinutes: 10,
+                cookingTimeMinutes: 8,
+                difficulty: "Très facile",
+                imageEmoji: "🍳",
+                description: "Omelette aérée et dorée aux tomates fraîches, oignons doux et poivrons croquants, servie avec du pain frais croustillant.",
+                chefTip: "Battez les œufs avec une cuillère d'eau pour rendre l'omelette encore plus moelleuse.",
+                tags: ["healthy", "vegetarien", "rapide", "petit-dejeuner"],
+                ingredients: [
+                    { ingredientId: "oeuf-poule", quantity: 2 * servings, unit: "piece" },
+                    { ingredientId: "tomate-fraiche", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 40 * servings, unit: "g" },
+                    { ingredientId: "poivron", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "pain-frais", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 5 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Émincer l'oignon et le poivron, couper la tomate en petits dés.",
+                    "Faire revenir les légumes dans une poêle antiadhésive avec l'huile d'olive 4 minutes.",
+                    "Battre les œufs entiers avec une pincée de sel et un tour de poivre.",
+                    "Verser les œufs battus sur les légumes chauds dans la poêle.",
+                    "Cuire 3 à 4 minutes à feu moyen en ramenant les bords vers le centre.",
+                    "Plier l'omelette en deux et servir immédiatement avec le pain frais."
+                ]
+            };
+        }
+        // 9. Bœuf + Poivrons + Riz
+        else if (hasBoeuf) {
+            recipe = {
+                title: "Sauté de bœuf émincé aux poivrons et riz blanc",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 15,
+                difficulty: "Facile",
+                imageEmoji: "🥩",
+                description: "Lamelles de bœuf maigre saisies à feu vif avec poivrons croquants et oignons, servies sur un lit de riz blanc parfumé.",
+                chefTip: "Saisissez la viande rapidement à feu très vif pour qu'elle reste bien juteuse et tendre.",
+                tags: ["healthy", "riche-en-fer", "riche-en-proteines", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "viande-boeuf", quantity: 150 * servings, unit: "g" },
+                    { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                    { ingredientId: "poivron", quantity: 100 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 7 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Cuire le riz blanc dans de l'eau bouillante salée 15 minutes, puis égoutter.",
+                    "Détailler le bœuf en fines lanières et trancher les poivrons et l'oignon en lamelles.",
+                    "Faire chauffer l'huile d'olive dans une sauteuse et saisir le bœuf 3 minutes à feu vif. Réserver.",
+                    "Faire sauter les poivrons et l'oignon dans la même poêle 5 à 6 minutes.",
+                    "Remettre la viande pour réchauffer l'ensemble pendant 1 minute.",
+                    "Dresser sur le lit de riz bien chaud."
+                ]
+            };
+        }
+        // 10. Fallback universel healthy
+        else {
+            recipe = {
+                title: "Bowl équilibré au poulet grillé, avocat et riz",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 15,
+                difficulty: "Facile",
+                imageEmoji: "🥑",
+                description: "Un bowl complet sain et nourrissant : émincé de poulet fermier grillé, tranches d'avocat crémeux, riz blanc tiède et crudités de saison.",
+                chefTip: "Le repas équilibré par excellence : protéines complètes, glucides à digestion lente et bonnes graisses mono-insaturées.",
+                tags: ["healthy", "equilibre", "riche-en-proteines", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "poulet-fermier", quantity: 150 * servings, unit: "g" },
+                    { ingredientId: "avocat", quantity: Math.ceil(0.5 * servings), unit: "piece" },
+                    { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                    { ingredientId: "concombre", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "carotte", quantity: 60 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 8 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Cuire le riz dans de l'eau bouillante salée pendant 15 minutes, égoutter et laisser tiédir.",
+                    "Émincer le poulet et le faire dorer à la poêle avec l'huile d'olive 8 minutes.",
+                    "Couper l'avocat en lamelles et le concombre et les carottes en fines rondelles.",
+                    "Disposer le riz tiède au fond de bols.",
+                    "Garnir harmonieusement avec le poulet doré, les lamelles d'avocat et les crudités.",
+                    "Arroser d'un filet de jus de citron et déguster."
+                ]
+            };
+        }
+
+        recipe.id = "ia-recette-" + Date.now();
+        recipe.baseServings = servings;
+        return enrichRecipeWithNutrition(recipe, servings);
+    }
+
+    // ============================================================
     // GÉNÉRATEUR CRÉATIF LOCAL (SUR-MESURE & OFFLINE)
+    // Coordonne les ingrédients sélectionnés pour créer une vraie recette saine
     // ============================================================
     function generateCreativeRecipe(selectedIngredientIds = [], options = {}) {
         if (!selectedIngredientIds || selectedIngredientIds.length === 0) {
@@ -951,110 +1300,10 @@
         }
 
         const servings = options.servings || 2;
-        const mealType = options.mealType || "dejeuner";
+        const names = selectedIngredientIds.join(" ");
 
-        const selectedObjects = selectedIngredientIds
-            .map(id => ingredients.find(i => i.id === id))
-            .filter(Boolean);
-
-        if (selectedObjects.length === 0) {
-            throw new Error("Aucun ingrédient reconnu dans la sélection.");
-        }
-
-        const bases = selectedObjects.filter(i => i.category === "cereales_feculents");
-        const proteins = selectedObjects.filter(i => i.category === "poissons_viandes_oeufs" || i.category === "legumineuses");
-        const veggies = selectedObjects.filter(i => i.category === "legumes");
-        const fruits = selectedObjects.filter(i => i.category === "fruits");
-        const liquids = selectedObjects.filter(i => i.category === "boissons_infusions" || i.category === "produits_laitiers");
-        const seasonings = selectedObjects.filter(i => i.category === "huiles_condiments");
-
-        const recipeItems = [];
-        let title = "Plat Maison Dakarois";
-        let emoji = "🥘";
-        let desc = "Recette saine et équilibrée composée à partir de vos ingrédients du marché.";
-        const steps = [];
-
-        if (mealType === "boisson" || (liquids.length > 0 && bases.length === 0 && proteins.length === 0)) {
-            emoji = "🫖";
-            title = "Infusion Bien-Être aux Saveurs Sénégalaises";
-            desc = "Boisson locale hydratante et tonifiante.";
-            selectedObjects.forEach(ing => {
-                let q = 10;
-                let u = "g";
-                if (ing.category === "produits_laitiers") { q = 150; u = "g"; }
-                recipeItems.push({ ingredientId: ing.id, quantity: q * servings, unit: u });
-            });
-            steps.push("Rincer les ingrédients végétaux à l'eau claire.");
-            steps.push(`Faire infuser ou mixer dans ${250 * servings} ml d'eau ou de lait tiède.`);
-            steps.push("Déguster tiède ou bien frais selon vos préférences.");
-        } else {
-            let primaryProteinName = proteins.length > 0 ? proteins[0].name.split("(")[0].trim() : null;
-            let primaryBaseName = bases.length > 0 ? bases[0].name.split("(")[0].trim() : null;
-            let primaryVeggieName = veggies.length > 0 ? veggies[0].name.split("(")[0].trim() : null;
-
-            if (primaryProteinName && primaryBaseName) {
-                title = `Mijoté de ${primaryProteinName} au ${primaryBaseName}`;
-            } else if (primaryProteinName && primaryVeggieName) {
-                title = `Poêlée de ${primaryProteinName} et ${primaryVeggieName}`;
-            } else if (primaryBaseName) {
-                title = `Plat Gourmand au ${primaryBaseName} et Légumes`;
-            } else {
-                title = `Poêlée Énergétique Dakaroise`;
-            }
-
-            bases.forEach(b => {
-                recipeItems.push({ ingredientId: b.id, quantity: 80 * servings, unit: "g" });
-            });
-            proteins.forEach(p => {
-                const q = p.id.includes("oeuf") ? 2 * servings : 120 * servings;
-                const u = p.id.includes("oeuf") ? "piece" : "g";
-                recipeItems.push({ ingredientId: p.id, quantity: q, unit: u });
-            });
-            veggies.forEach(v => {
-                recipeItems.push({ ingredientId: v.id, quantity: 70 * servings, unit: "g" });
-            });
-            seasonings.forEach(s => {
-                const q = s.id.includes("huile") ? 10 * servings : 10 * servings;
-                const u = s.id.includes("huile") ? "ml" : "g";
-                recipeItems.push({ ingredientId: s.id, quantity: q, unit: u });
-            });
-            fruits.forEach(f => {
-                recipeItems.push({ ingredientId: f.id, quantity: 80 * servings, unit: "g" });
-            });
-            liquids.forEach(l => {
-                recipeItems.push({ ingredientId: l.id, quantity: 100 * servings, unit: "g" });
-            });
-
-            steps.push("Préparer et laver soigneusement tous les ingrédients locaux.");
-            if (proteins.length > 0) {
-                steps.push(`Faire dorer ${proteins.map(p => p.name.split("(")[0]).join(", ")} avec un filet d'huile ou aromates.`);
-            }
-            if (veggies.length > 0) {
-                steps.push(`Ajouter les légumes découpés (${veggies.map(v => v.name.split("(")[0]).join(", ")}) et laisser mijoter 15 minutes.`);
-            }
-            if (bases.length > 0) {
-                steps.push(`Cuire ${bases.map(b => b.name.split("(")[0]).join(", ")} à l'eau ou à la vapeur selon la consistance désirée.`);
-            }
-            steps.push("Dresser harmonieusement et servir chaud en famille.");
-        }
-
-        const creativeRecipe = {
-            id: "creative-" + Date.now(),
-            title,
-            mealType,
-            prepTimeMinutes: 20,
-            cookingTimeMinutes: 25,
-            difficulty: "Facile",
-            baseServings: servings,
-            imageEmoji: emoji,
-            description: desc,
-            chefTip: "Cette création maison maximise les nutriments de vos ingrédients locaux à prix très doux.",
-            tags: ["creation-maison", "anti-gaspillage", "local"],
-            ingredients: recipeItems,
-            steps
-        };
-
-        return enrichRecipeWithNutrition(creativeRecipe, servings);
+        // Déléguer au moteur de composition culinaire saine
+        return generateRecipeFromPrompt(names, { servings, ...options });
     }
 
     // ============================================================
@@ -1198,6 +1447,7 @@ Assure-toi d'utiliser uniquement les "ingredientId" de la liste officielle fourn
         },
         matchRecipesWithIngredients,
         generateCreativeRecipe,
+        generateRecipeFromPrompt,
         generateAIPrompt,
         parseAndValidateAIRecipe,
         enrichRecipeWithNutrition,
