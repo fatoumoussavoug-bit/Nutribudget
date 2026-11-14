@@ -682,6 +682,354 @@
             ]
         },
         {
+            id: "recette-poulet-vapeur-gingembre-chine",
+            title: "Poulet vapeur au gingembre frais et riz parfumé",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 20,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥢",
+            description: "Plat sain emblématique de la cuisine cantonaise : suprêmes de poulet fermier cuits doucement à la vapeur avec gingembre frais et oignons doux, servis sur riz parfumé.",
+            chefTip: "La cuisson vapeur préserve la tendreté absolue du poulet et tous ses nutriments sans ajouter de gras superflu.",
+            tags: ["asiatique", "chine", "vapeur", "healthy", "riche-en-proteines", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 350, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 15, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "riz-parfume", quantity: 160, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz parfumé dans l'eau bouillante salée 15 minutes, puis égoutter.",
+                "Découper le poulet fermier en aiguillettes et râper finement le gingembre frais.",
+                "Disposer le poulet dans un panier vapeur avec les lamelles d'oignons et le gingembre râpé.",
+                "Cuire à la vapeur douce pendant 18 à 20 minutes jusqu'à ce que la chair soit très tendre.",
+                "Arroser d'un léger filet d'huile d'olive et servir aussitôt avec le riz parfumé bien chaud."
+            ]
+        },
+        {
+            id: "recette-boeuf-saute-poivrons-cantonais",
+            title: "Sauté de bœuf cantonais aux poivrons et oignons croquants",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 10,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥢",
+            description: "Recette traditionnelle chinoise rapide et équilibrée : émincé de bœuf maigre saisi vivement à la poêle avec poivrons doux croquants et riz blanc.",
+            chefTip: "Saisissez la viande à feu vif pendant 2 à 3 minutes maximum pour préserver tout son jus et sa tendreté.",
+            tags: ["asiatique", "chine", "riche-en-fer", "riche-en-proteines", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "viande-boeuf", quantity: 300, unit: "g" },
+                { ingredientId: "poivron", quantity: 160, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 100, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 12, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes, puis égoutter.",
+                "Couper le bœuf en très fines lanières, et émincer les poivrons et oignons.",
+                "Chauffer l'huile dans un wok ou une poêle à feu vif et faire sauter les légumes 4 minutes.",
+                "Ajouter le bœuf émincé et faire sauter 3 minutes supplémentaires à feu très vif en remuant.",
+                "Dresser bien chaud sur les assiettes avec le riz blanc."
+            ]
+        },
+        {
+            id: "recette-poisson-blanc-teriyaki-japon",
+            title: "Poisson blanc façon teriyaki léger, haricots verts et riz parfumé",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 12,
+            cookingTimeMinutes: 15,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🍱",
+            description: "Inspiré de l'art culinaire japonais : filets de poisson blanc frais délicatement dorés au gingembre, accompagnés de haricots verts vapeur et de riz parfumé.",
+            chefTip: "Une cuisson douce du poisson permet de préserver toutes ses protéines nobles et sa chair fondante.",
+            tags: ["asiatique", "japon", "poisson", "healthy", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poisson-blanc", quantity: 350, unit: "g" },
+                { ingredientId: "haricots-verts", quantity: 200, unit: "g" },
+                { ingredientId: "riz-parfume", quantity: 160, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 10, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz parfumé à l'eau bouillante salée 15 minutes.",
+                "Cuire les haricots verts à la vapeur ou à l'eau bouillante 10 minutes pour garder leur vert vif et leur croquant.",
+                "Dans une poêle antiadhésive avec l'huile et le gingembre frais râpé, dorer les filets de poisson 3 à 4 minutes par face.",
+                "Dresser les filets de poisson moelleux avec les haricots verts et le riz parfumé bien chaud.",
+                "Déguster chaud pour un repas complet, léger et digeste."
+            ]
+        },
+        {
+            id: "recette-oyakodon-japonais-poulet-oeuf",
+            title: "Oyakodon japonais allégé au poulet mijoté et œufs fondants",
+            cuisine: "asiatique",
+            mealType: "diner",
+            prepTimeMinutes: 10,
+            cookingTimeMinutes: 12,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍱",
+            description: "Le fameux donburi réconfortant du Japon : dés de poulet et oignons mijotés dans un bouillon léger, liés d'œufs battus juste saisis, sur un bol de riz chaud.",
+            chefTip: "Ne surcuisez pas les œufs : le secret de l'oyakodon traditionnel est de laisser les œufs encore légèrement crémeux.",
+            tags: ["asiatique", "japon", "riche-en-proteines", "healthy", "rapide"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 300, unit: "g" },
+                { ingredientId: "oeuf-poule", quantity: 3, unit: "piece" },
+                { ingredientId: "oignon-jaune", quantity: 120, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz à l'eau bouillante 15 minutes et le réserver au chaud dans deux bols.",
+                "Émincer l'oignon et découper le poulet en petits dés réguliers.",
+                "Faire suer l'oignon dans une sauteuse avec l'huile d'olive et un petit fond d'eau pendant 4 minutes.",
+                "Ajouter les dés de poulet, saler légèrement et laisser mijoter 5 minutes à feu moyen.",
+                "Battre les œufs à la fourchette et les verser en filet régulier sur le poulet. Couvrir 1 minute jusqu'à ce que les œufs soient pris mais fondants.",
+                "Glisser la préparation sur les bols de riz chaud et déguster sans attendre."
+            ]
+        },
+        {
+            id: "recette-goi-ga-salade-poulet-vietnam",
+            title: "Gỏi Gà - Salade vietnamienne de poulet effiloché, chou croquant et carottes",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 20,
+            cookingTimeMinutes: 15,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Salade traditionnelle du Vietnam, ultra-croquante et saine : poulet poché effiloché, chou blanc émincé, carottes, concombres et éclats d'arachides grillées.",
+            chefTip: "Massez légèrement le chou émincé avec une pincée de sel pour l'attendrir tout en conservant son croquant rafraîchissant.",
+            tags: ["asiatique", "vietnam", "salade", "healthy", "croquant", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 300, unit: "g" },
+                { ingredientId: "chou-blanc", quantity: 180, unit: "g" },
+                { ingredientId: "carotte", quantity: 120, unit: "g" },
+                { ingredientId: "concombre", quantity: 120, unit: "g" },
+                { ingredientId: "arachides-crues", quantity: 30, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 12, unit: "ml" }
+            ],
+            steps: [
+                "Pocher les morceaux de poulet 12 minutes dans une eau frémissante salée, laisser tiédir et effilocher à la main.",
+                "Émincer très finement le chou blanc, râper les carottes et découper le concombre en petits bâtonnets.",
+                "Torréfier les arachides 3 minutes à la poêle sèche, puis les concasser grossièrement.",
+                "Dans un grand saladier, réunir le poulet effiloché avec le chou, les carottes et le concombre.",
+                "Assaisonner d'huile d'olive, d'une pincée de sel, de poivre et parsemer d'arachides croquantes avant de servir."
+            ]
+        },
+        {
+            id: "recette-bouillon-pho-boeuf-vietnam",
+            title: "Bouillon façon Phô vietnamien au bœuf émincé, gingembre et légumes",
+            cuisine: "asiatique",
+            mealType: "diner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 20,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍜",
+            description: "Bouillon réconfortant emblématique du Vietnam : bouillon infusé au gingembre frais et oignons, garni de fines lamelles de bœuf, riz et légumes croquants.",
+            chefTip: "Versez le bouillon bouillant directement sur les très fines lamelles de bœuf cru pour une cuisson instantanée ultra-tendre.",
+            tags: ["asiatique", "vietnam", "bouillon", "healthy", "hydratant", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "viande-boeuf", quantity: 260, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 140, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 100, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 15, unit: "g" },
+                { ingredientId: "chou-blanc", quantity: 100, unit: "g" },
+                { ingredientId: "carotte", quantity: 80, unit: "g" }
+            ],
+            steps: [
+                "Faire dorer à sec les oignons coupés en deux et les tranches de gingembre dans une casserole 3 minutes.",
+                "Ajouter 1 litre d'eau, saler, poivrer et laisser frémir 15 minutes pour obtenir un bouillon très parfumé.",
+                "Cuire le riz séparément à l'eau bouillante 15 minutes et le répartir au fond de deux grands bols.",
+                "Couper la viande de bœuf en très fines lamelles.",
+                "Plonger le chou émincé et les carottes en julienne 3 minutes dans le bouillon frémissant.",
+                "Déposer le bœuf émincé et les légumes sur le riz, puis verser le bouillon bouillant par-dessus pour cuire le bœuf instantanément."
+            ]
+        },
+        {
+            id: "recette-dhal-indien-legumineuses-riz",
+            title: "Dhal indien mijoté aux tomates, oignons, gingembre et riz parfumé",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 25,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍛",
+            description: "Le plat végétarien par excellence de l'Inde : haricots fondants mijotés lentement avec des tomates fraîches, oignons dorés et gingembre râpé, servis sur riz parfumé.",
+            chefTip: "L'association de légumineuses et de riz offre un profil protéique végétal complet et très digeste.",
+            tags: ["asiatique", "inde", "vegetarien", "riche-en-fibres", "economique", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "niebe", quantity: 180, unit: "g" },
+                { ingredientId: "riz-parfume", quantity: 160, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 200, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 100, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 15, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Cuire les haricots dans de l'eau bouillante 25 minutes jusqu'à ce qu'ils soient tendres.",
+                "Cuire le riz parfumé séparément dans de l'eau bouillante salée 15 minutes, puis égoutter.",
+                "Dans une sauteuse avec l'huile, faire revenir l'oignon émincé et le gingembre frais râpé 5 minutes.",
+                "Ajouter les dés de tomates fraîches, saler et laisser mijoter 8 minutes.",
+                "Ajouter les haricots cuits avec une louche de bouillon et laisser mijoter 7 minutes en écrasant légèrement pour lier la sauce.",
+                "Servir bien chaud sur le riz parfumé."
+            ]
+        },
+        {
+            id: "recette-poulet-tikka-raita-inde",
+            title: "Poulet façon Tikka grillé aux épices, salade Raita au concombre et riz",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 12,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍛",
+            description: "Grande spécialité indienne saine : aiguillettes de poulet marinées et grillées, accompagnées d'une sauce raïta fraîche au concombre et kossam, avec riz blanc.",
+            chefTip: "Le kossam (lait caillé) apporte une onctuosité naturelle et des ferments lactiques bénéfiques pour la digestion.",
+            tags: ["asiatique", "inde", "riche-en-proteines", "healthy", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 350, unit: "g" },
+                { ingredientId: "lait-caille-kossam", quantity: 180, unit: "g" },
+                { ingredientId: "concombre", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 60, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes, puis égoutter.",
+                "Découper le poulet en morceaux réguliers et les enrober d'huile d'olive, d'oignons hachés, sel et poivre.",
+                "Râper le concombre, presser pour enlever l'eau et le mélanger avec le kossam pour créer la raïta fraîche.",
+                "Griller les morceaux de poulet dans une poêle chaude 8 à 10 minutes jusqu'à belle coloration.",
+                "Dresser le riz blanc, le poulet grillé fumant et la raïta fraîche au concombre."
+            ]
+        },
+        {
+            id: "recette-salade-boeuf-thai-yam-nuea",
+            title: "Yam Nuea - Salade thaïlandaise de bœuf grillé, concombres et tomates",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 8,
+            difficulty: "Très facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Salade thaïlandaise saine et explosive en saveurs : fines lamelles de bœuf grillé rosé, concombres croquants, tomates fraîches et salade verte.",
+            chefTip: "Laissez reposer la viande 3 minutes après cuisson avant de la trancher finement pour qu'elle reste juteuse.",
+            tags: ["asiatique", "thailande", "salade", "riche-en-proteines", "healthy"],
+            ingredients: [
+                { ingredientId: "viande-boeuf", quantity: 300, unit: "g" },
+                { ingredientId: "concombre", quantity: 150, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 150, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 100, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 60, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 12, unit: "ml" }
+            ],
+            steps: [
+                "Saisir le bœuf à la poêle très chaude avec un filet d'huile d'olive 2 à 3 minutes par face.",
+                "Laisser reposer 3 minutes sur une planche puis trancher en fines lamelles.",
+                "Disposer dans un saladier les feuilles de salade lavées, les concombres en rondelles et les tomates en dés.",
+                "Ajouter l'oignon émincé et les lamelles de bœuf tièdes.",
+                "Assaisonner d'huile d'olive, de sel, de poivre et d'un filet de jus de citron."
+            ]
+        },
+        {
+            id: "recette-pad-krapow-poulet-thai",
+            title: "Pad Krapow au poulet émincé, haricots verts, riz blanc et œuf au plat",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 12,
+            cookingTimeMinutes: 12,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥢",
+            description: "Plat thaïlandais incontournable en version équilibrée : poulet émincé sauté vivement avec haricots verts et poivrons, servi avec riz chaud et œuf au plat.",
+            chefTip: "Percez le jaune d'œuf coulant pour napper la viande sautée et le riz.",
+            tags: ["asiatique", "thailande", "riche-en-proteines", "healthy", "complet"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 300, unit: "g" },
+                { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
+                { ingredientId: "haricots-verts", quantity: 120, unit: "g" },
+                { ingredientId: "poivron", quantity: 100, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 160, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 12, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes, égoutter.",
+                "Couper les haricots verts en petits tronçons et le poivron en dés. Émincer finement le poulet.",
+                "Faire sauter le poulet 4 minutes à feu vif dans une sauteuse avec l'huile.",
+                "Ajouter les haricots verts et les poivrons, et faire sauter 4 minutes supplémentaires en remuant.",
+                "Dans une autre poêle, cuire les deux œufs au plat.",
+                "Servir le sauté de poulet et légumes avec le riz bien chaud et déposer un œuf au plat par assiette."
+            ]
+        },
+        {
+            id: "recette-dakgomtang-poulet-coree",
+            title: "Dakgomtang - Bouillon coréen réconfortant au poulet fermier et gingembre",
+            cuisine: "asiatique",
+            mealType: "diner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 25,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍲",
+            description: "Bouillon coréen traditionnel purifiant et réconfortant : poulet fermier mijoté avec gingembre frais, oignons et carottes, servi avec son bol de riz.",
+            chefTip: "Un plat traditionnel coréen réputé pour restaurer l'énergie sans aucune lourdeur digestive.",
+            tags: ["asiatique", "coreen", "bouillon", "healthy", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 380, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 100, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 15, unit: "g" },
+                { ingredientId: "carotte", quantity: 100, unit: "g" }
+            ],
+            steps: [
+                "Dans une marmite, déposer le poulet découpé, l'oignon coupé en quatre, les carottes en rondelles et le gingembre tranché.",
+                "Couvrir d'eau (environ 1 litre), saler et laisser mijoter doucement 20 minutes à feu moyen.",
+                "Cuire le riz dans une casserole séparée 15 minutes, puis répartir au fond des bols.",
+                "Effilocher les morceaux de poulet et les disposer sur le riz avec les rondelles de carottes.",
+                "Verser le bouillon chaud fumant par-dessus et déguster aussitôt."
+            ]
+        },
+        {
+            id: "recette-bulgogi-ssam-salade-coree",
+            title: "Bulgogi Ssam - Bouchées coréennes de bœuf sauté en feuilles de salade",
+            cuisine: "asiatique",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 10,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥬",
+            description: "L'art du 'Ssam' coréen : fines lamelles de bœuf sauté aux oignons, dégustées enroulées dans de grandes feuilles de salade croquante avec carottes et concombres.",
+            chefTip: "Déposez un peu de riz, du bœuf sauté et des crudités dans une feuille de salade, refermez en ballotin et croquez !",
+            tags: ["asiatique", "coreen", "healthy", "riche-en-proteines", "sans-gluten"],
+            ingredients: [
+                { ingredientId: "viande-boeuf", quantity: 300, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 100, unit: "g" },
+                { ingredientId: "concombre", quantity: 100, unit: "g" },
+                { ingredientId: "carotte", quantity: 80, unit: "g" },
+                { ingredientId: "riz-brise-ordinaire", quantity: 150, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Cuire le riz dans de l'eau bouillante salée 15 minutes, égoutter et garder au tiède.",
+                "Laver et essorer les grandes feuilles de salade en les gardant entières.",
+                "Tailler le concombre et la carotte en fins bâtonnets croquants.",
+                "Émincer le bœuf et l'oignon. Faire sauter à feu vif dans une poêle huilée 5 minutes en remuant.",
+                "Servir le plat de bœuf sauté chaud, le bol de riz tiède et le panier de salade pour confectionner les bouchées à table."
+            ]
+        },
+        {
             id: "recette-shakshuka-oeufs-pain",
             title: "Shakshuka orientale aux œufs pochés, poivrons et pain frais",
             cuisine: "moyen_orient",
@@ -1405,7 +1753,63 @@
         let recipe = null;
 
         // Requêtes spécifiques par cuisine du monde
-        if (text.includes("bibimbap") || text.includes("coreen") || text.includes("coréen")) {
+        if (text.includes("dakgomtang")) {
+            recipe = {
+                title: "Dakgomtang - Bouillon coréen réconfortant au poulet fermier et gingembre",
+                cuisine: "asiatique",
+                mealType: "diner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 25,
+                difficulty: "Facile",
+                imageEmoji: "🍲",
+                description: "Bouillon coréen traditionnel purifiant et réconfortant : poulet fermier mijoté avec gingembre frais, oignons et carottes, servi avec son bol de riz.",
+                chefTip: "Un plat traditionnel coréen réputé pour restaurer l'énergie sans aucune lourdeur digestive.",
+                tags: ["asiatique", "coreen", "bouillon", "healthy", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "poulet-fermier", quantity: 190 * servings, unit: "g" },
+                    { ingredientId: "riz-brise-ordinaire", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "gingembre-frais", quantity: 8 * servings, unit: "g" },
+                    { ingredientId: "carotte", quantity: 50 * servings, unit: "g" }
+                ],
+                steps: [
+                    "Déposer le poulet, l'oignon, la carotte et le gingembre tranché dans une marmite d'eau.",
+                    "Laisser mijoter doucement 20 minutes à feu moyen en écumant au besoin.",
+                    "Cuire le riz dans une casserole séparée 15 minutes.",
+                    "Disposer le poulet effiloché sur le riz et verser le bouillon chaud fumant par-dessus."
+                ]
+            };
+        }
+        else if (text.includes("bulgogi") || text.includes("ssam")) {
+            recipe = {
+                title: "Bulgogi Ssam - Bouchées coréennes de bœuf sauté en feuilles de salade",
+                cuisine: "asiatique",
+                mealType: "dejeuner",
+                prepTimeMinutes: 15,
+                cookingTimeMinutes: 10,
+                difficulty: "Facile",
+                imageEmoji: "🥬",
+                description: "L'art du 'Ssam' coréen : fines lamelles de bœuf sauté aux oignons, dégustées enroulées dans de grandes feuilles de salade croquante avec carottes et concombres.",
+                chefTip: "Déposez un peu de riz, du bœuf sauté et des crudités dans une feuille de salade, refermez en ballotin et croquez !",
+                tags: ["asiatique", "coreen", "healthy", "riche-en-proteines", "sans-gluten"],
+                ingredients: [
+                    { ingredientId: "viande-boeuf", quantity: 150 * servings, unit: "g" },
+                    { ingredientId: "salade-verte", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "oignon-jaune", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "concombre", quantity: 50 * servings, unit: "g" },
+                    { ingredientId: "carotte", quantity: 40 * servings, unit: "g" },
+                    { ingredientId: "riz-brise-ordinaire", quantity: 75 * servings, unit: "g" },
+                    { ingredientId: "huile-olive", quantity: 5 * servings, unit: "ml" }
+                ],
+                steps: [
+                    "Cuire le riz dans de l'eau bouillante salée 15 minutes, égoutter et garder au tiède.",
+                    "Laver les feuilles de salade et découper concombre et carotte en fins bâtonnets.",
+                    "Faire sauter le bœuf émincé et l'oignon à feu vif 5 minutes dans une poêle huilée.",
+                    "Composer les bouchées en enroulant bœuf, riz et crudités dans les feuilles de salade."
+                ]
+            };
+        }
+        else if (text.includes("bibimbap") || text.includes("coreen") || text.includes("coréen") || text.includes("coree") || text.includes("corée")) {
             recipe = {
                 title: "Bibimbap coréen healthy au bœuf et légumes",
                 cuisine: "asiatique",
@@ -1434,6 +1838,287 @@
                     "Dresser le riz au centre des bols, disposer les légumes et le bœuf en sections, et déposer un œuf au plat au sommet."
                 ]
             };
+        }
+        else if (text.includes("japon") || text.includes("teriyaki") || text.includes("oyakodon")) {
+            if (text.includes("oyakodon") || (hasPoulet && hasOeuf)) {
+                recipe = {
+                    title: "Oyakodon japonais allégé au poulet mijoté et œufs fondants",
+                    cuisine: "asiatique",
+                    mealType: "diner",
+                    prepTimeMinutes: 10,
+                    cookingTimeMinutes: 12,
+                    difficulty: "Facile",
+                    imageEmoji: "🍱",
+                    description: "Le fameux donburi réconfortant du Japon : dés de poulet et oignons mijotés dans un bouillon léger, liés d'œufs battus juste saisis, sur un bol de riz chaud.",
+                    chefTip: "Ne surcuisez pas les œufs pour conserver leur texture moelleuse et fondante.",
+                    tags: ["asiatique", "japon", "riche-en-proteines", "healthy", "rapide"],
+                    ingredients: [
+                        { ingredientId: "poulet-fermier", quantity: 150 * servings, unit: "g" },
+                        { ingredientId: "oeuf-poule", quantity: Math.ceil(1.5 * servings), unit: "piece" },
+                        { ingredientId: "oignon-jaune", quantity: 60 * servings, unit: "g" },
+                        { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 5 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Cuire le riz à l'eau bouillante 15 minutes et le réserver au chaud.",
+                        "Faire suer les oignons et les dés de poulet dans une sauteuse 5 minutes.",
+                        "Verser les œufs battus en filet, couvrir 1 minute jusqu'à ce que les œufs soient pris mais crémeux.",
+                        "Glisser sur le riz chaud et servir immédiatement."
+                    ]
+                };
+            } else {
+                recipe = {
+                    title: "Poisson blanc façon teriyaki léger, haricots verts et riz parfumé",
+                    cuisine: "asiatique",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 12,
+                    cookingTimeMinutes: 15,
+                    difficulty: "Très facile",
+                    imageEmoji: "🍱",
+                    description: "Inspiré de l'art culinaire japonais : filets de poisson blanc frais délicatement dorés au gingembre, accompagnés de haricots verts vapeur et de riz parfumé.",
+                    chefTip: "Une cuisson douce du poisson préserve sa fraîcheur et sa richesse en protéines.",
+                    tags: ["asiatique", "japon", "poisson", "healthy", "sans-gluten"],
+                    ingredients: [
+                        { ingredientId: "poisson-blanc", quantity: 175 * servings, unit: "g" },
+                        { ingredientId: "haricots-verts", quantity: 100 * servings, unit: "g" },
+                        { ingredientId: "riz-parfume", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "gingembre-frais", quantity: 5 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 5 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Cuire le riz parfumé 15 minutes et cuire les haricots verts à la vapeur 10 minutes.",
+                        "Dorer les filets de poisson à la poêle avec le gingembre râpé 3 à 4 minutes par face.",
+                        "Dresser le poisson chaud avec les haricots verts croquants et le riz parfumé."
+                    ]
+                };
+            }
+        }
+        else if (text.includes("chine") || text.includes("chinois") || text.includes("canton")) {
+            if (hasBoeuf || text.includes("boeuf") || text.includes("bœuf")) {
+                recipe = {
+                    title: "Sauté de bœuf cantonais aux poivrons et oignons croquants",
+                    cuisine: "asiatique",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 15,
+                    cookingTimeMinutes: 10,
+                    difficulty: "Facile",
+                    imageEmoji: "🥢",
+                    description: "Recette traditionnelle chinoise rapide et équilibrée : émincé de bœuf maigre saisi vivement à la poêle avec poivrons doux croquants et riz blanc.",
+                    chefTip: "Saisissez la viande à feu vif pendant 2 à 3 minutes maximum pour préserver tout son jus.",
+                    tags: ["asiatique", "chine", "riche-en-fer", "riche-en-proteines", "sans-gluten"],
+                    ingredients: [
+                        { ingredientId: "viande-boeuf", quantity: 150 * servings, unit: "g" },
+                        { ingredientId: "poivron", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "oignon-jaune", quantity: 50 * servings, unit: "g" },
+                        { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "huile-arachide", quantity: 6 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Cuire le riz dans de l'eau bouillante salée 15 minutes, puis égoutter.",
+                        "Faire sauter les oignons et les poivrons émincés 4 minutes à feu vif.",
+                        "Ajouter le bœuf en lanières et faire sauter 3 minutes supplémentaires à feu vif.",
+                        "Servir chaud avec le riz blanc."
+                    ]
+                };
+            } else {
+                recipe = {
+                    title: "Poulet vapeur au gingembre frais et riz parfumé",
+                    cuisine: "asiatique",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 15,
+                    cookingTimeMinutes: 20,
+                    difficulty: "Facile",
+                    imageEmoji: "🥢",
+                    description: "Plat sain emblématique de la cuisine cantonaise : suprêmes de poulet fermier cuits doucement à la vapeur avec gingembre frais et oignons doux, servis sur riz parfumé.",
+                    chefTip: "La cuisson vapeur préserve la tendreté absolue du poulet sans aucun apport superflu de gras.",
+                    tags: ["asiatique", "chine", "vapeur", "healthy", "riche-en-proteines", "sans-gluten"],
+                    ingredients: [
+                        { ingredientId: "poulet-fermier", quantity: 175 * servings, unit: "g" },
+                        { ingredientId: "gingembre-frais", quantity: 8 * servings, unit: "g" },
+                        { ingredientId: "oignon-jaune", quantity: 40 * servings, unit: "g" },
+                        { ingredientId: "riz-parfume", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 5 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Cuire le riz parfumé dans l'eau bouillante salée 15 minutes, puis égoutter.",
+                        "Disposer les aiguillettes de poulet dans un panier vapeur avec le gingembre râpé et l'oignon.",
+                        "Cuire à la vapeur douce 18 à 20 minutes jusqu'à ce que la chair soit très tendre.",
+                        "Arroser d'un léger filet d'huile et servir avec le riz parfumé."
+                    ]
+                };
+            }
+        }
+        else if (text.includes("vietnam") || text.includes("pho") || text.includes("phô") || text.includes("goi ga")) {
+            if (text.includes("pho") || text.includes("phô") || text.includes("bouillon")) {
+                recipe = {
+                    title: "Bouillon façon Phô vietnamien au bœuf émincé, gingembre et légumes",
+                    cuisine: "asiatique",
+                    mealType: "diner",
+                    prepTimeMinutes: 15,
+                    cookingTimeMinutes: 20,
+                    difficulty: "Facile",
+                    imageEmoji: "🍜",
+                    description: "Bouillon réconfortant emblématique du Vietnam : bouillon infusé au gingembre frais et oignons, garni de fines lamelles de bœuf, riz et légumes croquants.",
+                    chefTip: "Versez le bouillon bouillant directement sur le bœuf très finement tranché pour une cuisson instantanée parfaite.",
+                    tags: ["asiatique", "vietnam", "bouillon", "healthy", "hydratant", "sans-gluten"],
+                    ingredients: [
+                        { ingredientId: "viande-boeuf", quantity: 130 * servings, unit: "g" },
+                        { ingredientId: "riz-brise-ordinaire", quantity: 70 * servings, unit: "g" },
+                        { ingredientId: "oignon-jaune", quantity: 50 * servings, unit: "g" },
+                        { ingredientId: "gingembre-frais", quantity: 8 * servings, unit: "g" },
+                        { ingredientId: "chou-blanc", quantity: 50 * servings, unit: "g" },
+                        { ingredientId: "carotte", quantity: 40 * servings, unit: "g" }
+                    ],
+                    steps: [
+                        "Faire frémir l'eau avec oignons et gingembre 15 minutes pour préparer le bouillon parfumé.",
+                        "Cuire le riz à part et le répartir au fond des bols.",
+                        "Plonger le chou et les carottes 3 minutes dans le bouillon chaud.",
+                        "Disposer le bœuf en très fines lamelles sur le riz, verser le bouillon bouillant dessus et servir fumant."
+                    ]
+                };
+            } else {
+                recipe = {
+                    title: "Gỏi Gà - Salade vietnamienne de poulet effiloché, chou croquant et carottes",
+                    cuisine: "asiatique",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 20,
+                    cookingTimeMinutes: 15,
+                    difficulty: "Très facile",
+                    imageEmoji: "🥗",
+                    description: "Salade traditionnelle du Vietnam, ultra-croquante et saine : poulet poché effiloché, chou blanc émincé, carottes, concombres et éclats d'arachides grillées.",
+                    chefTip: "Massez légèrement le chou avec du sel pour le rendre tendre tout en préservant son croquant rafraîchissant.",
+                    tags: ["asiatique", "vietnam", "salade", "healthy", "croquant", "sans-gluten"],
+                    ingredients: [
+                        { ingredientId: "poulet-fermier", quantity: 150 * servings, unit: "g" },
+                        { ingredientId: "chou-blanc", quantity: 90 * servings, unit: "g" },
+                        { ingredientId: "carotte", quantity: 60 * servings, unit: "g" },
+                        { ingredientId: "concombre", quantity: 60 * servings, unit: "g" },
+                        { ingredientId: "arachides-crues", quantity: 15 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 6 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Pocher le poulet 12 minutes dans de l'eau salée, laisser tiédir et effilocher à la main.",
+                        "Émincer finement le chou, râper les carottes et trancher le concombre.",
+                        "Torréfier les arachides à la poêle sèche 3 minutes puis les concasser.",
+                        "Mélanger poulet et crudités dans un saladier, assaisonner d'huile d'olive, sel, poivre et parsemer d'arachides."
+                    ]
+                };
+            }
+        }
+        else if (text.includes("inde") || text.includes("indien") || text.includes("dhal") || text.includes("daal") || text.includes("tikka") || text.includes("raita")) {
+            if (text.includes("dhal") || text.includes("daal") || text.includes("vegetarien") || text.includes("niebe")) {
+                recipe = {
+                    title: "Dhal indien mijoté aux tomates, oignons, gingembre et riz parfumé",
+                    cuisine: "asiatique",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 15,
+                    cookingTimeMinutes: 25,
+                    difficulty: "Facile",
+                    imageEmoji: "🍛",
+                    description: "Le plat végétarien par excellence de l'Inde : haricots fondants mijotés lentement avec des tomates fraîches, oignons dorés et gingembre râpé, servis sur riz parfumé.",
+                    chefTip: "L'association de légumineuses et de riz offre un profil protéique végétal complet et digeste.",
+                    tags: ["asiatique", "inde", "vegetarien", "riche-en-fibres", "economique", "sans-gluten"],
+                    ingredients: [
+                        { ingredientId: "niebe", quantity: 90 * servings, unit: "g" },
+                        { ingredientId: "riz-parfume", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "tomate-fraiche", quantity: 100 * servings, unit: "g" },
+                        { ingredientId: "oignon-jaune", quantity: 50 * servings, unit: "g" },
+                        { ingredientId: "gingembre-frais", quantity: 8 * servings, unit: "g" },
+                        { ingredientId: "huile-arachide", quantity: 8 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Cuire les haricots dans de l'eau bouillante 25 minutes jusqu'à ce qu'ils soient tendres.",
+                        "Cuire le riz parfumé séparément dans de l'eau bouillante salée 15 minutes.",
+                        "Dans une sauteuse, dorer l'oignon et le gingembre râpé dans l'huile 5 minutes.",
+                        "Ajouter les dés de tomates, laisser compoter, puis incorporer les haricots cuits et laisser mijoter 7 minutes.",
+                        "Servir chaud sur le riz parfumé."
+                    ]
+                };
+            } else {
+                recipe = {
+                    title: "Poulet façon Tikka grillé aux épices, salade Raita au concombre et riz",
+                    cuisine: "asiatique",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 15,
+                    cookingTimeMinutes: 12,
+                    difficulty: "Facile",
+                    imageEmoji: "🍛",
+                    description: "Grande spécialité indienne saine : aiguillettes de poulet marinées et grillées, accompagnées d'une sauce raïta fraîche au concombre et kossam, avec riz blanc.",
+                    chefTip: "Le kossam apporte des probiotiques naturels et une fraîcheur bienfaisante pour équilibrer le repas.",
+                    tags: ["asiatique", "inde", "riche-en-proteines", "healthy", "sans-gluten"],
+                    ingredients: [
+                        { ingredientId: "poulet-fermier", quantity: 175 * servings, unit: "g" },
+                        { ingredientId: "lait-caille-kossam", quantity: 90 * servings, unit: "g" },
+                        { ingredientId: "concombre", quantity: 75 * servings, unit: "g" },
+                        { ingredientId: "oignon-jaune", quantity: 30 * servings, unit: "g" },
+                        { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 5 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Cuire le riz à l'eau bouillante salée 15 minutes, égoutter.",
+                        "Assaisonner le poulet d'oignon, sel, poivre et huile d'olive, puis griller à la poêle 8 à 10 minutes.",
+                        "Râper le concombre et le mélanger au kossam avec une pincée de sel.",
+                        "Dresser le riz chaud, les morceaux de poulet doré et la raïta fraîche."
+                    ]
+                };
+            }
+        }
+        else if (text.includes("thailande") || text.includes("thaïlande") || text.includes("thai") || text.includes("thaï") || text.includes("krapow") || text.includes("yam nuea")) {
+            if (hasBoeuf || text.includes("yam nuea") || (hasSalade && !hasPoulet)) {
+                recipe = {
+                    title: "Yam Nuea - Salade thaïlandaise de bœuf grillé, concombres et tomates",
+                    cuisine: "asiatique",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 15,
+                    cookingTimeMinutes: 8,
+                    difficulty: "Très facile",
+                    imageEmoji: "🥗",
+                    description: "Salade thaïlandaise saine et explosive en saveurs : fines lamelles de bœuf grillé rosé, concombres croquants, tomates fraîches et salade verte.",
+                    chefTip: "Laissez reposer la viande 3 minutes avant de la trancher pour qu'elle reste juteuse.",
+                    tags: ["asiatique", "thailande", "salade", "riche-en-proteines", "healthy"],
+                    ingredients: [
+                        { ingredientId: "viande-boeuf", quantity: 150 * servings, unit: "g" },
+                        { ingredientId: "concombre", quantity: 75 * servings, unit: "g" },
+                        { ingredientId: "tomate-fraiche", quantity: 75 * servings, unit: "g" },
+                        { ingredientId: "salade-verte", quantity: 50 * servings, unit: "g" },
+                        { ingredientId: "oignon-jaune", quantity: 30 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 6 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Saisir le bœuf à feu vif 2 à 3 minutes par face, laisser reposer 3 minutes et trancher en lanières.",
+                        "Disposer dans un saladier salade, concombres et tomates.",
+                        "Ajouter l'oignon émincé et les lamelles de bœuf tièdes.",
+                        "Assaisonner avec l'huile d'olive, sel, poivre et jus de citron."
+                    ]
+                };
+            } else {
+                recipe = {
+                    title: "Pad Krapow au poulet émincé, haricots verts, riz blanc et œuf au plat",
+                    cuisine: "asiatique",
+                    mealType: "dejeuner",
+                    prepTimeMinutes: 12,
+                    cookingTimeMinutes: 12,
+                    difficulty: "Facile",
+                    imageEmoji: "🥢",
+                    description: "Plat thaïlandais incontournable en version équilibrée : poulet émincé sauté vivement avec haricots verts et poivrons, servi avec riz chaud et œuf au plat.",
+                    chefTip: "Percez le jaune d'œuf coulant pour napper la viande sautée et le riz.",
+                    tags: ["asiatique", "thailande", "riche-en-proteines", "healthy", "complet"],
+                    ingredients: [
+                        { ingredientId: "poulet-fermier", quantity: 150 * servings, unit: "g" },
+                        { ingredientId: "oeuf-poule", quantity: 1 * servings, unit: "piece" },
+                        { ingredientId: "haricots-verts", quantity: 60 * servings, unit: "g" },
+                        { ingredientId: "poivron", quantity: 50 * servings, unit: "g" },
+                        { ingredientId: "riz-brise-ordinaire", quantity: 80 * servings, unit: "g" },
+                        { ingredientId: "huile-olive", quantity: 6 * servings, unit: "ml" }
+                    ],
+                    steps: [
+                        "Cuire le riz 15 minutes, égoutter.",
+                        "Faire sauter le poulet émincé 4 minutes à feu vif, puis ajouter haricots verts en tronçons et poivrons pour 4 minutes de plus.",
+                        "Cuire les œufs au plat dans une petite poêle.",
+                        "Servir le sauté sur le riz chaud et déposer l'œuf au plat sur le dessus."
+                    ]
+                };
+            }
         }
         else if (text.includes("shakshuka") || text.includes("chachouka")) {
             recipe = {
