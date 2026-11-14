@@ -171,8 +171,11 @@
 
         // Calcul du coût
         let costFCFA = 0;
+        let isCustom = customPrices[ingredient.id] !== undefined && !isNaN(customPrices[ingredient.id]);
         if (ingredient.priceUnit === "piece" && (item.unit === "piece" || item.unit === "pièce")) {
-            const piecePrice = ingredient.pricePerPiece || (ingredient.defaultPricePerKg / (1000 / (ingredient.unitWeightGrams || 100)));
+            const piecePrice = isCustom 
+                ? Number(customPrices[ingredient.id])
+                : (ingredient.pricePerPiece || (ingredient.defaultPricePerKg / (1000 / (ingredient.unitWeightGrams || 100))));
             costFCFA = Math.round(Number(item.quantity || 0) * piecePrice);
         } else {
             const effectivePriceKg = getEffectivePrice(ingredient.id);
@@ -193,6 +196,9 @@
             fiber,
             costFCFA,
             effectivePricePerKg: getEffectivePrice(ingredient.id),
+            priceUnit: ingredient.priceUnit || "kg",
+            priceSource: ingredient.priceSource || "Auchan Sénégal (auchan.sn)",
+            hasCustomPrice: isCustom,
             isUnknown: false
         };
     }
@@ -273,7 +279,7 @@
             },
             perServing,
             macroDistribution,
-            disclaimer: "Valeurs nutritionnelles calculées d'après les tables FAO/INFOODS. Les prix sont indicatifs pour les marchés de Dakar (FCFA) et personnalisables."
+            disclaimer: "Valeurs nutritionnelles calculées d'après les tables FAO/INFOODS. Les prix sont indicatifs avec pour référence officielle Auchan Sénégal (auchan.sn) et personnalisables pour vos marchés locaux."
         };
     }
 
@@ -293,16 +299,33 @@
         });
     }
 
+    function removeCustomPrice(ingredientId) {
+        if (customPrices[ingredientId] !== undefined) {
+            delete customPrices[ingredientId];
+            if (typeof window !== "undefined" && window.localStorage) {
+                try {
+                    window.localStorage.setItem("nutribudget_custom_prices", JSON.stringify(customPrices));
+                } catch (e) { }
+            }
+            return true;
+        }
+        return false;
+    }
+
     return {
         findIngredient,
         setIngredients,
         getEffectivePrice,
         setCustomPrice,
+        removeCustomPrice,
         resetCustomPrices,
+        getCustomPrices: () => ({ ...customPrices }),
+        hasCustomPrice: (id) => customPrices[id] !== undefined,
         convertToGrams,
         calculateItemNutrition,
         calculateRecipeNutrition,
         searchIngredients,
-        getAllIngredients: () => [...ingredientsList]
+        getAllIngredients: () => [...ingredientsList],
+        PRICE_SOURCE_REFERENCE: "Auchan Sénégal (auchan.sn)"
     };
 });

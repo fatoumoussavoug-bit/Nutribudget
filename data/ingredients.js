@@ -2,8 +2,16 @@
  * NutriBudget - Base de Données des Ingrédients Locaux & Saisonniers (Sénégal / Dakar)
  * Données nutritionnelles pour 100g de partie comestible.
  * Sources scientifiques de référence : Table de composition des aliments d'Afrique de l'Ouest (FAO/INFOODS) & Ciqual.
- * Prix indicatifs moyens observés sur les marchés de Dakar en Francs CFA (XOF).
+ * Référence officielle des prix du marché : Auchan Sénégal (catalogue et site officiel auchan.sn) en Francs CFA (XOF).
+ * Tous les prix sont personnalisables par l'utilisateur s'il achète moins cher ou plus cher au marché.
  */
+
+const AUCHAN_PRICE_REFERENCE = {
+    source: "Auchan Sénégal",
+    website: "https://www.auchan.sn",
+    currency: "FCFA (XOF)",
+    note: "Prix réels relevés sur auchan.sn et dans les hypermarchés Auchan Dakar. Chaque utilisateur peut ajuster ses prix locaux s'il achète plus ou moins cher au marché."
+};
 
 const SEN_INGREDIENTS = [
     // ==========================================
@@ -24,6 +32,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 500, // ~500 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "economique", "base-locale"],
         description: "Aliment de base au Sénégal, utilisé pour le ceebu jën, ceebu yapp et riz au gras."
@@ -43,6 +52,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 750, // ~750 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "base-locale"],
         description: "Riz à grains longs parfumé, apprécié pour les repas dominicaux et grandes occasions."
@@ -62,6 +72,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 600, // ~600 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "riche-en-fibres", "economique", "produit-terroir"],
         description: "Céréale ancestrale sénégalaise très nutritive, riche en fer, magnésium et fibres."
@@ -81,6 +92,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1000, // ~1000 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "dessert-traditionnel", "produit-terroir"],
         description: "Granules de mil roulées et étuvées, servies traditionnellement avec du lait caillé."
@@ -100,6 +112,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1500, // ~1500 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "faible-glycemie", "produit-terroir"],
         description: "Super-céréale d'Afrique de l'Ouest, digeste et particulièrement adaptée aux personnes diabétiques."
@@ -120,6 +133,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 500, // ~500 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "vitamine-a", "economique"],
         description: "Tubercule riche en bêta-carotène et glucides lents, très accessible sur les marchés."
@@ -140,6 +154,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 400, // ~400 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "economique", "energie-durable"],
         description: "Tubercule rassasiant, économique et source d'énergie durable pour les familles."
@@ -160,6 +175,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 600, // ~150 FCFA la baguette de 250g = 600 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["economique", "petit-dejeuner"],
         description: "Pain traditionnel dense à base de farine de blé et de mil/maïs, très populaire au petit-déjeuner."
@@ -183,6 +199,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 900, // ~900 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "tres-riche-proteines", "economique", "fer", "vegan"],
         description: "L'or noir protéique d'Afrique de l'Ouest. Idéal pour les budgets modestes : 24% de protéines végétales !"
@@ -202,6 +219,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1000, // ~1000 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "bonnes-graisses", "proteines", "produit-terroir"],
         description: "Produit phare de l'agriculture sénégalaise, riche en lipides mono-insaturés et protéines."
@@ -221,6 +239,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1200, // ~1200 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "riche-en-energie", "sauce-mafe"],
         description: "Ingrédient central de la fameuse sauce Mafé, concentré d'énergie et de minéraux."
@@ -245,6 +264,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1000, // ~500 à 1000 FCFA / kg selon arrivage Soumbédioune
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "omega-3", "economique", "proteines-pures"],
         description: "Le poisson le plus accessible et nutritif du littoral dakarois, concentré en oméga-3 et calcium."
@@ -265,6 +285,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 3200, // ~400 FCFA la boîte de 125g = 3200 FCFA/kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: false,
         tags: ["sans-gluten", "omega-3", "conservation-facile", "proteines"],
         description: "Protéine prête à l'emploi idéale pour enrichir le petit-déjeuner ou les dîners rapides."
@@ -286,6 +307,7 @@ const SEN_INGREDIENTS = [
         defaultPricePerKg: 2273, // ~125 FCFA pièce (prix réel marché)
         pricePerPiece: 125,
         priceUnit: "piece",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "proteines-completes", "economique"],
         description: "Protéine de référence à haute valeur biologique, cuisson ultra-rapide."
@@ -306,6 +328,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 5000, // ~4500 à 6000 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "poisson-noble", "faible-lipides", "proteines"],
         description: "Poisson emblématique du Ceebu Jën Penda Mbaye, chair blanche très maigre et savoureuse."
@@ -325,6 +348,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 3500, // ~3500 FCFA / kg (poulet ~1.2kg à 4000 FCFA)
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "proteines-maigres", "yassa-poulet"],
         description: "Viande blanche très appréciée, base du Yassa Poulet mariné aux oignons et citron vert."
@@ -344,6 +368,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 4000, // ~4000 FCFA / kg chez le boucher
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "fer-heminique", "proteines"],
         description: "Source concentrée de fer héminique et vitamine B12."
@@ -364,6 +389,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 4500, // ~4500 FCFA / kg (souvent acheté par petits morceaux de 100 à 200 FCFA)
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "condiment-traditionnel", "haute-densite-proteique"],
         description: "Condiment umami traditionnel qui relève les sauces locales tout en apportant des protéines concentrées."
@@ -387,6 +413,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1500, // ~1500 FCFA / kg (vendu en bottes de 100 à 250 FCFA)
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "super-aliment", "vitamines-a-c", "fer", "calcium"],
         description: "L'arbre de vie sénégalais. Exceptionnelle densité nutritionnelle en fer, calcium et vitamines."
@@ -407,6 +434,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 800, // ~800 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "faible-calorie", "fibres-solubles", "sauce-kandia"],
         description: "Légume mucilagineux excellent pour le transit, base de la sauce Soupe Kandia."
@@ -427,6 +455,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 600, // ~600 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "faible-calorie", "digestif", "economique"],
         description: "Légume amer traditionnel qui stimule la sécrétion biliaire et favorise la digestion des repas."
@@ -447,6 +476,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 500, // ~500 à 600 FCFA / kg prix réel du marché 2026
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "antioxydant", "base-cuisson"],
         description: "L'incontournable de la cuisine dakaroise (base de tous les ragoûts, marinades et Yassa)."
@@ -467,6 +497,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 600, // ~600 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "pro-vitamine-a", "economique"],
         description: "Légume croquant cultivé localement dans la zone des Niayes."
@@ -487,6 +518,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 400, // ~400 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "tres-faible-calorie", "economique", "vitamine-c"],
         description: "Légume économique présent dans presque tous les plats mijotés sénégalais."
@@ -507,6 +539,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 600, // ~600 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "lycopene", "hydratant"],
         description: "Apporte fraîcheur et lycopène protecteur pour le système cardiovasculaire."
@@ -527,6 +560,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 2000, // ~150 FCFA la boîte de 70g = 2100 FCFA/kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: false,
         tags: ["sans-gluten", "ceeb-rouge", "sauce-tomate"],
         description: "Donne sa couleur rubis et sa profondeur de goût au Ceebu Jën rouge."
@@ -546,6 +580,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1000, // En bottes de 100 FCFA
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "acidule", "fer", "sauce-beugue"],
         description: "Feuilles acidulées indispensables à la sauce Beugueudj pour accompagner le riz."
@@ -570,6 +605,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 500, // ~400 à 700 FCFA / kg en pleine saison
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "vitamine-c", "antioxydants", "saisonnier"],
         description: "Reine des fruits au Sénégal de mai à août, délicieuse en dessert ou smoothie vitaminé."
@@ -590,6 +626,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 700, // ~700 FCFA / kg (environ 100 FCFA la pièce)
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "potassium", "energie-rapide"],
         description: "Excellente source de potassium et d'énergie saine pour le petit-déjeuner ou l'entraînement."
@@ -610,6 +647,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 600, // ~600 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "papaine-digestive", "vitamine-c"],
         description: "Riche en papaïne pour faciliter la digestion gastrique."
@@ -629,6 +667,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1500, // ~1500 FCFA / kg en sachets
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "super-fruit", "vitamine-c-concentree", "prebiotiques", "calcium"],
         description: "Contient 6 fois plus de vitamine C qu'une orange et 2 fois plus de calcium que le lait."
@@ -652,6 +691,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 2000, // Vendu en grosses bottes à 200 - 500 FCFA
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "zero-sucre", "drainant-hepatique", "petit-dejeuner"],
         description: "La tisane de santé par excellence au Sénégal, dépurative du foie et excellente au réveil."
@@ -671,6 +711,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1500, // ~1500 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "antioxydant-puissant", "baisse-tension", "sans-sucre"],
         description: "Boisson nationale sénégalaise, réputée pour réguler naturellement la tension artérielle."
@@ -690,6 +731,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 3000, // Paquet standard ~500 FCFA
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: false,
         tags: ["sans-gluten", "stimulant", "antioxydants"],
         description: "Thé vert utilisé pour la cérémonie de l'Ataya, riche en polyphénols antioxydants."
@@ -709,6 +751,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 2500, // Paquet 250g ~ 600 FCFA
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "stimulant-digestif", "djar", "tonifiant"],
         description: "Café aromatisé au Djar (Xylopia aethiopica), doté de vertus tonifiantes et digestives reconnues."
@@ -728,6 +771,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1000, // ~1000 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "anti-inflammatoire", "vitalite"],
         description: "Racine tonique aux puissantes vertus anti-inflammatoires, utilisée en jus ou infusion."
@@ -751,6 +795,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1200, // ~1200 FCFA / litre
         priceUnit: "l",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "pure-lipides", "haute-cuisson"],
         description: "Huile de cuisson principale au Sénégal. À doser avec modération pour maîtriser les calories."
@@ -770,6 +815,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1500, // ~1500 FCFA / litre
         priceUnit: "l",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "vitamine-e", "pro-vitamine-a", "sauce-kandia"],
         description: "Huile non raffinée rougeoyante, riche en caroténoïdes naturels et tocotriénols."
@@ -789,6 +835,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1000, // ~1000 FCFA / kg ou sachet
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "probiotiques", "calcium", "thiakry"],
         description: "Lait fermenté riche en ferments lactiques protecteurs pour le microbiote intestinal."
@@ -808,6 +855,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 3500, // ~3500 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: false,
         tags: ["sans-gluten", "concentre-calcium", "petit-dejeuner"],
         description: "Très utilisé pour enrichir les bouillies de mil (arraw) et le café matinal."
@@ -828,6 +876,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 3000, // Boulettes à 50 - 100 FCFA
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "probiotique-traditionnel", "substitut-cube", "proteines", "vegan"],
         description: "Super-exhausteur de goût naturel ouest-africain, excellente alternative saine aux cubes industriels trop salés !"
@@ -852,6 +901,7 @@ const SEN_INGREDIENTS = [
         defaultPricePerKg: 1500, // ~300 FCFA la pièce de 200g
         pricePerPiece: 300,
         priceUnit: "piece",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["bonnes-graisses", "sans-gluten", "fibres", "potassium", "crudite"],
         description: "Riche en acides gras mono-insaturés protecteurs du cœur, texture onctueuse idéale pour les salades composées."
@@ -872,6 +922,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 6250, // ~1000 FCFA la boîte de 160g
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: false,
         tags: ["sans-gluten", "riche-en-proteines", "omega-3", "rapide", "salade"],
         description: "Protéine maigre ultra-pratique, sans matière grasse superflue, parfaite pour les salades fraîches équilibrées."
@@ -892,6 +943,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 800, // ~800 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "faible-calorie", "fibres", "vitamines", "vert"],
         description: "Légume vert croquant pauvre en calories, excellent pour la satiété et la régulation du transit."
@@ -912,6 +964,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 700, // ~700 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "feculent-sain", "potassium", "energie"],
         description: "Féculent digeste et très rassasiant, parfait cuit à la vapeur ou rôti au four avec peu d'huile."
@@ -932,6 +985,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 1500, // ~300 FCFA le pied de 200g
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "hydratant", "faible-calorie", "crudite"],
         description: "Feuilles fraîches et croquantes gorgées d'eau et de minéraux, base idéale des repas légers."
@@ -952,6 +1006,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 500, // ~500 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "hydratant", "detox", "faible-calorie", "crudite"],
         description: "Légume rafraîchissant composé à 96% d'eau, apporte du croquant naturel aux salades du monde."
@@ -972,6 +1027,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 700, // ~700 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "faible-calorie", "legume-saute", "digeste"],
         description: "Légume doux fondant, idéal sauté à la poêle avec un filet d'huile d'olive et de l'ail."
@@ -992,6 +1048,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 800, // ~800 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "vitamine-c", "antioxydant", "legume-saute"],
         description: "Champion de la vitamine C, parfait pour relever de couleurs et de parfums les poêlées équilibrées."
@@ -1012,6 +1069,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 800, // ~200 FCFA la baguette de 250g
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["energie", "petit-dejeuner", "base-cereale"],
         description: "Pain traditionnel croustillant pour accompagner les œufs brouillés ou l'omelette aux légumes."
@@ -1032,6 +1090,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 3500, // ~3500 FCFA / litre
         priceUnit: "l",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: false,
         tags: ["sans-gluten", "omega-9", "bonnes-graisses", "anti-inflammatoire"],
         description: "Riche en antioxydants et acides gras bénéfiques, la matière grasse saine par excellence pour assaisonner."
@@ -1052,6 +1111,7 @@ const SEN_INGREDIENTS = [
         },
         defaultPricePerKg: 2500, // ~2500 FCFA / kg
         priceUnit: "kg",
+        priceSource: "Auchan Sénégal (auchan.sn)",
         isLocalSenegal: true,
         tags: ["sans-gluten", "proteines-maigres", "poisson", "omega-3"],
         description: "Chair blanche tendre et digeste, riche en protéines complètes sans graisses saturées."

@@ -1874,7 +1874,184 @@ const App = (function () {
         filterShoppingPeriod,
         refreshShoppingList,
         toggleShoppingItem,
-        shareShoppingWhatsApp
+        shareShoppingWhatsApp,
+        // Méthodes Prix Auchan & Marché
+        openMarketPricesModal,
+        closeMarketPricesModal,
+        filterMarketPricesTable,
+        applyCustomPrice,
+        removeCustomPrice,
+        resetAllCustomPricesToAuchan,
+        toggleRecipePriceEditor
     };
+
+    // ======================================================
+    // PRIX AUCHAN SÉNÉGAL & PERSONNALISATION MARCHÉ
+    // ======================================================
+
+    function openMarketPricesModal() {
+        const modal = document.getElementById("market-prices-modal");
+        if (!modal) return;
+        modal.style.display = "block";
+        renderMarketPricesTable();
+    }
+
+    function closeMarketPricesModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        const modal = document.getElementById("market-prices-modal");
+        if (modal) modal.style.display = "none";
+        // Rafraîchir les recettes pour refléter les nouveaux prix
+        if (typeof cachedFilteredRecipes !== "undefined" && cachedFilteredRecipes && cachedFilteredRecipes.length > 0) {
+            filterRecipes();
+        }
+    }
+
+    function renderMarketPricesTable() {
+        if (!window.NutriCalculator) return;
+        const tbody = document.getElementById("market-prices-tbody");
+        if (!tbody) return;
+
+        const allIngredients = window.NutriCalculator.getAllIngredients();
+        const catFilter = document.getElementById("market-price-category-filter");
+        const searchEl = document.getElementById("market-price-search");
+        const catVal = catFilter ? catFilter.value : "all";
+        const searchQ = searchEl ? searchEl.value.toLowerCase().trim() : "";
+
+        const filtered = allIngredients.filter(ing => {
+            if (catVal !== "all" && ing.category !== catVal) return false;
+            if (searchQ && !ing.name.toLowerCase().includes(searchQ)) return false;
+            return true;
+        });
+
+        const categoryLabels = {
+            cereales_feculents: "Céréales",
+            poissons_viandes_oeufs: "Viandes/Poissons",
+            legumes: "Légumes",
+            legumineuses: "Légumineuses",
+            huiles_condiments: "Huiles",
+            produits_laitiers: "Laitiers",
+            fruits: "Fruits",
+            boissons_infusions: "Infusions"
+        };
+
+        tbody.innerHTML = filtered.map(ing => {
+            const isCustom = window.NutriCalculator.hasCustomPrice(ing.id);
+            const refPrice = ing.priceUnit === "piece" ? ing.pricePerPiece : ing.defaultPricePerKg;
+            const refLabel = ing.priceUnit === "piece" ? "FCFA/pièce" : `FCFA/${ing.priceUnit || "kg"}`;
+            const effectivePrice = window.NutriCalculator.getEffectivePrice(ing.id);
+            const customVal = isCustom ? effectivePrice : "";
+            const catLabel = categoryLabels[ing.category] || ing.category;
+            const shortName = (ing.name || "").split("(")[0].trim();
+
+            return `<tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:9px 12px; font-weight:600; color:var(--text-dark);">${shortName}</td>
+                <td style="padding:9px 12px; font-size:0.78rem; color:var(--text-light);">${catLabel}</td>
+                <td style="padding:9px 12px;">
+                    <strong style="color:var(--primary-dark);">${refPrice ? refPrice.toLocaleString("fr-FR") : "N/A"} ${refLabel}</strong>
+                    <br><span style="font-size:0.7rem; color:#0369A1;">🏪 auchan.sn</span>
+                </td>
+                <td style="padding:9px 12px;">
+                    <input type="number"
+                        placeholder="${refPrice ? refPrice.toLocaleString("fr-FR") : ""}"
+                        value="${customVal}"
+                        min="0" step="10"
+                        onchange="App.applyCustomPrice('${ing.id}', this.value)"
+                        style="width:120px; padding:5px 8px; font-size:0.85rem; border:1.5px solid ${isCustom ? "#F59E0B" : "var(--border)"}; border-radius:6px; outline:none;">
+                </td>
+                <td style="padding:9px 12px; text-align:center;">
+                    ${isCustom
+                        ? `<span style="background:#FEF3C7; color:#92400E; font-size:0.72rem; padding:3px 9px; border-radius:10px; font-weight:700; white-space:nowrap;">✏️ Modifié</span>`
+                        : `<span style="background:#DCFCE7; color:#15803D; font-size:0.72rem; padding:3px 9px; border-radius:10px; font-weight:700; white-space:nowrap;">🏪 Auchan</span>`}
+                </td>
+                <td style="padding:9px 12px; text-align:center;">
+                    ${isCustom
+                        ? `<button type="button" onclick="App.removeCustomPrice('${ing.id}')" style="padding:3px 10px; font-size:0.75rem; color:#DC2626; border:1.5px solid #FCA5A5; border-radius:6px; background:#fff; cursor:pointer; font-weight:600;">↺ Auchan</button>`
+                        : `<span style="font-size:0.75rem; color:var(--text-light);">—</span>`}
+                </td>
+            </tr>`;
+        }).join("");
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="padding:24px; text-align:center; color:var(--text-light); font-style:italic;">Aucun aliment trouvé.</td></tr>`;
+        }
+    }
+
+    function filterMarketPricesTable() {
+        renderMarketPricesTable();
+    }
+
+    function applyCustomPrice(ingredientId, value) {
+        if (!window.NutriCalculator) return;
+        const numVal = parseFloat(value);
+        if (!isNaN(numVal) && numVal > 0) {
+            window.NutriCalculator.setCustomPrice(ingredientId, numVal);
+            showToast("Prix mis à jour ! Le budget sera recalculé.", "success");
+        } else if (value === "" || value === "0") {
+            window.NutriCalculator.removeCustomPrice(ingredientId);
+        }
+        renderMarketPricesTable();
+        if (typeof cachedFilteredRecipes !== "undefined" && cachedFilteredRecipes && cachedFilteredRecipes.length > 0) {
+            filterRecipes();
+        }
+        // Rafraîchir la modale recette ouverte si nécessaire
+        if (typeof currentModalRecipe !== "undefined" && currentModalRecipe) {
+            const updated = window.NutriRecipes ? window.NutriRecipes.getRecipeById(currentModalRecipe.id, currentModalRecipe.activeServings) : null;
+            if (updated && typeof renderRecipeModalContent === "function") renderRecipeModalContent(updated);
+        }
+    }
+
+    function removeCustomPrice(ingredientId) {
+        if (!window.NutriCalculator) return;
+        window.NutriCalculator.removeCustomPrice(ingredientId);
+        renderMarketPricesTable();
+        showToast("Prix rétabli selon Auchan Sénégal.", "info");
+        if (typeof cachedFilteredRecipes !== "undefined" && cachedFilteredRecipes && cachedFilteredRecipes.length > 0) {
+            filterRecipes();
+        }
+    }
+
+    function resetAllCustomPricesToAuchan() {
+        if (!window.NutriCalculator) return;
+        window.NutriCalculator.resetCustomPrices();
+        renderMarketPricesTable();
+        showToast("Tous les prix sont rétablis selon Auchan Sénégal.", "success");
+        if (typeof cachedFilteredRecipes !== "undefined" && cachedFilteredRecipes && cachedFilteredRecipes.length > 0) {
+            filterRecipes();
+        }
+    }
+
+    function toggleRecipePriceEditor() {
+        const panel = document.getElementById("recipe-price-editor-panel");
+        const btn = document.getElementById("btn-toggle-recipe-price-editor");
+        if (!panel) return;
+        const isOpen = panel.style.display !== "none" && panel.style.display !== "";
+        if (isOpen) {
+            panel.style.display = "none";
+            if (btn) btn.textContent = "✏️ Ajuster mes prix du marché";
+        } else {
+            panel.style.display = "block";
+            if (btn) btn.textContent = "✕ Fermer l'éditeur de prix";
+            if (typeof currentModalRecipe !== "undefined" && currentModalRecipe && currentModalRecipe.nutrition) {
+                panel.innerHTML = currentModalRecipe.nutrition.items.map(it => {
+                    const ing = window.NutriCalculator ? window.NutriCalculator.findIngredient(it.ingredientId) : null;
+                    if (!ing) return "";
+                    const isCustom = window.NutriCalculator.hasCustomPrice(ing.id);
+                    const refPrice = ing.priceUnit === "piece" ? ing.pricePerPiece : ing.defaultPricePerKg;
+                    const effectivePrice = window.NutriCalculator.getEffectivePrice(ing.id);
+                    return `<div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; padding:6px; background:${isCustom ? "#FFFBEB" : "#F9FAFB"}; border-radius:6px;">
+                        <span style="flex:1; font-size:0.85rem; font-weight:600; min-width:140px;">${(it.name || "").split("(")[0].trim()}</span>
+                        <span style="font-size:0.78rem; color:#0369A1; min-width:120px; white-space:nowrap;">Réf.: ${refPrice ? refPrice.toLocaleString("fr-FR") : "N/A"} FCFA/${ing.priceUnit || "kg"}</span>
+                        <input type="number" value="${isCustom ? effectivePrice : ""}" placeholder="Mon prix..." min="0" step="10"
+                            onchange="App.applyCustomPrice('${ing.id}', this.value)"
+                            style="width:110px; padding:5px 8px; font-size:0.85rem; border:1.5px solid ${isCustom ? "#F59E0B" : "var(--border)"}; border-radius:6px; outline:none;">
+                        <span style="font-size:0.72rem; padding:2px 8px; border-radius:10px; font-weight:700; white-space:nowrap; color:${isCustom ? "#92400E" : "#15803D"}; background:${isCustom ? "#FEF3C7" : "#DCFCE7"};">
+                            ${isCustom ? "Modifié" : "Auchan"}
+                        </span>
+                    </div>`;
+                }).join("");
+            }
+        }
+    }
+
 })();
 

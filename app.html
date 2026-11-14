@@ -169,6 +169,9 @@
                     <button class="sidebar-item" id="sidebar-shopping" onclick="App.showTab('shopping')">
                         <span class="sidebar-icon">🛒</span> Liste de Courses
                     </button>
+                    <button class="sidebar-item" id="sidebar-market-prices" onclick="App.openMarketPricesModal()">
+                        <span class="sidebar-icon">🏪</span> Prix Auchan.sn & Marché
+                    </button>
                 </nav>
 
                 <div class="sidebar-logout">
@@ -684,6 +687,9 @@
                             <button type="button" class="btn btn-secondary" onclick="App.generateCreativeRecipeModal()" style="padding:10px 18px; font-size:0.9rem;">
                                 ✨ Créer un plat sur-mesure
                             </button>
+                            <button type="button" class="btn btn-outline" onclick="App.openMarketPricesModal()" style="padding:10px 16px; font-size:0.9rem; border-color:#0284C7; color:#0369A1; background:#F0F9FF;" title="Consulter et ajuster les prix du marché (Réf: Auchan Sénégal)">
+                                🏪 Prix Auchan.sn & Marché
+                            </button>
                             <button type="button" class="btn btn-outline" onclick="App.openAIPromptModal()" style="padding:10px 16px; font-size:0.9rem;" title="Voir le contrat de prompt pour LLMs externes">
                                 🤖 Prompt IA
                             </button>
@@ -970,15 +976,35 @@
                 </div>
 
                 <!-- Budget & Impact Placard -->
-                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:var(--radius-sm); padding:16px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:var(--radius-sm); padding:16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                     <div>
-                        <div style="font-size:0.8rem; color:#166534; font-weight:600;">COÛT ESTIMÉ DU PLAT (PRIX DU MARCHÉ LOCAL)</div>
+                        <div style="font-size:0.8rem; color:#166534; font-weight:700; letter-spacing:0.5px;">COÛT ESTIMÉ DU PLAT · RÉFÉRENCE AUCHAN SÉNÉGAL (AUCHAN.SN)</div>
                         <div style="font-size:1.4rem; font-weight:800; color:#15803D;" id="modal-cost-total">0 FCFA</div>
                         <div style="font-size:0.85rem; color:#166534;" id="modal-cost-per-serving">Soit 0 FCFA / personne</div>
                     </div>
                     <div style="text-align:right;" id="modal-pantry-savings-box">
                         <div style="font-size:0.8rem; color:#64748B;">Déjà au placard : <strong id="modal-pantry-saved" style="color:#15803D;">0 FCFA</strong></div>
                         <div style="font-size:0.85rem; color:#991B1B; font-weight:700;">Reste à acheter : <span id="modal-pantry-to-buy">0 FCFA</span></div>
+                    </div>
+                </div>
+
+                <!-- Section Personnalisation des Prix du Marché -->
+                <div class="market-price-customizer-box" style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <div>
+                            <div style="font-size:0.85rem; font-weight:700; color:#92400E; display:flex; align-items:center; gap:6px;">
+                                <span>⚖️</span> Vous achetez moins cher ou plus cher au marché ?
+                            </div>
+                            <div style="font-size:0.78rem; color:#B45309; margin-top:2px;">
+                                Les prix de référence sont ceux d'<strong>Auchan Sénégal (auchan.sn)</strong>. Ajustez vos prix réels d'achat pour recalculer votre budget sur-mesure.
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline" id="btn-toggle-recipe-price-editor" onclick="App.toggleRecipePriceEditor()" style="font-size:0.78rem; padding:6px 12px; background:#fff; border-color:#F59E0B; color:#B45309; font-weight:600;">
+                            ✏️ Ajuster mes prix du marché
+                        </button>
+                    </div>
+                    <div id="recipe-price-editor-panel" style="display:none; margin-top:12px; padding-top:12px; border-top:1px dashed #FCD34D;">
+                        <!-- Contenu généré dynamiquement -->
                     </div>
                 </div>
 
@@ -992,9 +1018,14 @@
                 </div>
 
                 <!-- Ingrédients avec statut Placard / À acheter -->
-                <h4 style="font-size:1rem; font-weight:700; color:var(--secondary); margin-bottom:12px;">
-                    🛒 Liste des Ingrédients & Coûts Détaillés
-                </h4>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                    <h4 style="font-size:1rem; font-weight:700; color:var(--secondary); margin:0;">
+                        🛒 Liste des Ingrédients & Coûts Détaillés
+                    </h4>
+                    <span style="font-size:0.75rem; background:#E0F2FE; color:#0369A1; padding:3px 10px; border-radius:12px; font-weight:600;">
+                        🏪 Prix Réf. Auchan Sénégal (auchan.sn)
+                    </span>
+                </div>
                 <div style="overflow-x:auto; margin-bottom:24px;">
                     <table class="modal-ingredients-table">
                         <thead>
@@ -1081,6 +1112,65 @@
                     <div id="ai-recipe-card" style="background:#FFFFFF; border:1.5px solid var(--border); border-radius:var(--radius-md); padding:20px; box-shadow:var(--shadow-sm);">
                         <!-- Le contenu sera injecté dynamiquement par App.generateRecipeFromAIPrompt() -->
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE BARÈME DES PRIX AUCHAN SÉNÉGAL -->
+    <div class="recipe-modal-overlay" id="market-prices-modal" onclick="App.closeMarketPricesModal(event)" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; overflow-y:auto; padding:20px;">
+        <div class="recipe-modal-dialog" style="max-width:800px; margin:auto; background:#fff; border-radius:var(--radius-md); box-shadow:var(--shadow-lg); overflow:hidden;" onclick="event.stopPropagation()">
+            <div class="recipe-modal-header" style="display:flex; justify-content:space-between; align-items:flex-start; padding:20px 24px; border-bottom:1px solid var(--border); background:linear-gradient(135deg,#F0FDF4,#DCFCE7);">
+                <div>
+                    <div style="font-size:0.72rem; font-weight:700; color:var(--primary-dark); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">RÉFÉRENCE OFFICIELLE · AUCHAN SÉNÉGAL (AUCHAN.SN)</div>
+                    <div class="recipe-modal-title" style="font-size:1.3rem; font-weight:800; color:var(--text-dark);">🏪 Barème des Prix & Ajustement Marché</div>
+                </div>
+                <button type="button" class="recipe-modal-close" onclick="App.closeMarketPricesModal()" style="font-size:1.5rem; background:none; border:none; cursor:pointer; color:var(--text-light); line-height:1;">&times;</button>
+            </div>
+            <div class="recipe-modal-body" style="padding:20px 24px;">
+                <!-- Info banner -->
+                <div style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:18px; font-size:0.85rem; color:#0369A1; line-height:1.5;">
+                    <strong>📍 Référence officielle : <a href="https://www.auchan.sn" target="_blank" rel="noopener" style="color:#0369A1;">Auchan Sénégal (auchan.sn)</a></strong><br>
+                    Les prix affichés sont relevés sur Auchan Sénégal. Si vous achetez moins cher ou plus cher sur votre marché local, modifiez le prix : toutes vos recettes et votre budget s'ajustent <strong>instantanément</strong> !
+                </div>
+                <!-- Filters -->
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
+                    <input type="text" id="market-price-search" placeholder="🔍 Rechercher un aliment..." oninput="App.filterMarketPricesTable()" style="flex:1; min-width:200px; padding:8px 12px; font-size:0.88rem; border:1.5px solid var(--border); border-radius:var(--radius-sm); outline:none;">
+                    <select id="market-price-category-filter" onchange="App.filterMarketPricesTable()" style="padding:8px 12px; font-size:0.85rem; border:1.5px solid var(--border); border-radius:var(--radius-sm); background:#fff;">
+                        <option value="all">Toutes catégories</option>
+                        <option value="cereales_feculents">Céréales & Féculents</option>
+                        <option value="poissons_viandes_oeufs">Viandes, Poissons & Œufs</option>
+                        <option value="legumes">Légumes</option>
+                        <option value="legumineuses">Légumineuses</option>
+                        <option value="huiles_condiments">Huiles & Condiments</option>
+                        <option value="produits_laitiers">Produits Laitiers</option>
+                        <option value="fruits">Fruits</option>
+                    </select>
+                </div>
+                <!-- Price table -->
+                <div style="overflow-x:auto; max-height:400px; overflow-y:auto; border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:18px;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                        <thead style="position:sticky; top:0; background:#F8FAFC; z-index:2;">
+                            <tr>
+                                <th style="padding:10px 12px; text-align:left; font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; border-bottom:2px solid var(--border);">Aliment</th>
+                                <th style="padding:10px 12px; text-align:left; font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; border-bottom:2px solid var(--border);">Catégorie</th>
+                                <th style="padding:10px 12px; text-align:left; font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; border-bottom:2px solid var(--border);">🏪 Réf. Auchan.sn</th>
+                                <th style="padding:10px 12px; text-align:left; font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; border-bottom:2px solid var(--border);">Mon prix réel</th>
+                                <th style="padding:10px 12px; text-align:center; font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; border-bottom:2px solid var(--border);">Statut</th>
+                                <th style="padding:10px 12px; text-align:center; font-size:0.75rem; text-transform:uppercase; color:var(--text-light); font-weight:700; border-bottom:2px solid var(--border);">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="market-prices-tbody" style="font-size:0.85rem;"></tbody>
+                    </table>
+                </div>
+                <!-- Bottom actions -->
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--border); flex-wrap:wrap; gap:10px;">
+                    <button type="button" onclick="App.resetAllCustomPricesToAuchan()" style="padding:8px 16px; font-size:0.85rem; color:#DC2626; border:1.5px solid #FCA5A5; border-radius:var(--radius-sm); background:#fff; cursor:pointer; font-weight:600;">
+                        ↺ Rétablir tous les prix Auchan
+                    </button>
+                    <button type="button" onclick="App.closeMarketPricesModal()" style="padding:8px 20px; font-size:0.9rem; color:#fff; background:var(--primary); border:none; border-radius:var(--radius-sm); cursor:pointer; font-weight:700;">
+                        ✓ Terminer & Appliquer
+                    </button>
                 </div>
             </div>
         </div>
