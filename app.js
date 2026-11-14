@@ -1858,9 +1858,6 @@ const App = (function () {
         closeAIPromptModal,
         generateRecipeFromAIPrompt,
         saveAIGeneratedRecipe,
-        copyPromptText,
-        loadMockAIResponse,
-        testAIReponse,
         // Méthodes Étape 5 (Adaptation & Substitutions)
         applyRecipeAdaptation,
         resetRecipeAdaptation,
