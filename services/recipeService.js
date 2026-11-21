@@ -1514,6 +1514,264 @@
                 "Disposer les carottes râpées, dés de tomates et mangue dans un plat.",
                 "Poser les quartiers d'œufs durs au sommet, assaisonner d'huile d'arachide et d'une pincée de sel marin."
             ]
+        },
+
+        // ============================================================
+        // NOUVELLES RECETTES INTERNATIONALES SAINES (PETIT-DEJ / DEJEUNER / DINER)
+        // ============================================================
+
+        // --- PETIT-DÉJEUNER ---
+        {
+            id: "recette-porridge-banane-avoine",
+            title: "Porridge à la banane et lait",
+            cuisine: "internationale",
+            mealType: "petit-dejeuner",
+            prepTimeMinutes: 5,
+            cookingTimeMinutes: 10,
+            difficulty: "Très facile",
+            baseServings: 1,
+            imageEmoji: "🍌",
+            description: "Un petit-déjeuner chaud, doux et nourrissant : flocons d'avoine cuits dans du lait, surmontés de rondelles de banane fraîche. Riche en fibres solubles, potassium et glucides complexes pour bien démarrer la journée.",
+            chefTip: "Ajoutez une pincée de cannelle et quelques gouttes de citron sur la banane pour un arôme subtil et éviter l'oxydation.",
+            tags: ["vegetarien", "petit-dejeuner", "fibre", "energie", "sans-gluten-optionnel"],
+            ingredients: [
+                { ingredientId: "mil-arraw", quantity: 60, unit: "g" },
+                { ingredientId: "banane-douce", quantity: 100, unit: "g" },
+                { ingredientId: "lait-poudre", quantity: 20, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 3, unit: "g" }
+            ],
+            steps: [
+                "Délayer le lait en poudre dans 300 ml d'eau chaude pour obtenir un lait reconstitué.",
+                "Verser le lait dans une casserole avec les flocons de mil et porter à feu doux en remuant.",
+                "Cuire 7 à 10 minutes en mélangeant régulièrement jusqu'à obtenir une texture crémeuse et épaisse.",
+                "Couper la banane en rondelles fines.",
+                "Verser le porridge dans un bol, disposer les rondelles de banane en rosace sur le dessus.",
+                "Râper légèrement le gingembre frais par-dessus et servir chaud."
+            ]
+        },
+
+        // --- DÉJEUNER ---
+        {
+            id: "recette-salade-poulet-grille-crudites",
+            title: "Salade de poulet grillé aux crudités",
+            cuisine: "internationale",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥗",
+            description: "Une salade repas généreuse et équilibrée : tranches de poulet fermier grillé doré, sur un lit de salade verte croquante, tomates, concombre, carottes râpées et vinaigrette légère à l'huile d'olive.",
+            chefTip: "Marinez le poulet 20 minutes dans du citron et ail avant de le griller pour une saveur plus intense et une chair bien tendre.",
+            tags: ["riche-en-proteines", "sans-gluten", "healthy", "dejeuner", "rapide"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 300, unit: "g" },
+                { ingredientId: "salade-verte", quantity: 100, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 150, unit: "g" },
+                { ingredientId: "concombre", quantity: 100, unit: "g" },
+                { ingredientId: "carotte", quantity: 100, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 40, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Assaisonner le poulet de sel, poivre et un filet d'huile d'olive.",
+                "Faire griller le poulet dans une poêle bien chaude 6 à 7 minutes de chaque côté jusqu'à belle coloration dorée.",
+                "Laisser reposer 5 minutes puis couper en tranches régulières.",
+                "Laver et essorer la salade verte, tailler les tomates en quartiers, le concombre en rondelles.",
+                "Râper les carottes, émincer l'oignon en fines lamelles.",
+                "Disposer les légumes dans deux grands bols, déposer les tranches de poulet grillé au centre.",
+                "Assaisonner d'huile d'olive, sel, poivre et servir immédiatement."
+            ]
+        },
+        {
+            id: "recette-soupe-legumes-maison",
+            title: "Soupe de légumes maison",
+            cuisine: "internationale",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 25,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥣",
+            description: "Une soupe de légumes généreuse, réconfortante et très nutritive : carottes, courgettes, tomates, chou blanc et oignon mijotés ensemble. Pauvre en calories, riche en fibres, vitamines et minéraux.",
+            chefTip: "Mixez la moitié de la soupe pour obtenir une texture mi-liquide mi-morceaux, plus agréable et rassasiante.",
+            tags: ["vegan", "sans-gluten", "fibre", "detox", "dejeuner", "low-calorie"],
+            ingredients: [
+                { ingredientId: "carotte", quantity: 200, unit: "g" },
+                { ingredientId: "courgette", quantity: 200, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 150, unit: "g" },
+                { ingredientId: "chou-blanc", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "tomate-concentree", quantity: 20, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Éplucher et tailler en dés réguliers les carottes, courgettes, tomates fraîches et chou blanc.",
+                "Dans une grande casserole, chauffer l'huile et faire revenir l'oignon émincé 3 minutes.",
+                "Ajouter la tomate concentrée, mélanger 1 minute puis verser les légumes.",
+                "Couvrir avec 800 ml d'eau chaude, saler, poivrer et porter à ébullition.",
+                "Réduire le feu et laisser mijoter 20 à 25 minutes jusqu'à ce que les légumes soient tendres.",
+                "Goûter, ajuster l'assaisonnement et servir bien chaud avec une tranche de pain si souhaité."
+            ]
+        },
+        {
+            id: "recette-wrap-legumes-grilles",
+            title: "Wrap aux légumes grillés et sauce yaourt",
+            cuisine: "internationale",
+            mealType: "dejeuner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 10,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🌯",
+            description: "Des wraps roulés garnis de légumes colorés grillés à la poêle — poivron, courgette, carotte — et nappés d'une sauce fraîche au lait caillé et gingembre. Repas complet, léger et très coloré.",
+            chefTip: "Faites chauffer légèrement la galette de pain dans une poêle sèche 30 secondes avant de la garnir pour qu'elle soit plus souple et ne se déchire pas.",
+            tags: ["vegetarien", "fibre", "vitamine", "healthy", "dejeuner", "equilibre"],
+            ingredients: [
+                { ingredientId: "pain-frais", quantity: 2, unit: "piece" },
+                { ingredientId: "poivron", quantity: 150, unit: "g" },
+                { ingredientId: "courgette", quantity: 150, unit: "g" },
+                { ingredientId: "carotte", quantity: 100, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 60, unit: "g" },
+                { ingredientId: "lait-caille-kossam", quantity: 80, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 5, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Émincer le poivron, la courgette et l'oignon en lamelles fines. Râper grossièrement les carottes.",
+                "Dans une poêle chaude avec l'huile, faire sauter les légumes 8 à 10 minutes à feu vif jusqu'à légère caramélisation. Saler, poivrer.",
+                "Préparer la sauce : mélanger le lait caillé avec le gingembre râpé, une pincée de sel.",
+                "Chauffer légèrement chaque galette de pain dans une poêle sèche 30 secondes.",
+                "Napper chaque galette de sauce yaourt au gingembre.",
+                "Répartir les légumes grillés au centre, rouler fermement et couper en deux en diagonale. Servir de suite."
+            ]
+        },
+
+        // --- DÎNER ---
+        {
+            id: "recette-brochettes-poulet-legumes",
+            title: "Brochettes de poulet aux légumes grillés",
+            cuisine: "internationale",
+            mealType: "diner",
+            prepTimeMinutes: 20,
+            cookingTimeMinutes: 15,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🍢",
+            description: "Des brochettes de poulet tendre marinées aux épices douces et enfilées avec des dés de poivron, oignon et tomate. Grillées à la poêle ou au barbecue, elles constituent un dîner léger, protéiné et très savoureux.",
+            chefTip: "Faites tremper les piques en bois 30 minutes dans l'eau avant de les garnir pour éviter qu'ils ne brûlent à la cuisson.",
+            tags: ["riche-en-proteines", "sans-gluten", "healthy", "diner", "grille"],
+            ingredients: [
+                { ingredientId: "poulet-fermier", quantity: 350, unit: "g" },
+                { ingredientId: "poivron", quantity: 120, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 120, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 8, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Couper le poulet en cubes réguliers de 3 cm. Mélanger avec l'huile, le gingembre râpé, sel et poivre. Laisser mariner 15 minutes.",
+                "Couper le poivron, les tomates et l'oignon en morceaux de même taille que le poulet.",
+                "Alterner sur les piques : un morceau de poulet, un dé de poivron, un quartier d'oignon, une tomate.",
+                "Chauffer une poêle-grill ou poêle ordinaire à feu vif.",
+                "Faire griller les brochettes 12 à 15 minutes en les retournant régulièrement pour une cuisson uniforme.",
+                "Servir chaud avec du riz vapeur ou une salade de crudités."
+            ]
+        },
+        {
+            id: "recette-chili-vegetarien-haricots",
+            title: "Chili végétarien aux haricots et légumes",
+            cuisine: "americaine",
+            mealType: "diner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 30,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🫘",
+            description: "Un chili végétarien riche et consistant : haricots niébé, tomates fraîches, poivron, oignon et épices mijotés lentement. Zéro viande, 100 % saveur — riche en protéines végétales, fibres et fer.",
+            chefTip: "Utilisez des haricots niébé pré-trempés une nuit et cuits à l'avance, ou des légumineuses en conserve pour gagner du temps. Un filet de citron à la fin rehausse toutes les saveurs.",
+            tags: ["vegan", "sans-gluten", "riche-en-proteines", "fibre", "diner", "economique"],
+            ingredients: [
+                { ingredientId: "niebe", quantity: 200, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 200, unit: "g" },
+                { ingredientId: "poivron", quantity: 100, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "carotte", quantity: 100, unit: "g" },
+                { ingredientId: "tomate-concentree", quantity: 30, unit: "g" },
+                { ingredientId: "gingembre-frais", quantity: 8, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 15, unit: "ml" }
+            ],
+            steps: [
+                "Si besoin, faire tremper les haricots niébé une nuit, puis les cuire à l'eau bouillante 40 minutes. Égoutter.",
+                "Émincer l'oignon, couper le poivron en dés, les tomates en quartiers, les carottes en rondelles.",
+                "Chauffer l'huile dans une grande casserole. Faire revenir l'oignon et le gingembre râpé 3 minutes.",
+                "Ajouter le poivron et les carottes, cuire 3 minutes supplémentaires à feu moyen.",
+                "Incorporer les tomates fraîches, la tomate concentrée et 200 ml d'eau. Porter à ébullition.",
+                "Ajouter les haricots cuits, baisser le feu et laisser mijoter 20 minutes. Saler, poivrer.",
+                "Servir chaud dans des bols, éventuellement avec du riz brisé vapeur."
+            ]
+        },
+        {
+            id: "recette-steak-grille-legumes-vapeur",
+            title: "Steak de bœuf grillé et légumes vapeur",
+            cuisine: "internationale",
+            mealType: "diner",
+            prepTimeMinutes: 10,
+            cookingTimeMinutes: 20,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🥩",
+            description: "Un dîner classique et équilibré : steak de bœuf maigre grillé à point, servi avec carottes, haricots verts et pommes de terre cuites à la vapeur. Riche en protéines complètes, fer et vitamines.",
+            chefTip: "Sortez le steak du réfrigérateur 15 minutes avant de le cuire pour une viande à température ambiante. Faites-le reposer 3 minutes sous une feuille d'aluminium après cuisson pour conserver tous les jus.",
+            tags: ["riche-en-proteines", "sans-gluten", "diner", "iron", "healthy"],
+            ingredients: [
+                { ingredientId: "viande-boeuf", quantity: 300, unit: "g" },
+                { ingredientId: "haricots-verts", quantity: 150, unit: "g" },
+                { ingredientId: "carotte", quantity: 150, unit: "g" },
+                { ingredientId: "pommes-de-terre", quantity: 200, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 60, unit: "g" },
+                { ingredientId: "huile-arachide", quantity: 10, unit: "ml" }
+            ],
+            steps: [
+                "Éplucher les carottes et les pommes de terre, couper en morceaux réguliers. Équeuter les haricots verts.",
+                "Cuire les légumes à la vapeur 15 à 18 minutes jusqu'à ce qu'ils soient tendres mais encore légèrement croquants.",
+                "Saler et poivrer les steaks des deux côtés. Badigeonner d'un filet d'huile.",
+                "Chauffer une poêle-grill à feu très vif. Saisir le steak 2 à 3 minutes de chaque côté (saignant) ou 4 à 5 minutes (à point).",
+                "Laisser reposer la viande 3 minutes sous aluminium.",
+                "Dresser le steak avec les légumes vapeur, assaisonner d'une pincée de sel et servir immédiatement."
+            ]
+        },
+        {
+            id: "recette-saumon-four-legumes",
+            title: "Saumon cuit au four et légumes rôtis",
+            cuisine: "europeenne",
+            mealType: "diner",
+            prepTimeMinutes: 15,
+            cookingTimeMinutes: 20,
+            difficulty: "Facile",
+            baseServings: 2,
+            imageEmoji: "🐟",
+            description: "Un dîner léger et raffiné : pavés de poisson blanc cuits doucement au four avec carottes, courgettes et oignons rôtis. Très riche en oméga-3, protéines et vitamines D. Peu de matière grasse ajoutée.",
+            chefTip: "Pour éviter que le poisson ne sèche, couvrez le plat avec une feuille d'aluminium les 15 premières minutes, puis retirez-la les 5 dernières pour légèrement dorer la surface.",
+            tags: ["omega3", "sans-gluten", "riche-en-proteines", "diner", "four", "healthy"],
+            ingredients: [
+                { ingredientId: "poisson-blanc", quantity: 350, unit: "g" },
+                { ingredientId: "carotte", quantity: 150, unit: "g" },
+                { ingredientId: "courgette", quantity: 150, unit: "g" },
+                { ingredientId: "oignon-jaune", quantity: 80, unit: "g" },
+                { ingredientId: "tomate-fraiche", quantity: 100, unit: "g" },
+                { ingredientId: "huile-olive", quantity: 15, unit: "ml" },
+                { ingredientId: "gingembre-frais", quantity: 8, unit: "g" }
+            ],
+            steps: [
+                "Préchauffer le four à 200°C (thermostat 7). Huiler légèrement un plat allant au four.",
+                "Couper les carottes en bâtonnets, les courgettes en rondelles, l'oignon en lamelles, les tomates en quartiers.",
+                "Disposer tous les légumes dans le plat, arroser d'huile d'olive, saler, poivrer. Enfourner 10 minutes.",
+                "Poser les filets de poisson blanc sur les légumes mi-cuits. Râper le gingembre par-dessus.",
+                "Couvrir d'aluminium et enfourner 10 minutes supplémentaires.",
+                "Retirer le papier, monter à 220°C et cuire encore 5 minutes pour dorer légèrement.",
+                "Servir directement dans le plat, avec un filet de jus de citron si disponible."
+            ]
         }
     ];
 
