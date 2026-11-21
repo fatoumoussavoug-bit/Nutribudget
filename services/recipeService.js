@@ -893,8 +893,8 @@
             difficulty: "Facile",
             baseServings: 2,
             imageEmoji: "🍛",
-            description: "Grande spécialité indienne saine : aiguillettes de poulet marinées et grillées, accompagnées d'une sauce raïta fraîche au concombre et kossam, avec riz blanc.",
-            chefTip: "Le kossam (lait caillé) apporte une onctuosité naturelle et des ferments lactiques bénéfiques pour la digestion.",
+            description: "Grande spécialité indienne saine : aiguillettes de poulet marinées et grillées, accompagnées d'une sauce raïta fraîche au concombre et lait caillé, avec riz blanc.",
+            chefTip: "Le lait caillé apporte une onctuosité naturelle et des ferments lactiques bénéfiques pour la digestion.",
             tags: ["asiatique", "inde", "riche-en-proteines", "healthy", "sans-gluten"],
             ingredients: [
                 { ingredientId: "poulet-fermier", quantity: 350, unit: "g" },
@@ -907,7 +907,7 @@
             steps: [
                 "Cuire le riz dans de l'eau bouillante salée 15 minutes, puis égoutter.",
                 "Découper le poulet en morceaux réguliers et les enrober d'huile d'olive, d'oignons hachés, sel et poivre.",
-                "Râper le concombre, presser pour enlever l'eau et le mélanger avec le kossam pour créer la raïta fraîche.",
+                "Râper le concombre, presser pour enlever l'eau et le mélanger avec le lait caillé pour créer la raïta fraîche.",
                 "Griller les morceaux de poulet dans une poêle chaude 8 à 10 minutes jusqu'à belle coloration.",
                 "Dresser le riz blanc, le poulet grillé fumant et la raïta fraîche au concombre."
             ]
@@ -1121,15 +1121,15 @@
         },
         {
             id: "recette-ceebu-jen-sain",
-            title: "Ceebu Jën Penda Mbaye Équilibré",
+            title: "Riz rouge au poisson et légumes du marché",
             mealType: "dejeuner",
             prepTimeMinutes: 45,
             cookingTimeMinutes: 50,
             difficulty: "Moyen",
             baseServings: 4,
             imageEmoji: "🍲",
-            description: "Le plat national sénégalais revisité avec un dosage d'huile maîtrisé, du poisson frais riche en oméga-3 et une abondance de légumes locaux.",
-            chefTip: "Remplacez le cube bouillon industriel par du Nététou et du poisson séché (Guedj) : vos artères vous remercieront et le goût authentique sera décuplé !",
+            description: "Plat traditionnel sénégalais revisité avec un dosage d'huile maîtrisé, du poisson frais riche en oméga-3 et une abondance de légumes locaux.",
+            chefTip: "Remplacez le cube bouillon industriel par des graines de néré fermentées et du poisson séché : vos artères vous remercieront et le goût authentique sera préservé !",
             tags: ["traditionnel", "omega-3", "poisson", "sans-gluten"],
             ingredients: [
                 { ingredientId: "yaboye-sardinelle", quantity: 600, unit: "g" },
@@ -1145,25 +1145,25 @@
                 { ingredientId: "guedj-poisson-seche", quantity: 30, unit: "g" }
             ],
             steps: [
-                "Nettoyer et vider le poisson Yaboye. Préparer le roff (hachis d'ail, piment, persil et une pincée de sel) et piquer la chair.",
+                "Nettoyer et vider le poisson frais. Préparer un hachis d'ail, piment, persil et une pincée de sel, puis piquer la chair.",
                 "Dans une marmite, chauffer légèrement l'huile d'arachide. Faire dorer délicatement le poisson puis le réserver.",
                 "Faire revenir les oignons hachés et la tomate concentrée délayée dans un peu d'eau jusqu'à obtention d'une belle couleur rouge foncée.",
-                "Ajouter le nététou, le guedj et 1,5 litre d'eau. Porter à ébullition puis incorporer les légumes (carotte, chou, diakhatou). Laisser mijoter 25 min.",
+                "Ajouter les graines de néré, le poisson séché et 1,5 litre d'eau. Porter à ébullition puis incorporer les légumes (carotte, chou, aubergine). Laisser mijoter 25 min.",
                 "Retirer les légumes et le poisson, rectifier l'assaisonnement.",
                 "Verser le riz brisé préalablement lavé et essoré dans le bouillon frémissant. Baisser à feu doux, couvrir hermétiquement et laisser cuire 20 min.",
-                "Dresser le riz rouge au centre du plat, surmonté des légumes, du poisson et du beugueul de bissap vert."
+                "Dresser le riz rouge au centre du plat, surmonté des légumes, du poisson et de la sauce aux feuilles d'oseille."
             ]
         },
         {
             id: "recette-yassa-poulet-fonio",
-            title: "Yassa au Poulet & Fonio Précuit",
+            title: "Poulet mariné au citron et oignons avec fonio",
             mealType: "dejeuner",
             prepTimeMinutes: 25,
             cookingTimeMinutes: 35,
             difficulty: "Facile",
             baseServings: 4,
             imageEmoji: "🍗",
-            description: "Un Yassa savoureux et équilibré servi sur un lit de fonio complet, céréale locale à index glycémique bas recommandée aux diabétiques et sportifs.",
+            description: "Un émincé de poulet mariné savoureux et équilibré servi sur un lit de fonio complet, céréale locale à index glycémique bas recommandée aux diabétiques et sportifs.",
             chefTip: "Faites compoter la montagne d'oignons à feu doux avec du gingembre frais râpé pour développer une douceur naturellement caramélisée sans sucre.",
             tags: ["sans-gluten", "riche-en-fibres", "volaille", "faible-ig"],
             ingredients: [
@@ -1185,15 +1185,15 @@
         },
         {
             id: "recette-soupou-kandia",
-            title: "Soupou Kandia Terroir (Gombo & Poissons)",
+            title: "Ragoût de gombo frais au poisson et huile de palme",
             mealType: "dejeuner",
             prepTimeMinutes: 30,
             cookingTimeMinutes: 45,
             difficulty: "Moyen",
             baseServings: 4,
             imageEmoji: "🥣",
-            description: "Sauce gluante traditionnelle au gombo frais, riche en mucilages digestifs et antioxydants, dosée modérément en huile de palme rouge brute.",
-            chefTip: "L'huile de palme rouge brute (non raffinée) est l'une des sources végétales les plus riches en caroténoïdes (vitamine A) : 2 cuillères à soupe suffisent pour tout le plat !",
+            description: "Sauce onctueuse traditionnelle au gombo frais, riche en mucilages digestifs et antioxydants, dosée modérément en huile de palme rouge naturelle.",
+            chefTip: "L'huile de palme rouge naturelle est l'une des sources végétales les plus riches en caroténoïdes (vitamine A) : 2 cuillères à soupe suffisent pour tout le plat !",
             tags: ["sans-gluten", "riche-en-fibres", "poisson", "terroir"],
             ingredients: [
                 { ingredientId: "gombo-frais", quantity: 400, unit: "g" },
@@ -1206,7 +1206,7 @@
             ],
             steps: [
                 "Hacher finement le gombo frais au couteau ou au mortier.",
-                "Faire bouillir 1 litre d'eau avec le poisson frais nettoyé, le guedj émietté, le nététou et l'oignon haché.",
+                "Faire bouillir 1 litre d'eau avec le poisson frais nettoyé, le poisson séché émietté, les graines de néré et l'oignon haché.",
                 "Après 15 min de bouillon, retirer délicatement le poisson frais.",
                 "Verser le gombo haché dans le bouillon. Fouetter énergiquement avec une spatule en bois pour développer la texture soyeuse.",
                 "Laisser cuire à feu doux pendant 20 minutes jusqu'à ce que la texture s'épaississe.",
@@ -1216,15 +1216,15 @@
         },
         {
             id: "recette-salade-niebe-fraicheur",
-            title: "Salade Énergétique de Niébé & Crudités",
+            title: "Salade de haricots blancs locaux et crudités",
             mealType: "diner",
             prepTimeMinutes: 15,
             cookingTimeMinutes: 25,
             difficulty: "Très facile",
             baseServings: 2,
             imageEmoji: "🥗",
-            description: "Une salade fraîche, économique et ultra-protéinée à base de haricots niébé sénégalais, idéale pour le soir ou en récupération sportive.",
-            chefTip: "Le niébé est le super-aliment économique du Sénégal : 24g de protéines pour 100g, zéro cholestérol et un prix imbattable sur tous les marchés !",
+            description: "Une salade fraîche, économique et ultra-protéinée à base de haricots blancs locaux, idéale pour le soir ou en récupération sportive.",
+            chefTip: "Le haricot blanc local est le super-aliment économique : 24g de protéines pour 100g, zéro cholestérol et un prix imbattable sur tous les marchés !",
             tags: ["vegetarien", "vegan", "economique", "sans-gluten", "riche-en-proteines"],
             ingredients: [
                 { ingredientId: "niebe", quantity: 160, unit: "g" },
@@ -1234,24 +1234,24 @@
                 { ingredientId: "moringa-nebeday", quantity: 20, unit: "g" }
             ],
             steps: [
-                "Rincer le niébé et le cuire dans une casserole d'eau bouillante pendant environ 25-30 minutes jusqu'à tendreté. Égoutter et laisser refroidir.",
+                "Rincer les haricots et les cuire dans une casserole d'eau bouillante pendant environ 25-30 minutes jusqu'à tendreté. Égoutter et laisser refroidir.",
                 "Couper les tomates en petits dés.",
                 "Émincer très finement l'oignon et le mélanger aux dés de tomates.",
-                "Dans un grand saladier, réunir le niébé refroidi, les dés de crudités et les feuilles fraîches de moringa hachées.",
+                "Dans un grand saladier, réunir les haricots refroidis, les dés de crudités et les feuilles fraîches de moringa hachées.",
                 "Arroser d'un filet d'huile d'arachide et d'une pincée de sel marin, mélanger délicatement et servir frais."
             ]
         },
         {
             id: "recette-omelette-dakaroise",
-            title: "Omelette Dakaroise aux Légumes du Marché",
+            title: "Omelette aux légumes frais du marché",
             mealType: "petit_dejeuner",
             prepTimeMinutes: 10,
             cookingTimeMinutes: 8,
             difficulty: "Très facile",
             baseServings: 1,
             imageEmoji: "🍳",
-            description: "Un petit-déjeuner complet et rapide à haute teneur protéique pour bien démarrer la journée avec les œufs locaux et légumes des Niayes.",
-            chefTip: "L'ajout de feuilles de Moringa (Nébéday) dans l'omelette apporte un concentré de fer et de calcium idéal dès le matin.",
+            description: "Un petit-déjeuner complet et rapide à haute teneur protéique pour bien démarrer la journée avec les œufs locaux et légumes frais du marché.",
+            chefTip: "L'ajout de feuilles de moringa dans l'omelette apporte un concentré de fer et de calcium idéal dès le matin.",
             tags: ["vegetarien", "sans-gluten", "rapide", "petit-dejeuner", "riche-en-proteines"],
             ingredients: [
                 { ingredientId: "oeuf-poule", quantity: 2, unit: "piece" },
@@ -1266,19 +1266,19 @@
                 "Dans une poêle antiadhésive, chauffer l'huile d'arachide et faire suer les légumes 3 minutes.",
                 "Verser les œufs battus uniformément sur les légumes dorés.",
                 "Laisser cuire 3 à 4 minutes à feu moyen jusqu'à consistance soyeuse.",
-                "Plier l'omelette en deux et servir immédiatement avec une tasse de Kinkeliba."
+                "Plier l'omelette en deux et servir immédiatement avec une infusion chaude."
             ]
         },
         {
             id: "recette-arraw-porridge-fruits",
-            title: "Porridge d'Arraw de Mil aux Fruits & Arachides",
+            title: "Bouillie de mil aux fruits et arachides",
             mealType: "petit_dejeuner",
             prepTimeMinutes: 5,
             cookingTimeMinutes: 15,
             difficulty: "Facile",
             baseServings: 2,
             imageEmoji: "🥣",
-            description: "Une bouillie énergétique traditionnelle à base de granules de mil (Arraw), adoucie au lait caillé frais (Kossam) et garnie de pâte d'arachide pure.",
+            description: "Une bouillie énergétique traditionnelle à base de granules de mil, adoucie au lait fermenté frais et garnie de pâte d'arachide pure.",
             chefTip: "Le mil apporte une satiété durable toute la matinée grâce à sa richesse en fibres et en glucides complexes à diffusion lente.",
             tags: ["sans-gluten", "vegetarien", "energie", "petit-dejeuner"],
             ingredients: [
@@ -1290,23 +1290,23 @@
             ],
             steps: [
                 "Dans une casserole, porter à ébullition 400 ml d'eau.",
-                "Verser en pluie les granules d'Arraw de mil tout en remuant au fouet pour éviter les grumeaux.",
+                "Verser en pluie les granules de mil tout en remuant au fouet pour éviter les grumeaux.",
                 "Baisser le feu et laisser épaissir 12 à 15 minutes en remuant régulièrement.",
-                "Hors du feu, incorporer la pâte d'arachide pure (Tigadèguè).",
-                "Verser dans deux bols, napper de lait caillé Kossam frais et parsemer de rondelles de banane douce et d'arachides concassées."
+                "Hors du feu, incorporer la pâte d'arachide pure.",
+                "Verser dans deux bols, napper de lait fermenté frais et parsemer de rondelles de banane douce et d'arachides concassées."
             ]
         },
         {
             id: "recette-thiakry-leger-mangue",
-            title: "Thiakry Léger au Kossam & Mangue Fraîche",
+            title: "Couscous de mil au lait fermenté et mangue fraîche",
             mealType: "collation",
             prepTimeMinutes: 10,
             cookingTimeMinutes: 10,
             difficulty: "Très facile",
             baseServings: 2,
             imageEmoji: "🍨",
-            description: "Le dessert emblématique dakarois en version légère : couscous de mil étuvé, yaourt caillé Kossam et dés de mangue juteuse gorgée de soleil.",
-            chefTip: "En saison des mangues (mai à août), profitez-en pour sucrer naturellement le thiakry sans aucun sucre raffiné ajouté !",
+            description: "Un dessert traditionnel en version légère : couscous de mil étuvé, lait fermenté onctueux et dés de mangue juteuse gorgée de soleil.",
+            chefTip: "En saison des mangues (mai à août), profitez-en pour sucrer naturellement le dessert sans aucun sucre raffiné ajouté !",
             tags: ["vegetarien", "dessert", "sans-gluten", "collation"],
             ingredients: [
                 { ingredientId: "thiakry-mil", quantity: 120, unit: "g" },
@@ -1314,23 +1314,23 @@
                 { ingredientId: "mangue-locale", quantity: 150, unit: "g" }
             ],
             steps: [
-                "Réhydrater le couscous de thiakry dans un peu d'eau tiède ou cuire 5 min à la vapeur.",
+                "Réhydrater le couscous de mil dans un peu d'eau tiède ou cuire 5 min à la vapeur.",
                 "Laisser refroidir à température ambiante.",
                 "Peler et détailler la mangue en petits dés réguliers.",
-                "Dans des verrines ou des bols, mélanger le thiakry aéré avec le lait caillé Kossam onctueux.",
+                "Dans des verrines ou des bols, mélanger le couscous de mil aéré avec le lait fermenté onctueux.",
                 "Déposer généreusement les dés de mangue fraîche sur le dessus. Servir bien frais."
             ]
         },
         {
             id: "recette-poisson-braise-patates",
-            title: "Poisson Braisé à la Dakaroise & Patates Douces",
+            title: "Poisson braisé aux herbes et patates douces",
             mealType: "diner",
             prepTimeMinutes: 20,
             cookingTimeMinutes: 25,
             difficulty: "Facile",
             baseServings: 2,
             imageEmoji: "🐟",
-            description: "Sardinelle Yaboye marinée et grillée, accompagnée de quartiers de patates douces dorées au four avec un concassé de tomates fraîches.",
+            description: "Poisson frais mariné et grillé, accompagné de quartiers de patates douces dorées au four avec un concassé de tomates fraîches.",
             chefTip: "Cuire les patates douces au four plutôt qu'en friture divise les calories de moitié tout en préservant le fondant et le goût sucré naturel.",
             tags: ["sans-gluten", "riche-en-proteines", "poisson", "omega-3"],
             ingredients: [
@@ -1351,14 +1351,14 @@
         },
         {
             id: "recette-kinkeliba-gingembre-vitalite",
-            title: "Infusion Détox Kinkeliba, Bissap & Gingembre",
+            title: "Infusion de plantes bienfaisantes, fleurs d'hibiscus et gingembre",
             mealType: "boisson",
             prepTimeMinutes: 5,
             cookingTimeMinutes: 10,
             difficulty: "Très facile",
             baseServings: 2,
             imageEmoji: "🫖",
-            description: "La tisane de santé par excellence d'Afrique de l'Ouest. Hépato-protectrice, drainante et tonifiante sans caféine excitante.",
+            description: "Une tisane bienfaisante traditionnelle d'Afrique de l'Ouest. Hépato-protectrice, drainante et tonifiante sans caféine excitante.",
             chefTip: "À boire tiède au réveil ou après les repas pour faciliter la digestion et détoxifier le foie naturellement.",
             tags: ["sans-gluten", "vegan", "detox", "sans-cafeine", "boisson"],
             ingredients: [
@@ -1367,7 +1367,7 @@
                 { ingredientId: "fleurs-bissap-rouge", quantity: 15, unit: "g" }
             ],
             steps: [
-                "Rincer rapidement les feuilles de kinkéliba et les fleurs de bissap rouge à l'eau claire.",
+                "Rincer rapidement les feuilles d'infusion et les fleurs d'hibiscus rouge à l'eau claire.",
                 "Écraser légèrement le morceau de gingembre frais.",
                 "Dans une bouilloire ou casserole, verser 600 ml d'eau et porter à ébullition avec les plantes.",
                 "Laisser frémir 7 à 10 minutes jusqu'à obtenir une belle couleur pourpre rubis et un parfum tonique.",
@@ -1376,14 +1376,14 @@
         },
         {
             id: "recette-smoothie-bouye-banane",
-            title: "Smoothie Protecteur Bouye (Baobab) & Banane",
+            title: "Smoothie protecteur à la pulpe de baobab et banane",
             mealType: "boisson",
             prepTimeMinutes: 5,
             cookingTimeMinutes: 0,
             difficulty: "Très facile",
             baseServings: 2,
             imageEmoji: "🥤",
-            description: "Une boisson onctueuse et tonique au fruit du baobab (Bouye), qui contient 6 fois plus de vitamine C qu'une orange et un taux exceptionnel de calcium et potassium.",
+            description: "Une boisson onctueuse et tonique au fruit du baobab, qui contient 6 fois plus de vitamine C qu'une orange et un taux exceptionnel de calcium et potassium.",
             chefTip: "Idéal après un effort physique ou en collation de l'après-midi pour recharger ses minéraux sans fatigue digestive.",
             tags: ["sans-gluten", "vegetarien", "super-aliment", "vitamines", "boisson"],
             ingredients: [
@@ -1392,23 +1392,23 @@
                 { ingredientId: "lait-caille-kossam", quantity: 200, unit: "g" }
             ],
             steps: [
-                "Diluer la poudre de pulpe de pain de singe (bouye) dans 150 ml d'eau tiède, puis filtrer si nécessaire.",
+                "Diluer la poudre de pulpe de baobab dans 150 ml d'eau tiède, puis filtrer si nécessaire.",
                 "Dans un mixeur ou blender, placer les bananes pelées coupées en morceaux.",
-                "Ajouter le lait caillé Kossam frais et le jus de bouye velouté.",
+                "Ajouter le lait fermenté frais et le jus de baobab velouté.",
                 "Mixer à pleine puissance pendant 45 secondes jusqu'à consistance mousseuse.",
                 "Servir bien frais avec quelques glaçons."
             ]
         },
         {
             id: "recette-mafe-vegetarien-niebe",
-            title: "Mafé Végétarien au Niébé & Patates Douces",
+            title: "Ragoût à la pâte d'arachide, haricots et patates douces",
             mealType: "dejeuner",
             prepTimeMinutes: 20,
             cookingTimeMinutes: 40,
             difficulty: "Facile",
             baseServings: 4,
             imageEmoji: "🍲",
-            description: "Une version végétale du classique Mafé dakarois où le haricot niébé apporte toutes les protéines nécessaires, sublimé par la pâte d'arachide et les patates douces fondantes.",
+            description: "Une version végétale du classique ragoût d'arachide où le haricot local apporte toutes les protéines nécessaires, sublimé par la pâte d'arachide et les patates douces fondantes.",
             chefTip: "Délayez toujours la pâte d'arachide dans une louche de bouillon chaud avant de l'incorporer pour une sauce soyeuse et sans grumeaux.",
             tags: ["vegetarien", "sans-gluten", "riche-en-proteines", "terroir", "economique"],
             ingredients: [
@@ -1422,25 +1422,25 @@
                 { ingredientId: "riz-brise-ordinaire", quantity: 320, unit: "g" }
             ],
             steps: [
-                "Cuire préalablement le niébé 25 minutes dans de l'eau bouillante non salée.",
+                "Cuire préalablement les haricots 25 minutes dans de l'eau bouillante non salée.",
                 "Dans une marmite, faire revenir l'oignon haché et la tomate concentrée avec un fond d'eau.",
                 "Ajouter 1 litre d'eau, porter à ébullition et incorporer les patates douces, carottes et chou en gros morceaux.",
-                "Délayer la pâte d'arachide pure avec un peu de bouillon chaud et l'ajouter à la marmite. Ajouter le niébé précuit.",
+                "Délayer la pâte d'arachide pure avec un peu de bouillon chaud et l'ajouter à la marmite. Ajouter les haricots précuits.",
                 "Laisser mijoter à feu doux 25 minutes jusqu'à ce que la sauce épaississe et prenne une texture onctueuse.",
-                "Cuire le riz blanc à la vapeur en accompagnement. Servir la sauce mafé bien chaude sur le riz."
+                "Cuire le riz blanc à la vapeur en accompagnement. Servir la sauce à l'arachide bien chaude sur le riz."
             ]
         },
         {
             id: "recette-thiere-mboum-poulet",
-            title: "Thiéré Mboum au Poulet & Feuilles de Moringa",
+            title: "Couscous de mil au poulet et feuilles de moringa",
             mealType: "diner",
             prepTimeMinutes: 25,
             cookingTimeMinutes: 35,
             difficulty: "Moyen",
             baseServings: 4,
             imageEmoji: "🥣",
-            description: "Le réconfortant couscous de mil sénégalais nappé d'une sauce verte Mboum aux feuilles de Moringa fraîches, réputé pour sa richesse en fer et son extrême digestibilité.",
-            chefTip: "Le Moringa perd ses vitamines en surcuisson : n'ajoutez les feuilles hachées qu'au dernier quart d'heure de mijotage !",
+            description: "Un réconfortant couscous de mil nappé d'une sauce verte aux feuilles de moringa fraîches, réputé pour sa richesse en fer et son extrême digestibilité.",
+            chefTip: "Le moringa perd ses vitamines en surcuisson : n'ajoutez les feuilles hachées qu'au dernier quart d'heure de mijotage !",
             tags: ["traditionnel", "sans-gluten", "riche-en-fer", "volaille"],
             ingredients: [
                 { ingredientId: "poulet-fermier", quantity: 500, unit: "g" },
@@ -1453,24 +1453,24 @@
             ],
             steps: [
                 "Faire dorer les morceaux de poulet dans une sauteuse avec l'huile d'arachide et l'oignon haché.",
-                "Piler les arachides avec le nététou pour former une poudre aromatique.",
-                "Mouiller avec 700 ml d'eau, incorporer la poudre d'arachides-nététou et laisser mijoter 20 minutes.",
+                "Piler les arachides avec les graines de néré pour former une poudre aromatique.",
+                "Mouiller avec 700 ml d'eau, incorporer la poudre d'arachides et graines de néré et laisser mijoter 20 minutes.",
                 "Pendant ce temps, cuire le couscous de mil à la vapeur.",
                 "Ajouter les feuilles de moringa lavées et émincées dans la sauce. Poursuivre la cuisson 10 minutes à feu doux.",
-                "Dresser le couscous de mil chaud et napper généreusement de sauce Mboum."
+                "Dresser le couscous de mil chaud et napper généreusement de sauce aux feuilles de moringa."
             ]
         },
         {
             id: "recette-fonde-mil-kossam",
-            title: "Fondé Onctueux de Mil au Kossam & Bouye",
+            title: "Bouillie de mil au lait fermenté et baobab",
             mealType: "petit_dejeuner",
             prepTimeMinutes: 10,
             cookingTimeMinutes: 20,
             difficulty: "Facile",
             baseServings: 2,
             imageEmoji: "🥣",
-            description: "Un petit-déjeuner traditionnel revigorant composé de boulettes de mil mijotées, servies avec du Kossam crémeux parfumé d'une note acidulée de pain de singe.",
-            chefTip: "Le mélange mil + Kossam offre une combinaison protéines/calcium idéale pour soutenir une matinée active sans coup de pompe.",
+            description: "Un petit-déjeuner traditionnel revigorant composé de boulettes de mil mijotées, servies avec du lait fermenté crémeux parfumé d'une note acidulée de pulpe de baobab.",
+            chefTip: "Le mélange mil + lait fermenté offre une combinaison protéines/calcium idéale pour soutenir une matinée active sans coup de pompe.",
             tags: ["vegetarien", "sans-gluten", "energie", "petit-dejeuner"],
             ingredients: [
                 { ingredientId: "mil-arraw", quantity: 120, unit: "g" },
@@ -1480,15 +1480,15 @@
             ],
             steps: [
                 "Porter 500 ml d'eau à frémissement dans une casserole.",
-                "Verser l'arraw de mil et laisser cuire à feu moyen 18 minutes en remuant jusqu'à ce que les granules soient tendres.",
-                "Diluer la pulpe de bouye dans 3 cuillères à soupe d'eau tiède et l'incorporer au lait caillé Kossam.",
-                "Répartir le fondé de mil chaud dans deux bols.",
-                "Verser le coulis de Kossam au bouye sur le dessus et garnir de rondelles de banane douce."
+                "Verser les granules de mil et laisser cuire à feu moyen 18 minutes en remuant jusqu'à ce que les granules soient tendres.",
+                "Diluer la pulpe de baobab dans 3 cuillères à soupe d'eau tiède et l'incorporer au lait fermenté.",
+                "Répartir la bouillie de mil chaude dans deux bols.",
+                "Verser le coulis de lait fermenté au baobab sur le dessus et garnir de rondelles de banane douce."
             ]
         },
         {
             id: "recette-salade-fraicheur-mangue-oeuf",
-            title: "Salade Fraîcheur des Niayes (Mangue & Œufs)",
+            title: "Salade fraîcheur mangue et œufs durs",
             mealType: "diner",
             prepTimeMinutes: 15,
             cookingTimeMinutes: 10,
@@ -2043,8 +2043,8 @@
                     cookingTimeMinutes: 12,
                     difficulty: "Facile",
                     imageEmoji: "🍛",
-                    description: "Grande spécialité indienne saine : aiguillettes de poulet marinées et grillées, accompagnées d'une sauce raïta fraîche au concombre et kossam, avec riz blanc.",
-                    chefTip: "Le kossam apporte des probiotiques naturels et une fraîcheur bienfaisante pour équilibrer le repas.",
+                    description: "Grande spécialité indienne saine : aiguillettes de poulet marinées et grillées, accompagnées d'une sauce raïta fraîche au concombre et lait caillé, avec riz blanc.",
+                    chefTip: "Le lait caillé apporte des probiotiques naturels et une fraîcheur bienfaisante pour équilibrer le repas.",
                     tags: ["asiatique", "inde", "riche-en-proteines", "healthy", "sans-gluten"],
                     ingredients: [
                         { ingredientId: "poulet-fermier", quantity: 175 * servings, unit: "g" },
@@ -2057,7 +2057,7 @@
                     steps: [
                         "Cuire le riz à l'eau bouillante salée 15 minutes, égoutter.",
                         "Assaisonner le poulet d'oignon, sel, poivre et huile d'olive, puis griller à la poêle 8 à 10 minutes.",
-                        "Râper le concombre et le mélanger au kossam avec une pincée de sel.",
+                        "Râper le concombre et le mélanger au lait caillé avec une pincée de sel.",
                         "Dresser le riz chaud, les morceaux de poulet doré et la raïta fraîche."
                     ]
                 };

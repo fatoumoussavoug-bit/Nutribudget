@@ -169,7 +169,7 @@
         const fats = Math.round((ingredient.per100g.fats || 0) * factor * 10) / 10;
         const fiber = Math.round((ingredient.per100g.fiber || 0) * factor * 10) / 10;
 
-        // Calcul du coût
+        // Calcul du coût théorique (legacy proportionnel pour les tests)
         let costFCFA = 0;
         let isCustom = customPrices[ingredient.id] !== undefined && !isNaN(customPrices[ingredient.id]);
         if (ingredient.priceUnit === "piece" && (item.unit === "piece" || item.unit === "pièce")) {
@@ -181,6 +181,8 @@
             const effectivePriceKg = getEffectivePrice(ingredient.id);
             costFCFA = Math.round((weightGrams / 1000) * effectivePriceKg);
         }
+
+        const realShopItem = calculateRealShoppingItem(item);
 
         return {
             ingredientId: ingredient.id,
@@ -195,11 +197,203 @@
             fats,
             fiber,
             costFCFA,
+            realCostFCFA: realShopItem.realCostFCFA,
+            purchaseFormatLabel: realShopItem.purchaseFormatLabel,
+            priceSource: realShopItem.priceSource,
+            priceSourceLabel: realShopItem.priceSourceLabel,
+            sourceRef: realShopItem.sourceRef,
+            unitsToBuy: realShopItem.unitsToBuy,
             effectivePricePerKg: getEffectivePrice(ingredient.id),
             priceUnit: ingredient.priceUnit || "kg",
-            priceSource: ingredient.priceSource || "Auchan Sénégal (auchan.sn)",
             hasCustomPrice: isCustom,
             isUnknown: false
+        };
+    }
+
+    /**
+     * Calcule le format d'achat réaliste et le coût effectif au Sénégal
+     * Respecte les unités réelles de vente :
+     * - Œuf par unité à 100 FCFA
+     * - Tomate, oignon, poivron, carotte au kg, 500g, 250g ou 125g (min 125g ou 1 pièce)
+     * - Huile au litre, demi-litre (500 ml), 250 ml ou 125 ml
+     * - Huile d'olive extra-vierge UNIQUEMENT en bouteille (500 ml ou 1 L, pas en détail)
+     * - Pain par baguette entière 150 FCFA
+     * - Poisson comme sardinelles : source Marché local ou poissonnerie (vendu au kg ou en tas, pas à Auchan)
+     * - Produits emballés : boîte entière à Auchan Sénégal
+     */
+    function calculateRealShoppingItem(item) {
+        const ingredient = findIngredient(item.ingredientId);
+        if (!ingredient) {
+            return {
+                ingredientId: item.ingredientId,
+                name: item.name || "Ingrédient non répertorié",
+                recipeQuantity: item.quantity || 0,
+                recipeUnit: item.unit || "g",
+                recipeWeightGrams: 0,
+                purchaseFormatLabel: "Format standard",
+                priceSource: "marche_local",
+                priceSourceLabel: "Marché local",
+                sourceRef: "Marché local",
+                realCostFCFA: 0,
+                unitsToBuy: 1,
+                unitPrice: 0,
+                isUnknown: true
+            };
+        }
+
+        const weightGrams = convertToGrams(ingredient, item.quantity, item.unit);
+        const isCustom = customPrices[ingredient.id] !== undefined && !isNaN(customPrices[ingredient.id]);
+        const customVal = isCustom ? Number(customPrices[ingredient.id]) : null;
+
+        const priceSource = ingredient.priceSource || (ingredient.isLocalSenegal ? "marche_local" : "auchan");
+        const priceSourceLabel = priceSource === "auchan" ? "Auchan Sénégal" : "Marché local";
+        const sourceRef = ingredient.sourceRef || (priceSource === "auchan" ? "Auchan Sénégal (auchan.sn)" : "Marchés locaux (ANSD/CSAR 2026)");
+
+        const formats = Array.isArray(ingredient.purchaseFormats) && ingredient.purchaseFormats.length > 0 
+            ? ingredient.purchaseFormats 
+            : [];
+
+        let unitsToBuy = 1;
+        let realCostFCFA = 0;
+        let purchaseFormatLabel = "";
+
+        const isPiece = ingredient.priceUnit === "piece" || item.unit === "piece" || item.unit === "pièce" || item.unit === "unite" || item.unit === "unité";
+
+        if (isPiece) {
+            const qtyPieces = Math.max(1, Math.round(Number(item.quantity) || 1));
+            let piecePrice = 100;
+            if (customVal !== null) {
+                piecePrice = customVal;
+            } else if (ingredient.marketPrice2026 && ingredient.priceUnit === "piece") {
+                piecePrice = ingredient.marketPrice2026;
+            } else if (ingredient.pricePerPiece) {
+                piecePrice = ingredient.id === "oeuf-poule" ? 100 : ingredient.pricePerPiece;
+            }
+
+            if (formats.length > 0) {
+                let minCost = Infinity;
+                let chosen = null;
+                for (const fmt of formats) {
+                    const count = Math.ceil(qtyPieces / fmt.qty) || 1;
+                    const p = customVal !== null ? Math.round(fmt.qty * customVal) : fmt.price;
+                    const cost = count * p;
+                    if (cost < minCost) {
+                        minCost = cost;
+                        chosen = { ...fmt, count, calcPrice: p };
+                    }
+                }
+                if (chosen) {
+                    unitsToBuy = chosen.count;
+                    realCostFCFA = minCost;
+                    purchaseFormatLabel = chosen.count > 1 
+                        ? `${chosen.count}x ${chosen.label}`
+                        : chosen.label;
+                } else {
+                    unitsToBuy = qtyPieces;
+                    realCostFCFA = unitsToBuy * piecePrice;
+                    purchaseFormatLabel = unitsToBuy === 1 
+                        ? `1 unité (${piecePrice.toLocaleString("fr-FR")} FCFA)` 
+                        : `${unitsToBuy} unités (${piecePrice.toLocaleString("fr-FR")} FCFA / u)`;
+                }
+            } else {
+                unitsToBuy = qtyPieces;
+                realCostFCFA = unitsToBuy * piecePrice;
+                purchaseFormatLabel = unitsToBuy === 1 
+                    ? `1 unité (${piecePrice.toLocaleString("fr-FR")} FCFA)` 
+                    : `${unitsToBuy} unités (${piecePrice.toLocaleString("fr-FR")} FCFA / u)`;
+            }
+        } else if (formats.length > 0) {
+            const neededQty = weightGrams;
+
+            const evaluatedFormats = formats.map(fmt => {
+                const fmtGrams = fmt.unit === "kg" || fmt.unit === "l" ? fmt.qty * 1000 : fmt.qty;
+                let p = fmt.price;
+                if (customVal !== null) {
+                    p = Math.round((fmtGrams / 1000) * customVal);
+                }
+                return {
+                    ...fmt,
+                    fmtGrams,
+                    calcPrice: p
+                };
+            });
+
+            let minCost = Infinity;
+            let chosen = null;
+
+            for (const fmt of evaluatedFormats) {
+                const count = Math.ceil(neededQty / fmt.fmtGrams) || 1;
+                const cost = count * fmt.calcPrice;
+                if (cost < minCost || (cost === minCost && (!chosen || fmt.fmtGrams < chosen.fmtGrams))) {
+                    minCost = cost;
+                    chosen = { ...fmt, count };
+                }
+            }
+
+            if (chosen) {
+                unitsToBuy = chosen.count;
+                realCostFCFA = minCost;
+                purchaseFormatLabel = chosen.count > 1 
+                    ? `${chosen.count}x ${chosen.label} (${chosen.calcPrice.toLocaleString("fr-FR")} FCFA/u)`
+                    : `${chosen.label} (${chosen.calcPrice.toLocaleString("fr-FR")} FCFA)`;
+            } else {
+                const fallbackPrice = customVal !== null ? customVal : (ingredient.marketPrice2026 || ingredient.defaultPricePerKg || 1000);
+                realCostFCFA = Math.round((neededQty / 1000) * fallbackPrice);
+                purchaseFormatLabel = `Portion ${Math.round(neededQty)}g`;
+            }
+        } else {
+            const fallbackPrice = customVal !== null ? customVal : (ingredient.marketPrice2026 || ingredient.defaultPricePerKg || 1000);
+            realCostFCFA = Math.round((weightGrams / 1000) * fallbackPrice);
+            purchaseFormatLabel = `Portion ${Math.round(weightGrams)}g`;
+        }
+
+        return {
+            ingredientId: ingredient.id,
+            name: ingredient.name,
+            category: ingredient.category,
+            recipeQuantity: Number(item.quantity) || 0,
+            recipeUnit: item.unit || "g",
+            recipeWeightGrams: Math.round(weightGrams * 10) / 10,
+            purchaseFormatLabel,
+            priceSource,
+            priceSourceLabel,
+            sourceRef,
+            realCostFCFA: Math.round(realCostFCFA),
+            unitsToBuy,
+            isUnknown: false
+        };
+    }
+
+    /**
+     * Calcule le panier réel et le coût global d'une recette au Sénégal
+     * @param {Array} ingredientItems
+     * @param {number} servings
+     * @returns {Object}
+     */
+    function calculateRealShoppingCost(ingredientItems = [], servings = 1) {
+        const safeServings = Math.max(1, Number(servings) || 1);
+        const items = (ingredientItems || []).map(calculateRealShoppingItem);
+
+        let totalCostFCFA = 0;
+        let auchanCostFCFA = 0;
+        let marcheCostFCFA = 0;
+
+        items.forEach(it => {
+            totalCostFCFA += it.realCostFCFA;
+            if (it.priceSource === "auchan") {
+                auchanCostFCFA += it.realCostFCFA;
+            } else {
+                marcheCostFCFA += it.realCostFCFA;
+            }
+        });
+
+        return {
+            items,
+            totalCostFCFA: Math.round(totalCostFCFA),
+            costPerServingFCFA: Math.round(totalCostFCFA / safeServings),
+            auchanCostFCFA: Math.round(auchanCostFCFA),
+            marcheCostFCFA: Math.round(marcheCostFCFA),
+            referenceNotice: "Prix de référence : Auchan Sénégal + Marchés locaux ANSD / CSAR, Dakar, 2026, à ajuster selon votre marché."
         };
     }
 
@@ -265,6 +459,8 @@
             costFCFA: Math.round(totalCostFCFA / safeServings)
         };
 
+        const realShopping = calculateRealShoppingCost(recipeIngredients, safeServings);
+
         return {
             servings: safeServings,
             items: analyzedItems,
@@ -275,11 +471,18 @@
                 carbs: totalCarbs,
                 fats: totalFats,
                 fiber: totalFiber,
-                costFCFA: totalCostFCFA
+                costFCFA: totalCostFCFA,
+                realCostFCFA: realShopping.totalCostFCFA,
+                realShoppingCostFCFA: realShopping.totalCostFCFA
             },
-            perServing,
+            perServing: {
+                ...perServing,
+                realCostFCFA: realShopping.costPerServingFCFA,
+                realShoppingCostFCFA: realShopping.costPerServingFCFA
+            },
+            realShopping,
             macroDistribution,
-            disclaimer: "Valeurs nutritionnelles calculées d'après les tables FAO/INFOODS. Les prix sont indicatifs avec pour référence officielle Auchan Sénégal (auchan.sn) et personnalisables pour vos marchés locaux."
+            disclaimer: "Valeurs nutritionnelles calculées d'après les tables FAO/INFOODS. Prix de référence : Auchan Sénégal + Marchés locaux ANSD / CSAR, Dakar, 2026, à ajuster selon votre marché."
         };
     }
 
@@ -323,9 +526,12 @@
         hasCustomPrice: (id) => customPrices[id] !== undefined,
         convertToGrams,
         calculateItemNutrition,
+        calculateRealShoppingItem,
+        calculateRealShoppingCost,
         calculateRecipeNutrition,
         searchIngredients,
         getAllIngredients: () => [...ingredientsList],
-        PRICE_SOURCE_REFERENCE: "Auchan Sénégal (auchan.sn)"
+        PRICE_REFERENCE_NOTICE: "Prix de référence : Auchan Sénégal + Marchés locaux ANSD / CSAR, Dakar, 2026, à ajuster selon votre marché.",
+        PRICE_SOURCE_REFERENCE: "Auchan Sénégal (auchan.sn) & Marchés locaux (ANSD/CSAR 2026)"
     };
 });

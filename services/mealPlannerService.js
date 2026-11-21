@@ -80,8 +80,8 @@
         },
         boissons_fruits: {
             id: "boissons_fruits",
-            title: "🥤 Fruits & Boissons Traditionnelles",
-            subtitle: "Kinkeliba, bissap, bouye & fruits frais",
+            title: "🥤 Fruits & Boissons Saines",
+            subtitle: "Infusions, hibiscus, pulpe de baobab & fruits frais",
             color: "#9333EA",
             categories: ["fruits", "boissons"]
         }
@@ -547,7 +547,7 @@
         }
 
         text += `\n──────────────────\n`;
-        text += `💡 *Astuce Terroir :* Privilégiez les légumes frais des Niayes et la sardinelle (Yaboye) à Soumbédioune pour un maximum d'oméga-3 au meilleur prix.\n`;
+        text += `💡 *Astuce Marché :* Privilégiez les légumes frais de saison et la sardinelle fraîche au marché local pour un maximum d'oméga-3 au meilleur prix.\n`;
         text += `🌱 _Généré par NutriBudget - Alimentation saine & budget maîtrisé_`;
 
         return text;

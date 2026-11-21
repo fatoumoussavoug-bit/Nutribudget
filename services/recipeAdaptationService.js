@@ -81,7 +81,7 @@
             { id: "niebe", reason: "Remplacement économique 100% végétal", category: "vegan" }
         ],
         "thiof-merou": [
-            { id: "yaboye-sardinelle", reason: "Poisson populaire dakarois 5 fois moins cher et plus riche en oméga-3", category: "economie" },
+            { id: "yaboye-sardinelle", reason: "Poisson local frais 5 fois moins cher et plus riche en oméga-3", category: "economie" },
             { id: "sardines-boite", reason: "Alternative pratique prête à l'emploi", category: "praticite" }
         ],
         "yaboye-sardinelle": [
@@ -110,7 +110,7 @@
             { id: "riz-brise-ordinaire", reason: "Féculent universel rapide à préparer", category: "praticite" }
         ],
         "pain-frais": [
-            { id: "pain-tapalapa", reason: "Pain artisanal traditionnel très consistant et plus économique", category: "economie" },
+            { id: "pain-tapalapa", reason: "Pain traditionnel très consistant et plus économique", category: "economie" },
             { id: "riz-brise-ordinaire", reason: "Base glucidique locale très accessible", category: "praticite" }
         ],
 
@@ -241,12 +241,12 @@
                 quantity: 60 * servings,
                 unit: "g"
             });
-            adapted.steps.push("Ajouter le niébé pré-cuit pour un enrichissement protéique naturel et économique.");
+            adapted.steps.push("Ajouter les haricots locaux pré-cuits pour un enrichissement protéique naturel et économique.");
         }
 
         adapted.adaptationApplied = "plus_proteines";
         adapted.adaptationLabel = "💪 Version Enrichie en Protéines (+30%)";
-        adapted.adaptationDescription = "Renforce les portions de poisson, volaille, œufs ou niébé pour maximiser la satiété et la récupération musculaire.";
+        adapted.adaptationDescription = "Renforce les portions de poisson, volaille, œufs ou légumineuses pour maximiser la satiété et la récupération musculaire.";
 
         return recipeService ? recipeService.enrichRecipeWithNutrition(adapted, servings) : adapted;
     }
@@ -259,7 +259,7 @@
         const servings = targetServings || adapted.activeServings || adapted.baseServings || 2;
 
         adapted.ingredients = adapted.ingredients.map(item => {
-            // Remplacer les viandes/poissons nobles coûteux par Yaboye ou Niébé
+            // Remplacer les viandes/poissons nobles coûteux par sardinelles ou haricots locaux
             if (item.ingredientId === "thiof-merou" || item.ingredientId === "viande-boeuf") {
                 return { ingredientId: "yaboye-sardinelle", quantity: item.quantity, unit: "g" };
             }
@@ -291,7 +291,7 @@
 
         adapted.adaptationApplied = "moins_cher";
         adapted.adaptationLabel = "💰 Version Économique & Anti-Inflation";
-        adapted.adaptationDescription = "Substitue les ingrédients coûteux par des super-aliments populaires (Yaboye, Niébé, Riz brisé) pour alléger la facture au marché.";
+        adapted.adaptationDescription = "Substitue les ingrédients coûteux par des aliments accessibles (sardinelles fraîches, haricots locaux, riz brisé) pour alléger la facture au marché.";
 
         return recipeService ? recipeService.enrichRecipeWithNutrition(adapted, servings) : adapted;
     }
